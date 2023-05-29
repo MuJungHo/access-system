@@ -31,7 +31,9 @@ import Switch from '@material-ui/core/Switch';
 import SearchIcon from "@material-ui/icons/Search"
 import SettingsIcon from '@material-ui/icons/Settings';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import TableChartIcon from '@material-ui/icons/TableChart';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import DragHandleIcon from '@material-ui/icons/DragHandle';
 
 import Modal from "./Modal";
 
@@ -131,7 +133,7 @@ const Card = ({ column, index, handleChange, moveCard }) => {
   });
 
   const [{ isDragging }, drag] = useDrag({
-    item: { index },
+    item: { index, type: "card" },
     type: "card",
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -144,15 +146,11 @@ const Card = ({ column, index, handleChange, moveCard }) => {
   return (
     <div
       ref={ref}
-      style={{ opacity }}
+      style={{ opacity, display: 'flex', alignItems: 'center', width: '100%' }}
     >
-      <IconButton>
-        <MoreVertIcon />
-      </IconButton>
-      <FormControlLabel
-        control={<Switch color="primary" checked={column.enable} onChange={(e) => handleChange(e, column.key)} name={column.key} />}
-        label={column.label}
-      />
+      <DragHandleIcon style={{ cursor: 'move' }} />
+      <span style={{ flex: 1, fontSize: 14, lineHeight: '14px', marginLeft: 20 }}>{column.label}</span>
+      <Switch color="primary" checked={column.enable} onChange={(e) => handleChange(e, column.key)} name={column.key} />
     </div>
   )
 }
@@ -264,6 +262,19 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
           <Typography className={classes.title} variant="h6" component="div">
             {title}
           </Typography>
+          {dateRangePicker && <DateRangePicker
+            locale={t("daterangepicker")}
+            style={{ marginRight: 20 }}
+            placement="auto"
+            value={[new Date(nowDateStartTime), new Date(nowDateEndTime)]}
+            onChange={e => {
+              setFilter({
+                ...filter,
+                page: 0,
+                start: moment(e[0]).startOf('date').valueOf(),
+                end: moment(e[1]).endOf('date').valueOf()
+              })
+            }} />}
           <form
             onSubmit={e => {
               e.preventDefault()
@@ -274,7 +285,7 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
             }}>
             <SearchTextField
               inputRef={ref}
-              style={{ marginRight: 20, width: 270 }}
+              style={{ width: 270 }}
               type="search"
               variant="outlined"
               placeholder={t('keyword')}
@@ -287,18 +298,6 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
               }}
             />
           </form>
-          {dateRangePicker && <DateRangePicker
-            locale={t("daterangepicker")}
-            placement="auto"
-            value={[new Date(nowDateStartTime), new Date(nowDateEndTime)]}
-            onChange={e => {
-              setFilter({
-                ...filter,
-                page: 0,
-                start: moment(e[0]).startOf('date').valueOf(),
-                end: moment(e[1]).endOf('date').valueOf()
-              })
-            }} />}
         </React.Fragment>
       )}
 
@@ -309,14 +308,14 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
           </IconButton>
         </Tooltip>
       ) : (<Tooltip title="Filter list">
-        <IconButton aria-label="filter list" onClick={() => setColumnModal({ isOpen: true })}>
-          <FilterListIcon />
+        <IconButton onClick={() => setColumnModal({ isOpen: true })}>
+          <TableChartIcon />
         </IconButton>
       </Tooltip>)
       }
 
       <Modal
-        title={'顯示欄位'}
+        title={'欄位管理'}
         open={columnModal.isOpen}
         maxWidth="xs"
         onConfirm={() => {
@@ -330,7 +329,7 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
         })}
       >
 
-        <FormControl component="fieldset">
+        <FormControl component="fieldset" fullWidth>
           <FormGroup>
             {
               modalColumns.map((column, index) =>
