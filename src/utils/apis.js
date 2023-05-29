@@ -29,6 +29,7 @@ export const api = (token, logout) => {
           response(data.data);
         })
         .catch((error) => {
+          if (error.message === 'Network Error') return logout()
           if (error.response.statusText) {
             const json = JSON.parse(error.response.statusText);
             if (json.code === 400124) {
