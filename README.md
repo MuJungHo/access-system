@@ -14,15 +14,3 @@ Analyze your webpack output.
 ### `npm run test`
 
 Run your test.
-
-### `npm run build:edge`
-
-Builds the app for edge-version production to the `build` folder.
-
-### `npm run build:cloud`
-
-Builds the app for cloud-version production to the `build` folder.
-
-### `npm run build:test`
-
-Builds the app for test-version production to the `build` folder.
