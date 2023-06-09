@@ -16,7 +16,7 @@ function PublicRoute({
           ) : (
             <Redirect
               to={{
-                pathname: '/home',
+                pathname: '/',
                 state: { from: location }
               }}
             />

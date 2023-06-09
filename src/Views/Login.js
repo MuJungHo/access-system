@@ -126,7 +126,7 @@ const Login = () => {
   };
 
   if (token) {
-    return <Redirect to="/home" />
+    return <Redirect to="/" />
   }
   const handleChagneLocale = (e) => {
     changeLocale(e.target.value)

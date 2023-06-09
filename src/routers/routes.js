@@ -1,8 +1,8 @@
 import Event from '../Views/Event'
-import Devices from '../Views/Devices'
+import Devices from '../Views/Device/List'
 import Home from '../Views/Home'
-import People from '../Views/People'
-import Person from '../Views/Person'
+import Staffs from '../Views/Staff/List'
+import Staff from '../Views/Staff/Staff'
 import User from '../Views/User'
 import Card from '../Views/Card'
 import Log from '../Views/Log'
@@ -10,7 +10,7 @@ import Location from '../Views/Location'
 import Visitor from '../Views/Visitor'
 import Access from '../Views/Access'
 
-import Device from '../Views/Device'
+import Device from '../Views/Device/Device'
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
@@ -25,15 +25,22 @@ import SubtitlesIcon from '@material-ui/icons/Subtitles';
 
 const routes = [
   {
-    path: '/home',
+    path: '/',
     component: Home,
     icon: DashboardIcon,
-    siderlink: true
+    siderlink: true,
+    exact: true,
   },
   {
-    path: '/devices',
+    path: '/device/device/:deviceid',
+    component: Device,
+    siderlink: false
+  },
+  {
+    path: '/device/list',
     component: Devices,
     icon: DevicesOtherIcon,
+    exact: true,
     siderlink: true
   },
   {
@@ -55,15 +62,16 @@ const routes = [
     siderlink: true
   },
   {
-    path: '/people',
-    component: People,
-    icon: PeopleIcon,
-    siderlink: true
+    path: '/staff//staff/:staffid',
+    component: Staff,
+    siderlink: false
   },
   {
-    path: '/person/:staffid',
-    component: Person,
-    siderlink: false
+    path: '/staff/list',
+    component: Staffs,
+    icon: PeopleIcon,
+    exact: true,
+    siderlink: true
   },
   {
     path: '/location',
@@ -82,11 +90,6 @@ const routes = [
     component: Visitor,
     icon: DirectionsWalkIcon,
     siderlink: true
-  },
-  {
-    path: '/device/:deviceid',
-    component: Device,
-    siderlink: false
   },
   {
     path: '/access',

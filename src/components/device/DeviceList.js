@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useHistory } from "react-router-dom"
+import { useHistory, useRouteMatch } from "react-router-dom"
 import { makeStyles } from '@material-ui/core/styles';
 import { AuthContext } from "../../contexts/AuthContext";
 import { DeviceContext } from "../../contexts/DeviceContext";
@@ -46,6 +46,8 @@ export default function Devices() {
   const classes = useStyles();
   const md5 = require("md5");
   const history = useHistory();
+
+  const { path } = useRouteMatch();
   const { t } = useContext(LocaleContext);
   const [wsData, setWsData] = React.useState({});
   const [total, setTotal] = React.useState(0);
@@ -129,11 +131,7 @@ export default function Devices() {
 
   const handleEditDeviceOpen = (e, device) => {
     e.stopPropagation()
-    setDeviceEditModal({
-      isOpen: true,
-      DeviceConfiguration: { ...device.config.DeviceConfiguration },
-      id: device.id
-    })
+    history.push(`/device/device/${device.deviceid}`)
   }
 
   const handleUpdateDevice = async () => {

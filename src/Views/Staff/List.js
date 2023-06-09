@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom"
-import { AuthContext } from "../contexts/AuthContext";
-import { LocaleContext } from "../contexts/LocaleContext";
+import { AuthContext } from "../../contexts/AuthContext";
+import { LocaleContext } from "../../contexts/LocaleContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
@@ -9,7 +9,7 @@ import {
   BorderColorSharp
 } from '@material-ui/icons';
 
-import Table from "../components/Table";
+import Table from "../../components/Table";
 
 const useStyles = makeStyles((theme) => ({
   root: {
