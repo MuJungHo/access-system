@@ -70,6 +70,7 @@ export default function Event() {
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <Table
+          tableKey="LOG_LIST"
           data={rows}
           total={total}
           title={t('sider/log')}

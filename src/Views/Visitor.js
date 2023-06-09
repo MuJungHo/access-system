@@ -65,6 +65,7 @@ export default function Event() {
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <Table
+          tableKey="VISITOR_LIST"
           data={rows}
           total={total}
           title={t('sider/visitor')}

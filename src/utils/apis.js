@@ -203,6 +203,26 @@ export const api = (token, logout) => {
     }))
   }
 
+  const getAccountById = async ({ ...rest }) => {
+    return promise_(instance.get('/db/account/get', {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
+  const editAccountCustomizeById = async ({ data, ...rest }) => {
+    return promise_(instance.post('/db/account/customize/edit', data, {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
   return {
     getDeviceList,
     getPersonList,
@@ -219,7 +239,9 @@ export const api = (token, logout) => {
     getStaffList,
     addAccess,
     getStaff,
-    editStaff
+    editStaff,
+    getAccountById,
+    editAccountCustomizeById
   }
 }
 

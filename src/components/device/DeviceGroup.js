@@ -82,7 +82,7 @@ export default function Devices() {
       const tableData = result.map(data => ({
         ...data,
         id: data.groupid,
-        device: data.id.join(', ')
+        device: data.id?.join(', ') || ""
       }))
       setTotal(total)
       setDeviceGroups(tableData)
@@ -196,6 +196,7 @@ export default function Devices() {
   return (
     <React.Fragment>
       <Table
+        tableKey="DEVICE_GROUP"
         data={deviceGroups}
         total={total}
         title={t('sider/devices')}

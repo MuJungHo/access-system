@@ -70,6 +70,7 @@ export default function Cards() {
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <Table
+          tableKey="CARD_LIST"
           data={rows}
           total={total}
           title={t('sider/card')}

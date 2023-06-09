@@ -75,6 +75,7 @@ export default function Devices() {
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <Table
+          tableKey="STAFF_LIST"
           data={rows}
           total={total}
           title={t('sider/people')}

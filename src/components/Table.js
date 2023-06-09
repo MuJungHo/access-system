@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from "react";
-// import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../contexts/AuthContext";
 import { LocaleContext } from "../contexts/LocaleContext";
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -225,7 +225,7 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRangePicker, columns, setColumns }) => {
+const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRangePicker, columns, setColumns, tableKey }) => {
   const classes = useToolbarStyles();
   const ref = useRef()
   const [columnModal, setColumnModal] = React.useState({
@@ -234,6 +234,7 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
   const [modalColumns, setModalColumns] = React.useState([...columns])
 
   const { t } = useContext(LocaleContext);
+  const { authedCustomize, editAuthedUserCustomize } = useContext(AuthContext);
 
   const handleChange = (event, key) => {
     const updateColumns = modalColumns.map(column => column.key === key ? { ...column, enable: event.target.checked } : { ...column })
@@ -245,8 +246,20 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
     setModalColumns([...dragColumns])
   }
 
+  const handleEditTableColumns = async () => {
+    console.log(modalColumns, authedCustomize)
+    const customize = { ...authedCustomize }
+    customize[tableKey] = modalColumns
+    await editAuthedUserCustomize(customize)
+    setColumns([...modalColumns])
+    setColumnModal({
+      isOpen: false
+    })
+  }
+
   const nowDateStartTime = moment(filter.start).unix() * 1000
   const nowDateEndTime = moment(filter.end).unix() * 1000
+
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -318,12 +331,7 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
         title={'欄位管理'}
         open={columnModal.isOpen}
         maxWidth="xs"
-        onConfirm={() => {
-          setColumns([...modalColumns])
-          setColumnModal({
-            isOpen: false
-          })
-        }}
+        onConfirm={handleEditTableColumns}
         onClose={() => setColumnModal({
           isOpen: false
         })}
@@ -444,16 +452,19 @@ export default ({
   title,
   dateRangePicker = false,
   allowSelect = false,
-  loading
+  tableKey
 }) => {
   const classes = useStyles();
-  const initColumns = columns_.map(c => ({ ...c, enable: true }))
   const { t } = useContext(LocaleContext);
+  const { authedCustomize } = useContext(AuthContext);
+  // const initColumns = columns_.map(c => ({ ...c, enable: true }))
+  const initColumns = authedCustomize[tableKey] ? authedCustomize[tableKey] : columns_.map(c => ({ ...c, enable: true }))
+
   const [selected, setSelected] = React.useState([]);
   const [columns, setColumns] = React.useState(initColumns)
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const emptyRows = filter.limit - Math.min(filter.limit, data.length - filter.page * filter.limit);
+  // const emptyRows = filter.limit - Math.min(filter.limit, data.length - filter.page * filter.limit);
 
   const handleRequestSort = (event, property) => {
     const isAsc = filter.orderBy === property && filter.order === 'asc';
@@ -519,7 +530,9 @@ export default ({
           setFilter={setFilter}
           numSelected={selected.length}
           title={title}
-          dateRangePicker={dateRangePicker} />
+          dateRangePicker={dateRangePicker}
+          tableKey={tableKey}
+        />
         <TableContainer>
           <Table
             className={classes.table}

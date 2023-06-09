@@ -172,6 +172,7 @@ export default function Devices() {
   return (
     <React.Fragment>
       <Table
+        tableKey="DEVICE_LIST"
         data={DEVICES}
         total={total}
         title={t('sider/devices')}

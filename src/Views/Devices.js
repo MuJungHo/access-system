@@ -63,7 +63,7 @@ export default function Devices() {
   const classes = useStyles();
   // const md5 = require("md5");
 
-  const [tabIndex, setTabIndex] = React.useState(1);
+  const [tabIndex, setTabIndex] = React.useState(0);
 
 
   return (

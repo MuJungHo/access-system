@@ -65,6 +65,7 @@ export default function Location() {
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <Table
+          tableKey="LOCATION_LIST"
           data={rows}
           total={total}
           title={t('sider/location')}

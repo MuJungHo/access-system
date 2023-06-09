@@ -120,9 +120,9 @@ const Login = () => {
 
     var credentials = Base64.encode(timeAccount + ":" + timePassword);
 
-    const { Token, /*name, Roleid, Accountid*/ } = await tokenlogin({ credentials, timestamp })
+    const { Token, Accountid /*name, Roleid*/ } = await tokenlogin({ credentials, timestamp })
 
-    login(Token);
+    login(Token, Accountid);
   };
 
   if (token) {
