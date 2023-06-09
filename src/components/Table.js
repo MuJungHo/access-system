@@ -577,6 +577,7 @@ export default ({
                       column.enable && <TableCell
                         key={column.key}
                         align="left"
+                        width={column.width}
                       >
                         {row[column.key]}
                       </TableCell>

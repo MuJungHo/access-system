@@ -77,7 +77,7 @@ export default function Event() {
             { key: 'name', label: t('account') },
             { key: 'email', label: t('email') },
             { key: 'rolename', label: t('role') },
-            { key: 'location', label: t('location') },
+            { key: 'location', label: t('location'), width: '25%' },
           ]}
           actions={[]}
         />
