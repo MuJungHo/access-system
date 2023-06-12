@@ -74,9 +74,9 @@ export default function Event() {
           filter={filter}
           setFilter={setFilter}
           columns={[
-            { key: 'name', label: t('account') },
-            { key: 'email', label: t('email') },
-            { key: 'rolename', label: t('role') },
+            { key: 'name', label: t('account'), enable: true },
+            { key: 'email', label: t('email'), enable: true },
+            { key: 'rolename', label: t('role'), enable: true },
             { key: 'location', label: t('location'), width: '25%' },
           ]}
           actions={[]}

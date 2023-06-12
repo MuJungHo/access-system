@@ -150,7 +150,7 @@ const Card = ({ column, index, handleChange, moveCard }) => {
     >
       <DragHandleIcon style={{ cursor: 'move' }} />
       <span style={{ flex: 1, fontSize: 14, lineHeight: '14px', marginLeft: 20 }}>{column.label}</span>
-      <Switch color="primary" checked={column.enable} onChange={(e) => handleChange(e, column.key)} name={column.key} />
+      <Switch color="primary" checked={column.enable || false} onChange={(e) => handleChange(e, column.key)} name={column.key} />
     </div>
   )
 }
@@ -184,12 +184,13 @@ function EnhancedTableHead(props) {
               active={orderBy === column.key}
               direction={orderBy === column.key ? order : 'asc'}
               onClick={createSortHandler(column.key)}
+              disabled={!!!column.sortable}
             >
               {column.label}
             </TableSortLabel>
           </TableCell>
         ))}
-        {actions.length > 0 && <TableCell align={'left'}>{t('actions')}</TableCell>}
+        {actions.length > 0 && <TableCell align="left">{t('actions')}</TableCell>}
       </TableRow>
     </TableHead>
   );
@@ -247,9 +248,8 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
   }
 
   const handleEditTableColumns = async () => {
-    console.log(modalColumns, authedCustomize)
     const customize = { ...authedCustomize }
-    customize[tableKey] = modalColumns
+    customize[tableKey] = modalColumns.map(column => ({ key: column.key, enable: column.enable }))
     await editAuthedUserCustomize(customize)
     setColumns([...modalColumns])
     setColumnModal({
@@ -457,14 +457,17 @@ export default ({
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
   const { authedCustomize } = useContext(AuthContext);
-  // const initColumns = columns_.map(c => ({ ...c, enable: true }))
-  const initColumns = authedCustomize[tableKey] ? authedCustomize[tableKey] : columns_.map(c => ({ ...c, enable: true }))
+
+  const initColumns = authedCustomize[tableKey]
+    ? authedCustomize[tableKey].map(column => {
+      const foundColumn = columns_.find(column_ => column_.key === column.key) || {}
+      return { ...column, sortable: foundColumn.sortable || false, label: foundColumn.label || "" }
+    })
+    : columns_
 
   const [selected, setSelected] = React.useState([]);
   const [columns, setColumns] = React.useState(initColumns)
   const isSelected = (name) => selected.indexOf(name) !== -1;
-
-  // const emptyRows = filter.limit - Math.min(filter.limit, data.length - filter.page * filter.limit);
 
   const handleRequestSort = (event, property) => {
     const isAsc = filter.orderBy === property && filter.order === 'asc';

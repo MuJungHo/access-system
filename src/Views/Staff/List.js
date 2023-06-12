@@ -82,9 +82,9 @@ export default function Devices() {
           filter={filter}
           setFilter={setFilter}
           columns={[
-            { key: 'name', label: t('name') },
-            { key: 'card', label: t('card') },
-            { key: 'vehicle', label: t('vehicle') },
+            { key: 'name', label: t('name'), enable: true },
+            { key: 'card', label: t('card'), enable: true },
+            { key: 'vehicle', label: t('vehicle'), enable: true },
             { key: 'group', label: t('group') },
           ]}
           actions={[

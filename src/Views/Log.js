@@ -78,10 +78,10 @@ export default function Event() {
           setFilter={setFilter}
           dateRangePicker
           columns={[
-            { key: 'datetime', label: t('date') },
-            { key: 'condition', label: t('condition') },
-            { key: 'detail', label: t('detail') },
-            { key: 'accountname', label: t('account') },
+            { key: 'datetime', label: t('date'), enable: true },
+            { key: 'condition', label: t('condition'), enable: true },
+            { key: 'detail', label: t('detail'), enable: true },
+            { key: 'accountname', label: t('account'), enable: true },
             { key: 'rolename', label: t('role') },
             // { key: 'location', label: t('location') },
           ]}

@@ -95,7 +95,7 @@ const Siderbar = ({ open, setOpen }) => {
       <div className={classes.toolbar}>
         {open && <img src="../assets/logo.png" style={{ height: 25 }} alt='' />}
         <IconButton edge="end" onClick={() => setOpen(!open)}>
-          {open ? <ArrowBackIosIcon color="error" /> : <ArrowForwardIosIcon color="error" />}
+          {open ? <ArrowBackIosIcon color="primary" /> : <ArrowForwardIosIcon color="primary" />}
         </IconButton>
       </div>
       <List>

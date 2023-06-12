@@ -178,8 +178,8 @@ export default function Devices() {
         setFilter={setFilter}
         columns={[
           { key: 'status', label: t('status') },
-          { key: 'category', label: t('category') },
-          { key: 'name', label: t('name') },
+          { key: 'category', label: t('category'), sortable: true },
+          { key: 'name', label: t('name'), sortable: true },
           { key: 'ip', label: t('ip') },
         ]}
         actions={[

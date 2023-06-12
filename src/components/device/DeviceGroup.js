@@ -203,9 +203,9 @@ export default function Devices() {
         filter={filter}
         setFilter={setFilter}
         columns={[
-          { key: 'name', label: t('name') },
-          { key: 'locationid', label: t('location') },
-          { key: 'device', label: t('device') },
+          { key: 'name', label: t('name'), enable: true },
+          { key: 'locationid', label: t('location'), enable: true },
+          { key: 'device', label: t('device'), enable: false },
         ]}
         actions={[
           { name: '群組權限', onClick: handleDeviceGroupAccessStaffGroup, icon: <GroupIcon /> },

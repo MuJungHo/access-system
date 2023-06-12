@@ -72,8 +72,8 @@ export default function Location() {
           filter={filter}
           setFilter={setFilter}
           columns={[
-            { key: 'name', label: t('name') },
-            { key: 'address', label: t('address') },
+            { key: 'name', label: t('name'), enable: true },
+            { key: 'address', label: t('address'), enable: true },
           ]}
           actions={[]}
         />
