@@ -1,8 +1,5 @@
 import React from "react";
-// import { AuthContext } from "../contexts/AuthContext";
-// import { LocaleContext } from "../contexts/LocaleContext";
 import { DeviceProvider } from "../../contexts/DeviceContext";
-// import { useHistory } from "react-router-dom"
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';

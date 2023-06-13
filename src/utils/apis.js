@@ -51,16 +51,6 @@ export const api = (token, logout) => {
     }))
   }
 
-  const getPersonList = async ({ ...rest }) => {
-    return promise_(instance.get('/db/staff/list', {
-      params: {
-        sign,
-        timestamp,
-        ...rest
-      }
-    }))
-  }
-
   const getNewCardList = async ({ ...rest }) => {
     return promise_(instance.get('/db/newcard/list', {
       params: {
@@ -225,7 +215,7 @@ export const api = (token, logout) => {
 
   return {
     getDeviceList,
-    getPersonList,
+    getStaffList,
     getNewCardList,
     getEventList,
     getUserList,
@@ -236,7 +226,6 @@ export const api = (token, logout) => {
     getDevcieGroupList,
     getAccessGroupListById,
     getStaffGroupList,
-    getStaffList,
     addAccess,
     getStaff,
     editStaff,

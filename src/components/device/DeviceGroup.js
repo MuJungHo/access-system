@@ -199,7 +199,8 @@ export default function Devices() {
         tableKey="DEVICE_GROUP"
         data={deviceGroups}
         total={total}
-        title={t('sider/devices')}
+        maxHeight="calc(100vh - 275px)"
+        title="設備群組"
         filter={filter}
         setFilter={setFilter}
         columns={[

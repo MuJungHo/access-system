@@ -172,15 +172,16 @@ export default function Devices() {
       <Table
         tableKey="DEVICE_LIST"
         data={DEVICES}
+        maxHeight="calc(100vh - 275px)"
         total={total}
-        title={t('sider/devices')}
+        title="設備列表"
         filter={filter}
         setFilter={setFilter}
         columns={[
-          { key: 'status', label: t('status') },
-          { key: 'category', label: t('category'), sortable: true },
-          { key: 'name', label: t('name'), sortable: true },
-          { key: 'ip', label: t('ip') },
+          { key: 'status', label: t('status'), enable: true },
+          { key: 'category', label: t('category'), sortable: true, enable: true },
+          { key: 'name', label: t('name'), sortable: true, enable: true },
+          { key: 'ip', label: t('ip'), enable: true },
         ]}
         actions={[
           { name: t('play'), onClick: handleOpenPlayer, icon: <PlayArrow /> },

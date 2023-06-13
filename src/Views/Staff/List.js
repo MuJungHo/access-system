@@ -1,15 +1,33 @@
-import React, { useContext } from "react";
-import { useHistory } from "react-router-dom"
-import { AuthContext } from "../../contexts/AuthContext";
-import { LocaleContext } from "../../contexts/LocaleContext";
-import { makeStyles } from '@material-ui/core/styles';
+import React from "react";
+import { DeviceProvider } from "../../contexts/DeviceContext";
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
-import {
-  BorderColorSharp
-} from '@material-ui/icons';
+import StaffList from '../../components/staff/StaffList'
+import StaffGroup from '../../components/staff/StaffGroup'
 
-import Table from "../../components/Table";
+const StyledTabs = withStyles(theme => ({
+  root: {
+    width: '30%',
+    boxShadow: theme.shadows[1],
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    // "& .MuiOutlinedInput-notchedOutline": {
+    //   borderColor: 'rgba(190, 190, 190, 0.4)'
+    // }
+  }
+}))((props) => <Tabs {...props} />)
+
+const StyledTab = withStyles(theme => ({
+  root: {
+    // width: '30%',
+    // "& .MuiOutlinedInput-notchedOutline": {
+    //   borderColor: 'rgba(190, 190, 190, 0.4)'
+    // }
+  }
+}))((props) => <Tab {...props} />)
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,60 +55,36 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Devices() {
   const classes = useStyles();
-  const history = useHistory();
-  const { t } = useContext(LocaleContext);
-  const [rows, setRows] = React.useState([]);
-  const [total, setTotal] = React.useState(0);
-  const [filter, setFilter] = React.useState({
-    order: 'asc',
-    orderBy: 'datetime',
-    page: 0,
-    limit: 5
-  })
-  const { authedApi } = useContext(AuthContext);
+  // const md5 = require("md5");
 
-  React.useEffect(() => {
-    (async () => {
-      const { result, total } = await authedApi.getPersonList({ ...filter, page: filter.page + 1 })
+  const [tabIndex, setTabIndex] = React.useState(0);
 
-      const tableData = result.map(data => {
-        const card = data.cardid.map(c => (c.uhfnumber && `UHF number  ${c.uhfnumber}`) || (c.mifarenumber && `Mifare number  ${c.mifarenumber}`)) || '--'
-        const vehicle = data.vehicleid.map(v => v.vin).join(' ,') || '--'
-        const group = data.groups.map(g => g.name).join(' ,') || '--'
-        return {
-          ...data,
-          id: data.staffid,
-          card,
-          vehicle,
-          group
-        }
-      })
-      setTotal(total)
-      setRows(tableData)
 
-    })();
-  }, [authedApi, filter])
 
   return (
     <div className={classes.root}>
+      <StyledTabs
+        value={tabIndex}
+        TabIndicatorProps={{ style: { background: 'white' } }}
+        onChange={(event, newValue) => {
+          setTabIndex(newValue);
+        }}
+        variant="fullWidth"
+        textColor="primary"
+      >
+        <StyledTab label="人員列表" />
+        <StyledTab label="人員群組" />
+      </StyledTabs>
+
       <Paper className={classes.paper}>
-        <Table
-          tableKey="STAFF_LIST"
-          data={rows}
-          total={total}
-          title={t('sider/people')}
-          filter={filter}
-          setFilter={setFilter}
-          columns={[
-            { key: 'name', label: t('name'), enable: true },
-            { key: 'card', label: t('card'), enable: true },
-            { key: 'vehicle', label: t('vehicle'), enable: true },
-            { key: 'group', label: t('group') },
-          ]}
-          actions={[
-            { name: t('edit'), onClick: (e, person) => history.push(`/person/${person.staffid}`), icon: <BorderColorSharp /> }]}
-        />
+        {
+          {
+            0: <StaffList />,
+            1: <StaffGroup />
+          }[tabIndex]
+        }
       </Paper>
+
     </div>
   );
 }

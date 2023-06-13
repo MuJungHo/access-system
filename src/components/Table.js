@@ -452,7 +452,8 @@ export default ({
   title,
   dateRangePicker = false,
   allowSelect = false,
-  tableKey
+  tableKey,
+  maxHeight = 'calc(100vh - 225px)'
 }) => {
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
@@ -461,10 +462,10 @@ export default ({
   const initColumns = authedCustomize[tableKey]
     ? authedCustomize[tableKey].map(column => {
       const foundColumn = columns_.find(column_ => column_.key === column.key) || {}
-      return { ...column, sortable: foundColumn.sortable || false, label: foundColumn.label || "" }
+      return { ...column, sortable: foundColumn.sortable || false, label: foundColumn.label || t(column.key) }
     })
     : columns_
-
+    
   const [selected, setSelected] = React.useState([]);
   const [columns, setColumns] = React.useState(initColumns)
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -536,7 +537,7 @@ export default ({
           dateRangePicker={dateRangePicker}
           tableKey={tableKey}
         />
-        <TableContainer>
+        <TableContainer style={{ maxHeight }}>
           <Table
             className={classes.table}
             size={'medium'}
