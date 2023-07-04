@@ -77,6 +77,7 @@ export default function Devices() {
       <Paper className={classes.paper}>
         <Table
           tableKey="STAFF_GROUP_LIST"
+          maxHeight="calc(100vh - 275px)"
           data={rows}
           total={total}
           title="人員群組"
