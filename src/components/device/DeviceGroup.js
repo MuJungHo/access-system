@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { AuthContext } from "../../contexts/AuthContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
 
-import Table from "../../components/Table";
-import Modal from '../../components/Modal';
+import Table from "../../components/table/Table";
+import ConfirmDialog from '../../components/ConfirmDialog';
 
 import PersonIcon from '@material-ui/icons/Person';
 import GroupIcon from '@material-ui/icons/Group';
@@ -213,7 +213,7 @@ export default function Devices() {
           { name: '人員權限', onClick: handleDeviceGroupAccessStaff, icon: <PersonIcon /> },
         ]}
       />
-      <Modal
+      <ConfirmDialog
         title={"設備群組 > 人員群組"}
         open={staffGroupModal.isOpen}
         maxWidth="xs"
@@ -249,7 +249,7 @@ export default function Devices() {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </Modal>
+      </ConfirmDialog>
     </React.Fragment>
   );
 }

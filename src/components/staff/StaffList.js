@@ -10,7 +10,7 @@ import {
   FiberManualRecord
 } from '@material-ui/icons';
 
-import Table from "../../components/Table";
+import Table from "../../components/table/Table";
 import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles((theme) => ({

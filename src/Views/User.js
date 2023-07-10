@@ -3,7 +3,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { LocaleContext } from "../contexts/LocaleContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Table from "../components/Table";
+import Table from "../components/table/Table";
 
 const useStyles = makeStyles((theme) => ({
   root: {

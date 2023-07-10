@@ -11,8 +11,8 @@ import {
 } from '@material-ui/icons';
 
 import Player from "../../components/Player";
-import Table from "../../components/Table";
-import Modal from '../../components/Modal';
+import Table from "../../components/table/Table";
+import ConfirmDialog from '../../components/ConfirmDialog';
 import VMSEditModalContent from "../../components/device/VMSEditModalContent";
 
 const useStyles = makeStyles((theme) => ({
@@ -188,7 +188,7 @@ export default function Devices() {
           { name: t('edit'), onClick: handleEditDeviceOpen, icon: <BorderColorSharp /> }
         ]}
       />
-      <Modal
+      <ConfirmDialog
         title={playerModal.playerName}
         open={playerModal.isOpen}
         maxWidth="lg"
@@ -199,8 +199,8 @@ export default function Devices() {
         })}
       >
         <Player id={playerModal.playerId} />
-      </Modal>
-      <Modal
+      </ConfirmDialog>
+      <ConfirmDialog
         title={'編輯設備'}
         open={deviceEditModal.isOpen}
         maxWidth="sm"
@@ -215,7 +215,7 @@ export default function Devices() {
             "VMS": <VMSEditModalContent deviceEditModal={deviceEditModal} setDeviceEditModal={setDeviceEditModal} />
           }[deviceEditModal.DeviceConfiguration.Category]
         }
-      </Modal>
+      </ConfirmDialog>
     </React.Fragment>
   );
 }

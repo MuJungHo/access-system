@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from "react";
-import { AuthContext } from "../contexts/AuthContext";
-import { LocaleContext } from "../contexts/LocaleContext";
+import { AuthContext } from "../../contexts/AuthContext";
+import { LocaleContext } from "../../contexts/LocaleContext";
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles, withStyles } from '@material-ui/core/styles';
@@ -35,7 +35,7 @@ import TableChartIcon from '@material-ui/icons/TableChart';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 
-import Modal from "./Modal";
+import ConfirmDialog from "../ConfirmDialog";
 
 import { DateRangePicker } from 'rsuite';
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
@@ -327,7 +327,7 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
       </Tooltip>)
       }
 
-      <Modal
+      <ConfirmDialog
         title={'欄位管理'}
         open={columnModal.isOpen}
         maxWidth="xs"
@@ -352,7 +352,7 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
 
           </FormGroup>
         </FormControl>
-      </Modal>
+      </ConfirmDialog>
     </Toolbar>
   );
 };

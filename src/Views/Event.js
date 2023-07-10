@@ -4,7 +4,7 @@ import { LocaleContext } from "../contexts/LocaleContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import moment from 'moment'
-import Table from "../components/Table";
+import Table from "../components/table/Table";
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import { palette } from '../customTheme'
 
