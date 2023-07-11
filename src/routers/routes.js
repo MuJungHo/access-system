@@ -4,10 +4,8 @@ import Home from '../Views/Home'
 import Staffs from '../Views/Staff/List'
 import Staff from '../Views/Staff/Staff'
 import User from '../Views/User'
-import Card from '../Views/Card'
 import Log from '../Views/Log'
 import Location from '../Views/Location'
-import Visitor from '../Views/Visitor'
 import Access from '../Views/Access'
 
 import Device from '../Views/Device/Device'
@@ -16,11 +14,9 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
-import CreditCardIcon from '@material-ui/icons/CreditCard';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import StorageIcon from '@material-ui/icons/Storage';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import SubtitlesIcon from '@material-ui/icons/Subtitles';
 
 const routes = [
@@ -62,7 +58,7 @@ const routes = [
     siderlink: true
   },
   {
-    path: '/staff//staff/:staffid',
+    path: '/staff/staff/:staffid',
     component: Staff,
     siderlink: false
   },
@@ -77,18 +73,6 @@ const routes = [
     path: '/location',
     component: Location,
     icon: LocationOnIcon,
-    siderlink: true
-  },
-  {
-    path: '/card',
-    component: Card,
-    icon: CreditCardIcon,
-    siderlink: true
-  },
-  {
-    path: '/visitor',
-    component: Visitor,
-    icon: DirectionsWalkIcon,
     siderlink: true
   },
   {
