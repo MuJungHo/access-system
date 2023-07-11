@@ -207,9 +207,10 @@ EnhancedTableHead.propTypes = {
 };
 
 const useToolbarStyles = makeStyles((theme) => ({
-  root: {
+  toolbar: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(1),
+    display: 'flex'
   },
   highlight:
     theme.palette.type === 'light'
@@ -226,7 +227,7 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRangePicker, columns, setColumns, tableKey }) => {
+const EnhancedTableToolbar = ({ numSelected, setFilter, filter, dateRangePicker, columns, setColumns, tableKey, filterComponent }) => {
   const classes = useToolbarStyles();
   const ref = useRef()
   const [columnModal, setColumnModal] = React.useState({
@@ -262,7 +263,7 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
 
   return (
     <Toolbar
-      className={clsx(classes.root, {
+      className={clsx(classes.toolbar, {
         [classes.highlight]: numSelected > 0,
       })}
     >
@@ -272,22 +273,6 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
         </Typography>
       ) : (
         <React.Fragment>
-          <Typography className={classes.title} variant="h6" component="div">
-            {title}
-          </Typography>
-          {dateRangePicker && <DateRangePicker
-            locale={t("daterangepicker")}
-            style={{ marginRight: 20 }}
-            placement="auto"
-            value={[new Date(nowDateStartTime), new Date(nowDateEndTime)]}
-            onChange={e => {
-              setFilter({
-                ...filter,
-                page: 0,
-                start: moment(e[0]).startOf('date').valueOf(),
-                end: moment(e[1]).endOf('date').valueOf()
-              })
-            }} />}
           <form
             onSubmit={e => {
               e.preventDefault()
@@ -311,9 +296,23 @@ const EnhancedTableToolbar = ({ numSelected, title, setFilter, filter, dateRange
               }}
             />
           </form>
+          {dateRangePicker && <DateRangePicker
+            locale={t("daterangepicker")}
+            style={{ marginLeft: 20 }}
+            placement="auto"
+            value={[new Date(nowDateStartTime), new Date(nowDateEndTime)]}
+            onChange={e => {
+              setFilter({
+                ...filter,
+                page: 0,
+                start: moment(e[0]).startOf('date').valueOf(),
+                end: moment(e[1]).endOf('date').valueOf()
+              })
+            }} />}
         </React.Fragment>
       )}
-
+      {filterComponent}
+      <div style={{ flex: 1 }}></div>
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton aria-label="delete">
@@ -449,11 +448,11 @@ export default ({
   filter,
   setFilter,
   actions = [],
-  title,
   dateRangePicker = false,
   allowSelect = false,
   tableKey,
-  maxHeight = 'calc(100vh - 225px)'
+  maxHeight = 'calc(100vh - 225px)',
+  filterComponent = <></>
 }) => {
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
@@ -465,7 +464,7 @@ export default ({
       return { ...column, sortable: foundColumn.sortable || false, label: foundColumn.label || t(column.key) }
     })
     : columns_
-    
+
   const [selected, setSelected] = React.useState([]);
   const [columns, setColumns] = React.useState(initColumns)
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -533,9 +532,9 @@ export default ({
           filter={filter}
           setFilter={setFilter}
           numSelected={selected.length}
-          title={title}
           dateRangePicker={dateRangePicker}
           tableKey={tableKey}
+          filterComponent={filterComponent}
         />
         <TableContainer style={{ maxHeight }}>
           <Table
@@ -556,7 +555,7 @@ export default ({
               allowSelect={allowSelect}
             />
             <TableBody>
-              {data.map((row, index) => {
+              {data.map(row => {
                 const isItemSelected = isSelected(row.id);
                 const labelId = row.id;
 

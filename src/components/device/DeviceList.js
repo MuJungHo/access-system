@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import { makeStyles } from '@material-ui/core/styles';
 import { AuthContext } from "../../contexts/AuthContext";
 import { DeviceContext } from "../../contexts/DeviceContext";
@@ -7,47 +7,52 @@ import { LocaleContext } from "../../contexts/LocaleContext";
 import {
   PlayArrow,
   BorderColorSharp,
-  FiberManualRecord
+  FiberManualRecord,
+  Close
 } from '@material-ui/icons';
 
+import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 import Player from "../../components/Player";
 import Table from "../../components/table/Table";
+import Select from '../../components/Select';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import VMSEditModalContent from "../../components/device/VMSEditModalContent";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-  },
-  paper: {
-    width: '100%',
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
-    // marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-  table: {
-    minWidth: 750,
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: 'rect(0 0 0 0)',
-    height: 1,
-    margin: -1,
-    overflow: 'hidden',
-    padding: 0,
-    position: 'absolute',
-    top: 20,
-    width: 1,
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   root: {
+//     width: '100%',
+//   },
+//   paper: {
+//     width: '100%',
+//     borderTopLeftRadius: 0,
+//     borderTopRightRadius: 0,
+//     // marginTop: theme.spacing(2),
+//     marginBottom: theme.spacing(2),
+//   },
+//   table: {
+//     minWidth: 750,
+//   },
+//   visuallyHidden: {
+//     border: 0,
+//     clip: 'rect(0 0 0 0)',
+//     height: 1,
+//     margin: -1,
+//     overflow: 'hidden',
+//     padding: 0,
+//     position: 'absolute',
+//     top: 20,
+//     width: 1,
+//   },
+// }));
+
+const categories = ["VMS", "VMSIPC", "ACR", "ACC", "ACCR", "FRS", "FRD", "FRAD", "ELEVC", "ELEVE"];
 
 export default function Devices() {
-  const classes = useStyles();
+  // const classes = useStyles();
   const md5 = require("md5");
   const history = useHistory();
 
-  const { path } = useRouteMatch();
   const { t } = useContext(LocaleContext);
   const [wsData, setWsData] = React.useState({});
   const [total, setTotal] = React.useState(0);
@@ -55,7 +60,10 @@ export default function Devices() {
     order: 'asc',
     orderBy: '',
     page: 0,
-    limit: 5
+    limit: 5,
+    category: "",
+    locationid: "",
+    groupid: ""
   });
   const [playerModal, setPlayerModal] = React.useState({
     playerId: null,
@@ -69,9 +77,20 @@ export default function Devices() {
       Category: ""
     }
   });
+  const [locations, setLocations] = React.useState([])
+  const [groups, setGroups] = React.useState([])
 
   const { authedApi, token } = useContext(AuthContext);
   const { DEVICES, setDEVICES } = useContext(DeviceContext);
+
+  React.useEffect(() => {
+    (async () => {
+      const { result: locationList } = await authedApi.getLocationList({ limit: 50, page: 1 })
+      const { result: groupList } = await authedApi.getDevcieGroupList({ limit: 50, page: 1 })
+      setLocations(locationList)
+      setGroups(groupList)
+    })()
+  }, [])
 
   React.useEffect(() => {
     (async () => {
@@ -174,9 +193,78 @@ export default function Devices() {
         data={DEVICES}
         maxHeight="calc(100vh - 275px)"
         total={total}
-        title="設備列表"
         filter={filter}
         setFilter={setFilter}
+        filterComponent={
+          <React.Fragment>
+            <Select
+              style={{ marginLeft: 20 }}
+              value={filter.category}
+              onChange={(e) => setFilter({
+                ...filter,
+                category: e.target.value
+              })}
+              label={t('category')}
+            >
+              {
+                categories
+                  .map(category =>
+                    <MenuItem
+                      key={category}
+                      value={category}>
+                      {category}
+                    </MenuItem>)
+              }
+            </Select>
+            <Select
+              style={{ marginLeft: 20 }}
+              value={filter.locationid}
+              onChange={(e) => setFilter({
+                ...filter,
+                locationid: e.target.value
+              })}
+              label="地點"
+            >
+              {
+                locations
+                  .map(location =>
+                    <MenuItem
+                      key={location.locationid}
+                      value={location.locationid}>
+                      {location.name}
+                    </MenuItem>)
+              }
+            </Select>
+            <Select
+              style={{ marginLeft: 20 }}
+              value={filter.groupid}
+              onChange={(e) => setFilter({
+                ...filter,
+                groupid: e.target.value
+              })}
+              label="群組"
+            >
+              {
+                groups
+                  .map(group =>
+                    <MenuItem
+                      key={group.groupid}
+                      value={group.groupid}>
+                      {group.name}
+                    </MenuItem>)
+              }
+            </Select>
+            <Button
+              style={{ marginLeft: 20 }}
+              onClick={() => setFilter({
+                ...filter,
+                groupid: "",
+                locationid: "",
+                category: ""
+              })}
+              variant="outlined"><Close />清除</Button>
+          </React.Fragment>
+        }
         columns={[
           { key: 'status', label: t('status'), enable: true },
           { key: 'category', label: t('category'), sortable: true, enable: true },
