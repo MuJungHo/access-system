@@ -73,5 +73,12 @@
     "select-thing": "Select {{thing}}",
     "uid": "UID",
     "vehicle": "vehicle",
-    "welcome": "Welcome"
+    "welcome": "Welcome",
+    "_sun": "Sunday",
+    "_mon": "Monday",
+    "_tue": "Tuesday",
+    "_wed": "Wednesday",
+    "_thu": "Thursday",
+    "_fri": "Friday",
+    "_sat": "Saturday"
 }

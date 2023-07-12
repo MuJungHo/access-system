@@ -21,13 +21,14 @@ const useStyles = makeStyles((theme) => ({
 const mins = ["100", "300", "500", "1000", "3000", "5000"]
 
 export default ({
+  style
 }) => {
   const { t } = useContext(LocaleContext);
   const classes = useStyles();
   const [minutes, setMinutes] = React.useState()
   // console.log(deviceEditModal)
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} style={{ ...style }}>
       <div style={{ padding: 20, fontSize: 16 }}>遠距開門</div>
       <Divider />
       <div style={{ display: 'flex', padding: 20 }}>

@@ -73,5 +73,12 @@
     "select-thing": "請選擇{{thing}}",
     "uid": "卡號",
     "vehicle": "車輛",
-    "welcome": "歡迎"
+    "welcome": "歡迎",
+    "_sun": "星期日",
+    "_mon": "星期一",
+    "_tue": "星期二",
+    "_wed": "星期三",
+    "_thu": "星期四",
+    "_fri": "星期五",
+    "_sat": "星期六"
 }

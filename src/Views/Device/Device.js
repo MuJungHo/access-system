@@ -10,6 +10,7 @@ import {
 
 import { LocaleContext } from "../../contexts/LocaleContext";
 import DoorControl from '../../components/device/DoorControl';
+import Schedule from '../../components/device/Schedule';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,7 +26,8 @@ export default () => {
   return (
     <div className={classes.root}>
       <IconButton onClick={() => history.push('/device/list')}><ArrowBackIcon /></IconButton>
-        {/* {deviceid} */}
-        <DoorControl />
+      {/* {deviceid} */}
+      <DoorControl style={{ marginBottom: 20 }} />
+      <Schedule />
     </div>)
 }
