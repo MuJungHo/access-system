@@ -210,7 +210,9 @@ const useToolbarStyles = makeStyles((theme) => ({
   toolbar: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(1),
-    display: 'flex'
+    display: 'flex',
+    // paddingTop: 8,
+    // paddingBottom: 8
   },
   highlight:
     theme.palette.type === 'light'

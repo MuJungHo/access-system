@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom"
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import { AuthContext } from "../../contexts/AuthContext";
 import { DeviceContext } from "../../contexts/DeviceContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
@@ -204,7 +204,7 @@ export default function Devices() {
                 ...filter,
                 category: e.target.value
               })}
-              label={t('category')}
+              label={t("category")}
             >
               {
                 categories
@@ -223,7 +223,7 @@ export default function Devices() {
                 ...filter,
                 locationid: e.target.value
               })}
-              label="地點"
+              label={t("location")}
             >
               {
                 locations
@@ -242,7 +242,7 @@ export default function Devices() {
                 ...filter,
                 groupid: e.target.value
               })}
-              label="群組"
+              label={t("group")}
             >
               {
                 groups

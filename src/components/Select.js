@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useContext } from "react";
 import { makeStyles } from '@material-ui/core/styles';
+import { LocaleContext } from "../contexts/LocaleContext";
 
 import {
   FormControl,
@@ -17,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     "& .MuiOutlinedInput-input": {
       color: "rgba(0, 0, 0, 0.4)",
       padding: 10
+    },
+    "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
+      transform: "translate(10px, 3px) scale(0.75)" 
     },
     // "& .MuiInputLabel-root": {
     //   color: "green"
@@ -45,7 +49,9 @@ export default ({
   onChange,
   style = {}
 }) => {
-  const classes = useStyles()
+  const classes = useStyles();
+  const { t } = useContext(LocaleContext);
+
   return (
     <FormControl
       style={{ ...style }}
@@ -59,7 +65,7 @@ export default ({
         onChange={onChange}
       >
         <MenuItem value="">
-          <em>None</em>
+          <em>{t("select-thing", { "thing": label })}</em>
         </MenuItem>
         {children}
       </Select>
