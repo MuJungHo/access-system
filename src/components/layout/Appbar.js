@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import clsx from 'clsx';
-import { useHistory } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,6 +17,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import Badge from '@material-ui/core/Badge';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Link from '@material-ui/core/Link';
 import Divider from '@material-ui/core/Divider';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
@@ -55,7 +57,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 50,
+    height: 48,
+    fontSize: 16,
   },
   menuButton: {
     marginRight: 36,
@@ -65,9 +68,37 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const PathComponent = () => {
+  const location = useLocation();
+  const history = useHistory();
+  if (location.pathname === "/device/list") return "設備管理"
+  if (location.pathname === "/event") return "事件管理"
+  if (location.pathname === "/log") return "系統紀錄"
+  if (location.pathname === "/user") return "用戶管理"
+  if (location.pathname === "/staff/list") return "人員管理"
+  if (location.pathname === "/location") return "位置管理"
+  if (location.pathname === "/access") return "存取控制"
+  if (location.pathname.includes("/device/device/")) return (<Breadcrumbs aria-label="breadcrumb">
+    <Link color="inherit" onClick={e => {
+      e.preventDefault();
+      history.push("/device/list")
+
+    }}>
+      設備管理
+    </Link>
+    <Link
+      color="textPrimary"
+    >
+      設備詳情
+    </Link>
+  </Breadcrumbs>)
+  return ""
+}
+
 const Appbar = ({ open }) => {
   const classes = useStyles();
   const history = useHistory();
+
   const md5 = require("md5");
   const { logout, token } = useContext(AuthContext);
   const { locale, changeLocale } = useContext(LocaleContext);
@@ -153,7 +184,7 @@ const Appbar = ({ open }) => {
     >
       <Toolbar>
         <Paper className={classes.paper}>
-          <div></div>
+          <PathComponent />
           <div>
             <IconButton onClick={e => setEventAnchor(e.currentTarget)}>
               <Badge overlap="rectangular" badgeContent={events.length} color="error">

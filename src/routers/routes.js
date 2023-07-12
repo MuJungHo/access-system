@@ -40,24 +40,6 @@ const routes = [
     siderlink: true
   },
   {
-    path: '/event',
-    component: Event,
-    icon: EventIcon,
-    siderlink: true
-  },
-  {
-    path: '/log',
-    component: Log,
-    icon: StorageIcon,
-    siderlink: true
-  },
-  {
-    path: '/user',
-    component: User,
-    icon: AccountBoxIcon,
-    siderlink: true
-  },
-  {
     path: '/staff/staff/:staffid',
     component: Staff,
     siderlink: false
@@ -70,17 +52,35 @@ const routes = [
     siderlink: true
   },
   {
+    path: '/access',
+    component: Access,
+    icon: SubtitlesIcon,
+    siderlink: true
+  },
+  {
+    path: '/event',
+    component: Event,
+    icon: EventIcon,
+    siderlink: true
+  },
+  {
     path: '/location',
     component: Location,
     icon: LocationOnIcon,
     siderlink: true
   },
   {
-    path: '/access',
-    component: Access,
-    icon: SubtitlesIcon,
+    path: '/user',
+    component: User,
+    icon: AccountBoxIcon,
     siderlink: true
-  }
+  },
+  {
+    path: '/log',
+    component: Log,
+    icon: StorageIcon,
+    siderlink: true
+  },
 ]
 
 export default routes
