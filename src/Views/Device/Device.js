@@ -9,15 +9,11 @@ import {
 } from '@material-ui/core'
 
 import { LocaleContext } from "../../contexts/LocaleContext";
+import DoorControl from '../../components/device/DoorControl';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-  },
-  paper: {
-    width: '100%',
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
   }
 }));
 export default () => {
@@ -29,8 +25,7 @@ export default () => {
   return (
     <div className={classes.root}>
       <IconButton onClick={() => history.push('/device/list')}><ArrowBackIcon /></IconButton>
-      <Paper className={classes.paper}>
-        {deviceid}
-      </Paper>
+        {/* {deviceid} */}
+        <DoorControl />
     </div>)
 }
