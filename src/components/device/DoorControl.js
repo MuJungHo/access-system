@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Select from "../../components/Select"
-
+import DetailCard from "./DetailCard";
 import {
   Paper,
   Divider,
@@ -28,10 +28,8 @@ export default ({
   const [minutes, setMinutes] = React.useState()
   // console.log(deviceEditModal)
   return (
-    <Paper className={classes.paper} style={{ ...style }}>
-      <div style={{ padding: 20, fontSize: 16 }}>遠距開門</div>
-      <Divider />
-      <div style={{ display: 'flex', padding: 20 }}>
+    <DetailCard title="遠距開門" style={{ marginBottom: 20 }}>
+      <div style={{ display: 'flex', padding: 16 }}>
         <div style={{ flex: 1 }}>
           <span>單次開門</span>
           <Select
@@ -60,7 +58,8 @@ export default ({
             style={{ marginLeft: 20 }} color="primary" variant="contained">解鎖</Button>
           <Button
             style={{ marginLeft: 20 }} color="primary" variant="contained">上鎖</Button>
-        </div></div>
-    </Paper>
+        </div>
+      </div>
+    </DetailCard>
   )
 }

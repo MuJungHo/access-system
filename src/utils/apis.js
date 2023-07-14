@@ -213,6 +213,16 @@ export const api = (token, logout) => {
     }))
   }
 
+  const getDeviceById = async ({ ...rest }) => {
+    return promise_(instance.get('/db/device/get', {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
   return {
     getDeviceList,
     getStaffList,
@@ -230,7 +240,8 @@ export const api = (token, logout) => {
     getStaff,
     editStaff,
     getAccountById,
-    editAccountCustomizeById
+    editAccountCustomizeById,
+    getDeviceById
   }
 }
 

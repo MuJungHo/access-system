@@ -48,7 +48,8 @@ export default ({
   children,
   value,
   onChange,
-  style = {}
+  style = {},
+  multiple = false
 }) => {
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
@@ -64,6 +65,7 @@ export default ({
         labelId="select-label"
         value={value}
         onChange={onChange}
+        multiple={multiple}
       >
         <MenuItem value="">
           <em>{t("select-thing", { "thing": label })}</em>

@@ -54,6 +54,8 @@ export default function Devices() {
   const history = useHistory();
 
   const { t } = useContext(LocaleContext);
+  const { authedApi, token } = useContext(AuthContext);
+  
   const [wsData, setWsData] = React.useState({});
   const [total, setTotal] = React.useState(0);
   const [filter, setFilter] = React.useState({
@@ -70,18 +72,11 @@ export default function Devices() {
     playerName: null,
     isOpen: false
   });
-
-  const [deviceEditModal, setDeviceEditModal] = React.useState({
-    isOpen: false,
-    DeviceConfiguration: {
-      Category: ""
-    }
-  });
+  const [devices, setDevices] = React.useState([])
   const [locations, setLocations] = React.useState([])
   const [groups, setGroups] = React.useState([])
+  
 
-  const { authedApi, token } = useContext(AuthContext);
-  const { DEVICES, setDEVICES } = useContext(DeviceContext);
 
   React.useEffect(() => {
     (async () => {
@@ -103,10 +98,10 @@ export default function Devices() {
         status: <FiberManualRecord color="error" />
       }))
       setTotal(total)
-      setDEVICES(tableData)
+      setDevices(tableData)
 
     })();
-  }, [authedApi, filter, setDEVICES])
+  }, [authedApi, filter, setDevices])
 
   React.useEffect(() => {
     const timestamp = Date.now()
@@ -128,7 +123,7 @@ export default function Devices() {
 
   React.useEffect(() => {
     if (wsData['DeviceStatus']) {
-      setDEVICES(prevRows => prevRows.map(row => {
+      setDevices(prevRows => prevRows.map(row => {
         const device = wsData['DeviceStatus'].find(ws => ws.DeviceID === row.deviceid) || {}
         const status = device.Status
         return {
@@ -137,7 +132,7 @@ export default function Devices() {
         }
       }))
     }
-  }, [wsData, setDEVICES])
+  }, [wsData, setDevices])
 
   const handleOpenPlayer = (e, device) => {
     e.stopPropagation()
@@ -150,47 +145,14 @@ export default function Devices() {
 
   const handleEditDeviceOpen = (e, device) => {
     e.stopPropagation()
-    history.push(`/device/device/${device.deviceid}`)
+    history.push(`/device/device/${device.id}`)
   }
 
-  const handleUpdateDevice = async () => {
-    await authedApi.editVMSDevice({
-      data: {
-        DeviceConfiguration: { ...deviceEditModal.DeviceConfiguration }
-      },
-      id: deviceEditModal.id
-    })
-    var updatedList = [...DEVICES]
-    updatedList = updatedList.map(device =>
-      device.id === deviceEditModal.id
-        ? {
-          ...device,
-          name: deviceEditModal.DeviceConfiguration.Name,
-          config: {
-            DeviceConfiguration: {
-              ...deviceEditModal.DeviceConfiguration,
-              DeviceSetting: { ...deviceEditModal.DeviceConfiguration.DeviceSetting },
-              Ports: { ...deviceEditModal.DeviceConfiguration.Ports },
-              Authentication: { ...deviceEditModal.DeviceConfiguration.Authentication }
-            },
-          },
-          ip: deviceEditModal.DeviceConfiguration.DeviceSetting.IPAddress
-        }
-        : { ...device }
-    )
-    setDEVICES(updatedList)
-    setDeviceEditModal({
-      isOpen: false,
-      DeviceConfiguration: { DeviceSetting: {}, Ports: {}, Authentication: {} },
-      id: null
-    })
-
-  }
   return (
     <React.Fragment>
       <Table
         tableKey="DEVICE_LIST"
-        data={DEVICES}
+        data={devices}
         maxHeight="calc(100vh - 275px)"
         total={total}
         filter={filter}
@@ -287,22 +249,6 @@ export default function Devices() {
         })}
       >
         <Player id={playerModal.playerId} />
-      </ConfirmDialog>
-      <ConfirmDialog
-        title={'編輯設備'}
-        open={deviceEditModal.isOpen}
-        maxWidth="sm"
-        onConfirm={handleUpdateDevice}
-        onClose={() => setDeviceEditModal({
-          isOpen: false,
-          DeviceConfiguration: { DeviceSetting: {}, Ports: {}, Authentication: {} },
-          id: null
-        })}>
-        {
-          {
-            "VMS": <VMSEditModalContent deviceEditModal={deviceEditModal} setDeviceEditModal={setDeviceEditModal} />
-          }[deviceEditModal.DeviceConfiguration.Category]
-        }
       </ConfirmDialog>
     </React.Fragment>
   );
