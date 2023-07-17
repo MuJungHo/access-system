@@ -81,5 +81,18 @@
     "_wed": "Wednesday",
     "_thu": "Thursday",
     "_fri": "Friday",
-    "_sat": "Saturday"
+    "_sat": "Saturday",
+    "error-400001": "Command execution timeout.",
+    "error-400002": "QueryString cannot be empty.",
+    "error-400009": "Json format is invalid.",
+    "error-400010": "Name cannot be empty.",
+    "error-400036": "Category cannot be empty.",
+    "error-400037": "DeviceId cannot be empty.",
+    "error-400038": "Invalid Category type.",
+    "error-400039": "Deviceid cannot be greater than the number of licenses.",
+    "error-400040": "Duplicate DeviceId.",
+    "error-400041": "Invalid Brand.",
+    "error-400042": "Id cannot be empty.",
+    "error-400043": "Id not exist.",
+    "error-400110": "Duplicate ip address."
 }

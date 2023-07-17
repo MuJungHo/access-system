@@ -1,12 +1,23 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useContext } from "react";
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 import { api } from '../utils/apis'
+import { LocaleContext } from "./LocaleContext";
+
 
 const AuthContext = createContext();
 
-function AuthProvider(props) {
+
+function AuthProvider({ children }) {
+  const { t } = useContext(LocaleContext);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [authedUser, setAuthedUser] = useState(JSON.parse(localStorage.getItem('user')));
   const [authedCustomize, setAuthedCustomize] = useState(JSON.parse(localStorage.getItem('customize')))
+  const [snackBar, setSnakcBar] = useState({
+    isOpen: false,
+    severity: '',
+    message: ''
+  })
 
   const login = async (jwtToken, accountid) => {
     const [accountInfo] = await api(jwtToken, logout).getAccountById({ accountid })
@@ -48,10 +59,32 @@ function AuthProvider(props) {
     authedUser,
     authedCustomize,
     editAuthedUserCustomize,
-    authedApi: api(token, logout),
+    authedApi: api(token, logout, setSnakcBar),
   };
 
-  return <AuthContext.Provider value={value} {...props} />;
+  return <AuthContext.Provider
+    value={value}>
+    <Snackbar
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      open={snackBar.isOpen}
+      autoHideDuration={3000}
+      onClose={() => setSnakcBar({
+        ...snackBar,
+        isOpen: false,
+      })}
+    >
+      <Alert
+        elevation={6}
+        variant="filled"
+        onClose={() => setSnakcBar({
+          ...snackBar,
+          isOpen: false,
+        })} severity={snackBar.severity}>
+        {t(`error-${snackBar.message}`)}
+      </Alert>
+    </Snackbar>
+    {children}
+  </AuthContext.Provider>;
 }
 
 export { AuthContext, AuthProvider };

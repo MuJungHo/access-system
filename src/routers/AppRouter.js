@@ -11,8 +11,8 @@ import Layout from '../components/layout/Layout';
 const AppRouter = () => {
 
   return (
-    <AuthProvider>
-      <LocaleProvider>
+    <LocaleProvider>
+      <AuthProvider>
         <BrowserRouter>
           <Switch>
             <PublicRoute path="/login">
@@ -28,8 +28,8 @@ const AppRouter = () => {
             </Layout>
           </Switch>
         </BrowserRouter>
-      </LocaleProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </LocaleProvider>
   )
 }
 export default AppRouter

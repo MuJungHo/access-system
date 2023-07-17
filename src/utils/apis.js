@@ -18,7 +18,7 @@ const Promise_ = (instance_) => {
   });
 }
 
-export const api = (token, logout) => {
+export const api = (token, logout, setSnakcBar) => {
   const timestamp = Date.now()
   const sign = md5(timestamp + '#' + token)
 
@@ -30,11 +30,14 @@ export const api = (token, logout) => {
         })
         .catch((error) => {
           if (error.message === 'Network Error') return logout()
-          if (error.response.statusText) {
+          if (error.response?.statusText) {
             const json = JSON.parse(error.response.statusText);
-            if (json.code === 400124) {
-              logout()
-            }
+
+            setSnakcBar({
+              message: json.code,
+              isOpen: true,
+              severity: "error"
+            })
           }
           reject(error);
         })
@@ -196,7 +199,7 @@ export const api = (token, logout) => {
       }
     }))
   }
-  
+
   const editStaff = async ({ data, ...rest }) => {
     return promise_(instance.post('/db/staff/edit', data, {
       params: {
