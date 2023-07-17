@@ -46,7 +46,7 @@ import VMSEditModalContent from "../../components/device/VMSEditModalContent";
 //   },
 // }));
 
-const categories = ["VMS", "VMSIPC", "ACR", "ACC", "ACCR", "FRS", "FRD", "FRAD", "ELEVC", "ELEVE"];
+const categories = ["PMS", "VMS", "VMSIPC", "ACR", "ACC", "ACCR", "FRS", "FRD", "FRAD", "ELEVC", "ELEVE"];
 
 export default function Devices() {
   // const classes = useStyles();
@@ -145,7 +145,7 @@ export default function Devices() {
 
   const handleEditDeviceOpen = (e, device) => {
     e.stopPropagation()
-    history.push(`/device/device/${device.id}`)
+    history.push(`/device/item/${device.id}`)
   }
 
   return (

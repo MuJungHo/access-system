@@ -31,7 +31,7 @@ export default ({
   const classes = useStyles();
 
   return (
-    <DetailCard title="相機綁定" style={{ marginBottom: 20 }}>
+    <DetailCard buttonText="新增" title="相機綁定" style={{ marginBottom: 20 }}>
       
       <TableContainer>
         <Table className={classes.table} aria-label="simple table">

@@ -21,6 +21,14 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   }
 }));
+
+const config = {
+  "PMS": ["Child"],
+  "VMS": ["CameraBind"],
+  "ACC": ["Child"],
+  "ACR": ["DoorControl", "Schedule", "CameraBind"]
+}
+
 export default () => {
   const classes = useStyles();
   const history = useHistory();
@@ -80,16 +88,18 @@ export default () => {
   return (
     <div className={classes.root}>
       <IconButton onClick={() => history.push('/device/list')}><ArrowBackIcon /></IconButton>
-      <DeviceConfiguration deviceConfig={deviceConfig} setDeviceConfig={setDeviceConfig} />
-      <DoorControl />
-      <Schedule
+      <DeviceConfiguration
+        deviceConfig={deviceConfig}
+        setDeviceConfig={setDeviceConfig} />
+      {config[deviceConfig.Category]?.includes("DoorControl") && <DoorControl />}
+      {config[deviceConfig.Category]?.includes("Schedule") && <Schedule
         scheduleType={scheduleType}
         setScheduleType={setScheduleType}
         scheduleTimes={scheduleTimes}
         setScheduleTimes={setScheduleTimes}
         scheduleWeek={scheduleWeek}
-        setScheduleWeek={setScheduleWeek} />
-      <Child childDevices={childDevices} />
-      <CameraBind camerabinds={camerabinds} />
+        setScheduleWeek={setScheduleWeek} />}
+      {config[deviceConfig.Category]?.includes("Child") && <Child childDevices={childDevices} />}
+      {config[deviceConfig.Category]?.includes("CameraBind") && <CameraBind camerabinds={camerabinds} />}
     </div>)
 }

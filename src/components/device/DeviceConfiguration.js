@@ -1,6 +1,9 @@
 import React, { useContext } from "react";
+import { useParams } from "react-router-dom"
+
 // import TextField from '@material-ui/core/TextField';
 import { LocaleContext } from "../../contexts/LocaleContext";
+import { AuthContext } from "../../contexts/AuthContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Select from "../../components/Select"
 import DetailCard from "./DetailCard";
@@ -21,98 +24,208 @@ const useStyles = makeStyles((theme) => ({
   },
   info: {
     display: 'flex',
-    width: '100%',
+    width: 'calc(50% - 16px)',
     alignItems: 'center',
-    height: 36
+    height: 36,
+    margin: 8,
+    '& > *': {
+      flex: 1
+    },
   }
 }));
 
+// const allfunction = [
+//   "Account", "Password", "Brand", "IPAddress",
+//   "VCSHost", "ModelName", "SN", "DoorTimeout",
+//   "LockTimeout", "apb", "RS485MasterMode", "DoorForce",
+//   "DoorStatus", "Mac", "Http", "Rtsp", "Tcp"]
+
+const config = {
+  "PMS": ["Account", "Password", "Brand", "IPAddress", "Mac", "Http"],
+  "VMS": ["Account", "Password", "Brand", "IPAddress", "Mac", "Http", "Rtsp"],
+  "ACC": ["Brand", "IPAddress", "ModelName", "SN", "Mac", "Tcp"],
+  "ACR": ["Brand", "IPAddress", "Mac", "DoorTimeout", "LockTimeout", "apb", "RS485MasterMode", "DoorForce", "DoorStatus"]
+}
+
 export default ({
-  deviceConfig
+  deviceConfig,
+  setDeviceConfig
 }) => {
-  const { t } = useContext(LocaleContext);
   const classes = useStyles();
+  const { t } = useContext(LocaleContext);
+  const { authedApi } = useContext(AuthContext);
+  const { deviceid } = useParams();
+
+  const handleSaveDeviceConfiguration = async () => {
+    if (deviceConfig.Category === "PMS") {
+      await authedApi.editPMSDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    }
+    if (deviceConfig.Category === "ACR") {
+      await authedApi.editACRDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    }
+  }
 
   return (
-    <DetailCard title="設備資訊" style={{ marginBottom: 20 }}>
-      <div style={{ display: 'flex', padding: 16 }}>
-        <div style={{ flex: 1, marginRight: 16 }}>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>設備種類</span>
-            <span style={{ flex: 1 }}>{deviceConfig.Category}</span>
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>設備名稱</span>
-            <TextField style={{ flex: 1 }} value={deviceConfig?.Name || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>Brand</span>
-            <TextField style={{ flex: 1 }} value={deviceConfig?.DeviceSetting?.Brand || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>IPAddress</span>
-            <TextField style={{ flex: 1 }} value={deviceConfig?.DeviceSetting?.IPAddress || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>Mac</span>
-            <TextField style={{ flex: 1 }} value={deviceConfig?.DeviceSetting?.Mac || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>VCSHost</span>
-            <TextField style={{ flex: 1 }} value={deviceConfig?.DeviceSetting?.VCSHost || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>ModelName</span>
-            <TextField style={{ flex: 1 }} value={deviceConfig?.DeviceSetting?.ModelName || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>DoorTimeout</span>
-            <TextField type="number" style={{ flex: 1 }} value={deviceConfig?.DeviceSetting?.DoorTimeout || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>LockTimeout</span>
-            <TextField type="number" style={{ flex: 1 }} value={deviceConfig?.DeviceSetting?.LockTimeout || ""} />
-          </div>
+    <DetailCard
+      title="設備資訊"
+      style={{ marginBottom: 20 }}
+      buttonText="儲存"
+      onClick={handleSaveDeviceConfiguration}
+    >
+      <div style={{ display: 'flex', flexWrap: 'wrap', padding: 8 }}>
+        <div className={classes.info}>
+          <span>{t("category")}</span>
+          <span>{deviceConfig.Category}</span>
         </div>
-        <div style={{ flex: 1 }}>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>Account</span>
-            <TextField style={{ flex: 1 }} value={deviceConfig?.Authentication?.Account || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>Password</span>
-            <TextField type="password" style={{ flex: 1 }} value={deviceConfig?.Authentication?.Password || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>Http</span>
-            <TextField style={{ flex: 1 }} value={deviceConfig?.Ports?.Http || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>Rtsp</span>
-            <TextField style={{ flex: 1 }} value={deviceConfig?.Ports?.Rtsp || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>Port</span>
-            <TextField style={{ flex: 1 }} value={deviceConfig?.Ports?.Tcp || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>apb</span>
-            <TextField style={{ flex: .5 }} value={deviceConfig?.DeviceSetting?.apb1 || ""} />
-            <TextField style={{ flex: .5 }} value={deviceConfig?.DeviceSetting?.apb2 || ""} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>RS485MasterMode</span>
-            <Checkbox checked={deviceConfig?.DeviceSetting?.RS485MasterMode === 1} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>DoorForce</span>
-            <Checkbox checked={deviceConfig?.DeviceSetting?.DoorForce === 1} />
-          </div>
-          <div className={classes.info}>
-            <span style={{ flex: 1 }}>DoorStatus</span>
-            <Checkbox checked={deviceConfig?.DeviceSetting?.DoorStatus === 1} />
-          </div>
+        <div className={classes.info}>
+          <span>{t("deviceid")}</span>
+          <span>{deviceConfig.DeviceId}</span>
         </div>
+        {config[deviceConfig.Category]?.includes("Mac") && <div className={classes.info}>
+          <span>Mac</span>
+          <span>{deviceConfig?.DeviceSetting?.Mac || "--"}</span>
+        </div>}
+        {config[deviceConfig.Category]?.includes("Brand") && <div className={classes.info}>
+          <span>{t("brand")}</span>
+          <span>{deviceConfig?.DeviceSetting?.Brand || "--"}</span>
+        </div>}
+        <div className={classes.info}>
+          <span>{t("name")}</span>
+          <TextField
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Name: e.target.value
+            })}
+            value={deviceConfig?.Name || ""} />
+        </div>
+        {config[deviceConfig.Category]?.includes("IPAddress") && <div className={classes.info}>
+          <span>IPAddress</span>
+          <span>{deviceConfig?.DeviceSetting?.IPAddress || "--"}</span>
+        </div>}
+        {config[deviceConfig.Category]?.includes("Account") && <div className={classes.info}>
+          <span>{t("account")}</span>
+          <TextField
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Authentication: {
+                ...deviceConfig.Authentication,
+                Account: e.target.value
+              }
+            })}
+            value={deviceConfig?.Authentication?.Account || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("Password") && <div className={classes.info}>
+          <span>{t("password")}</span>
+          <TextField
+            type="password"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Authentication: {
+                ...deviceConfig.Authentication,
+                Password: e.target.value
+              }
+            })}
+            value={deviceConfig?.Authentication?.Password || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("Http") && <div className={classes.info}>
+          <span>Http</span>
+          <TextField value={deviceConfig?.Ports?.Http || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("Rtsp") && <div className={classes.info}>
+          <span>Rtsp</span>
+          <TextField value={deviceConfig?.Ports?.Rtsp || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("Tcp") && <div className={classes.info}>
+          <span>Tcp</span>
+          <TextField value={deviceConfig?.Ports?.Tcp || ""} />
+        </div>}
+
+        {config[deviceConfig.Category]?.includes("VCSHost") && <div className={classes.info}>
+          <span>VCSHost</span>
+          <TextField value={deviceConfig?.DeviceSetting?.VCSHost || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("ModelName") && <div className={classes.info}>
+          <span>ModelName</span>
+          <TextField value={deviceConfig?.DeviceSetting?.ModelName || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("SN") && <div className={classes.info}>
+          <span>SN</span>
+          <TextField value={deviceConfig?.DeviceSetting?.SN || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("DoorTimeout") && <div className={classes.info}>
+          <span>DoorTimeout</span>
+          <TextField type="number" value={deviceConfig?.DeviceSetting?.DoorTimeout || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("LockTimeout") && <div className={classes.info}>
+          <span>LockTimeout</span>
+          <TextField type="number" value={deviceConfig?.DeviceSetting?.LockTimeout || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("apb") && <div className={classes.info}>
+          <span>apb</span>
+          <TextField
+            style={{ flex: .5, marginRight: 10 }}
+            type="number"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              DeviceSetting: {
+                ...deviceConfig.DeviceSetting,
+                apb1: e.target.value,
+                apb: Number(e.target.value + (deviceConfig?.DeviceSetting?.apb2 || ""))
+              }
+            })}
+            value={deviceConfig?.DeviceSetting?.apb1 || ""} />
+          <TextField
+            style={{ flex: .5 }}
+            type="number"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              DeviceSetting: {
+                ...deviceConfig.DeviceSetting,
+                apb2: e.target.value,
+                apb: Number((deviceConfig?.DeviceSetting?.apb1 || "") + e.target.value)
+              }
+            })}
+            value={deviceConfig?.DeviceSetting?.apb2 || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("RS485MasterMode") && <div className={classes.info}>
+          <span>RS485MasterMode</span>
+          <div>
+            <Checkbox
+              onChange={e => setDeviceConfig({
+                ...deviceConfig,
+                DeviceSetting: {
+                  ...deviceConfig.DeviceSetting,
+                  RS485MasterMode: e.target.checked ? 1 : 0
+                }
+              })} checked={deviceConfig?.DeviceSetting?.RS485MasterMode === 1} />
+          </div>
+        </div>}
+        {config[deviceConfig.Category]?.includes("DoorForce") && <div className={classes.info}>
+          <span>DoorForce</span>
+          <div>
+            <Checkbox
+              onChange={e => setDeviceConfig({
+                ...deviceConfig,
+                DeviceSetting: {
+                  ...deviceConfig.DeviceSetting,
+                  DoorForce: e.target.checked ? 1 : 0
+                }
+              })} checked={deviceConfig?.DeviceSetting?.DoorForce === 1} />
+          </div>
+        </div>}
+        {config[deviceConfig.Category]?.includes("DoorStatus") && <div className={classes.info}>
+          <span>DoorStatus</span>
+          <div>
+            <Checkbox
+              onChange={e => setDeviceConfig({
+                ...deviceConfig,
+                DeviceSetting: {
+                  ...deviceConfig.DeviceSetting,
+                  DoorStatus: e.target.checked ? 1 : 0
+                }
+              })} checked={deviceConfig?.DeviceSetting?.DoorStatus === 1} />
+          </div>
+        </div>}
       </div>
     </DetailCard>
   )

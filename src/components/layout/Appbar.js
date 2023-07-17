@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 48,
-    fontSize: 16,
+    fontSize: 14,
   },
   menuButton: {
     marginRight: 36,
@@ -78,7 +78,7 @@ const PathComponent = () => {
   if (location.pathname === "/staff/list") return "人員管理"
   if (location.pathname === "/location") return "位置管理"
   if (location.pathname === "/access") return "存取控制"
-  if (location.pathname.includes("/device/device/")) return (<Breadcrumbs aria-label="breadcrumb">
+  if (location.pathname.includes("/device/item/")) return (<Breadcrumbs aria-label="breadcrumb">
     <Link color="inherit" onClick={e => {
       e.preventDefault();
       history.push("/device/list")

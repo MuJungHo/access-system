@@ -123,6 +123,30 @@ export const api = (token, logout) => {
     }))
   }
 
+  const editPMSDevice = async ({ data, ...rest }) => {
+    return promise_(instance.post('/db/pms/edit', {
+      ...data
+    }, {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
+  const editACRDevice = async ({ data, ...rest }) => {
+    return promise_(instance.post('/db/acr/edit', {
+      ...data
+    }, {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
   const getDevcieGroupList = async ({ ...rest }) => {
     return promise_(instance.get('/db/group/list', {
       params: {
@@ -233,6 +257,8 @@ export const api = (token, logout) => {
     getLocationList,
     getCheckinLogList,
     editVMSDevice,
+    editPMSDevice,
+    editACRDevice,
     getDevcieGroupList,
     getAccessGroupListById,
     getStaffGroupList,

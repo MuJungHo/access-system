@@ -7,7 +7,8 @@ import Select from "../../components/Select"
 import {
   Paper,
   Divider,
-  Collapse
+  Collapse,
+  Button
 } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
@@ -21,7 +22,10 @@ const useStyles = makeStyles((theme) => ({
 export default ({
   style,
   title,
-  children
+  children,
+  onClick,
+  buttonText = "儲存",
+  showButton = true
 }) => {
   const { t } = useContext(LocaleContext);
   const classes = useStyles();
@@ -29,9 +33,15 @@ export default ({
   // console.log(deviceEditModal)
   return (
     <Paper className={classes.paper} style={{ ...style }}>
-      <div style={{ padding: 16, fontSize: 16 }} onClick={() => setOpen(!open)}>{title}</div>
-      <Divider />
+      <div style={{ padding: 16, display: 'flex', alignItems: 'center' }} onClick={() => setOpen(!open)}>
+        <span style={{ flex: 1, fontSize: 16 }}>{title}</span>
+        {showButton && <Button onClick={e => {
+          e.stopPropagation()
+          onClick()
+        }} variant="contained" color="primary">{buttonText}</Button>}
+      </div>
       <Collapse in={open} timeout="auto" unmountOnExit>
+        <Divider />
         {children}
       </Collapse>
     </Paper>

@@ -28,7 +28,7 @@ export default ({
   const [minutes, setMinutes] = React.useState()
   // console.log(deviceEditModal)
   return (
-    <DetailCard title="遠距開門" style={{ marginBottom: 20 }}>
+    <DetailCard showButton={false} title="遠距開門" style={{ marginBottom: 20 }}>
       <div style={{ display: 'flex', padding: 16 }}>
         <div style={{ flex: 1 }}>
           <span>單次開門</span>
@@ -49,15 +49,15 @@ export default ({
             }
           </Select>
           <Button
-            style={{ marginLeft: 20 }} color="primary" variant="contained">解鎖</Button>
+            style={{ marginLeft: 20 }} color="primary" variant="outlined">解鎖</Button>
         </div>
         <div style={{ flex: 1 }}>
           <span>持續開門</span>
 
           <Button
-            style={{ marginLeft: 20 }} color="primary" variant="contained">解鎖</Button>
+            style={{ marginLeft: 20 }} color="primary" variant="outlined">解鎖</Button>
           <Button
-            style={{ marginLeft: 20 }} color="primary" variant="contained">上鎖</Button>
+            style={{ marginLeft: 20 }} color="primary" variant="outlined">上鎖</Button>
         </div>
       </div>
     </DetailCard>

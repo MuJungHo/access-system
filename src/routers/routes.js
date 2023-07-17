@@ -8,7 +8,7 @@ import Log from '../Views/Log'
 import Location from '../Views/Location'
 import Access from '../Views/Access'
 
-import Device from '../Views/Device/Device'
+import Device from '../Views/Device/Item'
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
@@ -28,7 +28,7 @@ const routes = [
     exact: true,
   },
   {
-    path: '/device/device/:deviceid',
+    path: '/device/item/:deviceid',
     component: Device,
     siderlink: false
   },
