@@ -41,9 +41,9 @@ const useStyles = makeStyles((theme) => ({
 //   "DoorStatus", "Mac", "Http", "Rtsp", "Tcp"]
 
 const config = {
-  "PMS": ["Account", "Password", "Brand", "IPAddress", "Mac", "Http"],
-  "VMS": ["Account", "Password", "Brand", "IPAddress", "Mac", "Http", "Rtsp"],
   "ACC": ["Brand", "IPAddress", "ModelName", "SN", "Mac", "Tcp"],
+  "VMS": ["Account", "Password", "Brand", "IPAddress", "Mac", "Http", "Rtsp"],
+  "PMS": ["Account", "Password", "Brand", "IPAddress", "Mac", "Http"],
   "ACR": ["Brand", "IPAddress", "Mac", "DoorTimeout", "LockTimeout", "apb", "RS485MasterMode", "DoorForce", "DoorStatus"]
 }
 
@@ -53,7 +53,7 @@ export default ({
 }) => {
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
-  const { authedApi } = useContext(AuthContext);
+  const { authedApi, setSnakcBar } = useContext(AuthContext);
   const { deviceid } = useParams();
 
   const handleSaveDeviceConfiguration = async () => {
@@ -62,6 +62,9 @@ export default ({
     }
     if (deviceConfig.Category === "ACR") {
       await authedApi.editACRDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    }
+    if (deviceConfig.Category === "VMS") {
+      await authedApi.editVMSDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
     }
     if (deviceConfig.Category === "ACC") {
       await authedApi.editACCDevice({
@@ -73,6 +76,11 @@ export default ({
         }, id: deviceid
       })
     }
+    setSnakcBar({
+      message: t('saveSucceed'),
+      isOpen: true,
+      severity: "success"
+    })
   }
 
   return (
@@ -88,10 +96,6 @@ export default ({
           <span>{deviceConfig.Category}</span>
         </div>
         <div className={classes.info}>
-          <span>{t("deviceid")}</span>
-          <span>{deviceConfig.DeviceId}</span>
-        </div>
-        <div className={classes.info}>
           <span>{t("name")}</span>
           <TextField
             onChange={e => setDeviceConfig({
@@ -102,23 +106,63 @@ export default ({
         </div>
         {config[deviceConfig.Category]?.includes("Mac") && <div className={classes.info}>
           <span>Mac</span>
-          <span>{deviceConfig?.DeviceSetting?.Mac || "--"}</span>
+          <TextField
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              DeviceSetting: {
+                ...deviceConfig.DeviceSetting,
+                Mac: e.target.value
+              }
+            })}
+            value={deviceConfig?.DeviceSetting?.Mac || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("Brand") && <div className={classes.info}>
           <span>{t("brand")}</span>
-          <span>{deviceConfig?.DeviceSetting?.Brand || "--"}</span>
+          <TextField
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              DeviceSetting: {
+                ...deviceConfig.DeviceSetting,
+                Brand: e.target.value
+              }
+            })}
+            value={deviceConfig?.DeviceSetting?.Brand || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("SN") && <div className={classes.info}>
           <span>SN</span>
-          <span>{deviceConfig?.DeviceSetting?.SN || ""}</span>
+          <TextField
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              DeviceSetting: {
+                ...deviceConfig.DeviceSetting,
+                SN: e.target.value
+              }
+            })}
+            value={deviceConfig?.DeviceSetting?.SN || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("ModelName") && <div className={classes.info}>
           <span>ModelName</span>
-          <span>{deviceConfig?.DeviceSetting?.ModelName || ""}</span>
+          <TextField
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              DeviceSetting: {
+                ...deviceConfig.DeviceSetting,
+                ModelName: e.target.value
+              }
+            })}
+            value={deviceConfig?.DeviceSetting?.ModelName || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("IPAddress") && <div className={classes.info}>
           <span>IPAddress</span>
-          <span>{deviceConfig?.DeviceSetting?.IPAddress || "--"}</span>
+          <TextField
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              DeviceSetting: {
+                ...deviceConfig.DeviceSetting,
+                IPAddress: e.target.value
+              }
+            })}
+            value={deviceConfig?.DeviceSetting?.IPAddress || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("Account") && <div className={classes.info}>
           <span>{t("account")}</span>
@@ -147,27 +191,80 @@ export default ({
         </div>}
         {config[deviceConfig.Category]?.includes("Http") && <div className={classes.info}>
           <span>Http</span>
-          <TextField value={deviceConfig?.Ports?.Http || ""} />
+          <TextField
+            type="number"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Ports: {
+                ...deviceConfig.Ports,
+                Http: Number(e.target.value)
+              }
+            })}
+            value={deviceConfig?.Ports?.Http || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("Rtsp") && <div className={classes.info}>
           <span>Rtsp</span>
-          <TextField value={deviceConfig?.Ports?.Rtsp || ""} />
+          <TextField
+            type="number"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Ports: {
+                ...deviceConfig.Ports,
+                Rtsp: Number(e.target.value)
+              }
+            })}
+            value={deviceConfig?.Ports?.Rtsp || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("Tcp") && <div className={classes.info}>
           <span>Tcp</span>
-          <TextField type="number" value={deviceConfig?.Ports?.Tcp || ""} />
+          <TextField
+            type="number"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Ports: {
+                ...deviceConfig.Ports,
+                Tcp: Number(e.target.value)
+              }
+            })}
+            value={deviceConfig?.Ports?.Tcp || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("VCSHost") && <div className={classes.info}>
           <span>VCSHost</span>
-          <TextField value={deviceConfig?.DeviceSetting?.VCSHost || ""} />
+          <TextField
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              DeviceSetting: {
+                ...deviceConfig.DeviceSetting,
+                VCSHost: e.target.value
+              }
+            })}
+            value={deviceConfig?.DeviceSetting?.VCSHost || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("DoorTimeout") && <div className={classes.info}>
           <span>DoorTimeout</span>
-          <TextField type="number" value={deviceConfig?.DeviceSetting?.DoorTimeout || ""} />
+          <TextField
+            type="number"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              DeviceSetting: {
+                ...deviceConfig.DeviceSetting,
+                DoorTimeout: e.target.value
+              }
+            })}
+            value={deviceConfig?.DeviceSetting?.DoorTimeout || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("LockTimeout") && <div className={classes.info}>
           <span>LockTimeout</span>
-          <TextField type="number" value={deviceConfig?.DeviceSetting?.LockTimeout || ""} />
+          <TextField
+            type="number"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              DeviceSetting: {
+                ...deviceConfig.DeviceSetting,
+                LockTimeout: e.target.value
+              }
+            })}
+            value={deviceConfig?.DeviceSetting?.LockTimeout || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("apb") && <div className={classes.info}>
           <span>apb</span>

@@ -6,7 +6,7 @@ export const instance = axios.create({
   timeout: 10000
 })
 
-export const api = (token, logout, setSnakcBar) => {
+export const api = (token, logout, setSnakcBar, t) => {
   const timestamp = Date.now()
   const sign = md5(timestamp + '#' + token)
 
@@ -24,7 +24,7 @@ export const api = (token, logout, setSnakcBar) => {
               logout()
             }
             setSnakcBar({
-              message: json.code,
+              message: t(json.code),
               isOpen: true,
               severity: "error"
             })
@@ -152,6 +152,18 @@ export const api = (token, logout, setSnakcBar) => {
     }))
   }
 
+  const getVmsVmsipcList = async ({ data, ...rest }) => {
+    return promise_(instance.post('/device/vmsipclist', {
+      ...data
+    }, {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
   const getAccAccrList = async ({ data, ...rest }) => {
     return promise_(instance.post('/device/accaccrlist', {
       ...data
@@ -174,6 +186,17 @@ export const api = (token, logout, setSnakcBar) => {
     }))
   }
 
+  const deleteVmsVmsipc = async ({ ...rest }) => {
+    return promise_(instance.delete('/db/vmsipc/delete', {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
+
   const getAvailableDeviceIdList = async ({ ...rest }) => {
     return promise_(instance.get('/db/deviceid/list', {
       params: {
@@ -186,6 +209,17 @@ export const api = (token, logout, setSnakcBar) => {
 
   const addAccAccr = async ({ data }) => {
     return promise_(instance.post('/db/accr/add', {
+      ...data
+    }, {
+      params: {
+        sign,
+        timestamp
+      }
+    }))
+  }
+
+  const addVMSIPC = async ({ data }) => {
+    return promise_(instance.post('/db/vmsipc/add', {
       ...data
     }, {
       params: {
@@ -309,9 +343,12 @@ export const api = (token, logout, setSnakcBar) => {
     editACRDevice,
     editACCDevice,
     getAccAccrList,
+    getVmsVmsipcList,
     deleteAccAccr,
+    deleteVmsVmsipc,
     getAvailableDeviceIdList,
     addAccAccr,
+    addVMSIPC,
     getDevcieGroupList,
     getAccessGroupListById,
     getStaffGroupList,

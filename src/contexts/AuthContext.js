@@ -15,7 +15,7 @@ function AuthProvider({ children }) {
   const [authedCustomize, setAuthedCustomize] = useState(JSON.parse(localStorage.getItem('customize')))
   const [snackBar, setSnakcBar] = useState({
     isOpen: false,
-    severity: '',
+    severity: 'info',
     message: ''
   })
 
@@ -59,7 +59,8 @@ function AuthProvider({ children }) {
     authedUser,
     authedCustomize,
     editAuthedUserCustomize,
-    authedApi: api(token, logout, setSnakcBar),
+    setSnakcBar,
+    authedApi: api(token, logout, setSnakcBar, t),
   };
 
   return <AuthContext.Provider
@@ -69,18 +70,20 @@ function AuthProvider({ children }) {
       open={snackBar.isOpen}
       autoHideDuration={3000}
       onClose={() => setSnakcBar({
-        ...snackBar,
         isOpen: false,
+        severity: 'info',
+        message: ''
       })}
     >
       <Alert
         elevation={6}
         variant="filled"
         onClose={() => setSnakcBar({
-          ...snackBar,
           isOpen: false,
+          severity: 'info',
+          message: ''
         })} severity={snackBar.severity}>
-        {t(`error-${snackBar.message}`)}
+        {snackBar.message}
       </Alert>
     </Snackbar>
     {children}

@@ -41,16 +41,29 @@ export default ({
   const { authedApi } = useContext(AuthContext);
   const [selected, setSelected] = React.useState([]);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [doors, setDoors] = React.useState([])
+  const [childs, setChilds] = React.useState([])
   const [modal, setModal] = React.useState({
     title: "關聯設備",
     isOpen: false
   });
   const [availableDeviceIdList, setAvailableDeviceIdList] = React.useState([])
 
-  const handleDeleteAccr = async (item) => {
+  // const childSNs = childDevices.map(child => child.config.DeviceConfiguration.DeviceSetting.Door[0].SN)
+  const childSNs = []
+
+  const config = {
+    "ACC": ["SN", "ModelId"],
+    "VMS": ["ModelName", "IPAddress", "Mac", "Stream"],
+  }
+
+  const handleDeleteChild = async (item) => {
     let newChilds = [...childDevices];
-    await authedApi.deleteAccAccr({ id: item.id })
+    if (deviceConfig.Category === "ACC") {
+      await authedApi.deleteAccAccr({ id: item.id })
+    }
+    if (deviceConfig.Category === "VMS") {
+      await authedApi.deleteVmsVmsipc({ id: item.id })
+    }
     newChilds = newChilds.filter(child => child.id !== item.id)
     // console.log(childDevices, item.id)
     setChildDevices(newChilds)
@@ -58,9 +71,17 @@ export default ({
 
   React.useEffect(() => {
     (async () => {
-      let { DoorList } = await authedApi.getAccAccrList({ data: { DeviceConfiguration: deviceConfig } })
-      DoorList = DoorList.map(door => door.Door[0])
-      setDoors(DoorList)
+      if (deviceConfig.Category === "ACC") {
+        let { DoorList } = await authedApi.getAccAccrList({ data: { DeviceConfiguration: deviceConfig } })
+        DoorList = DoorList.map(door => door.Door[0])
+        DoorList = DoorList.map(door => ({ ...door, key: door.SN }))
+        setChilds(DoorList)
+      }
+      if (deviceConfig.Category === "VMS") {
+        let { VMSIPCConfig } = await authedApi.getVmsVmsipcList({ data: { DeviceConfiguration: deviceConfig } })
+        VMSIPCConfig = VMSIPCConfig.map(config => ({ ...config, key: config.Mac }))
+        setChilds(VMSIPCConfig)
+      }
       // console.log(DoorList)
     })()
   }, [])
@@ -74,15 +95,6 @@ export default ({
       // console.log(DoorList)
     })()
   }, [modal.isOpen])
-
-  // const onSelectAllClick = (event) => {
-  //   if (event.target.checked) {
-  //     const newSelecteds = doors.map((n) => n.SN);
-  //     setSelected(newSelecteds);
-  //     return;
-  //   }
-  //   setSelected([]);
-  // };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
@@ -102,12 +114,12 @@ export default ({
         selected.slice(selectedIndex + 1),
       );
     }
-    const newDoors = doors.filter(door => newSelected.includes(door.SN))
+    const newDoors = childs.filter(child => newSelected.includes(child.key))
     setSelectedRows(newDoors)
     setSelected(newSelected);
   };
 
-  const handleConfirm = async () => {
+  const handleACConfirm = async () => {
     let newChilds = [...childDevices];
     for (let i = 0; i < selectedRows.length; i++) {
       let data = {
@@ -129,8 +141,9 @@ export default ({
         }
       }
       // console.log(data)
-      await authedApi.addAccAccr({ data })
+      let { id } = await authedApi.addAccAccr({ data })
       newChilds.push({
+        id,
         deviceid: availableDeviceIdList[i],
         name: selectedRows[i].ModelId,
         config: {
@@ -138,8 +151,51 @@ export default ({
         }
       })
     }
-    setSelected([])
     setChildDevices(newChilds)
+  }
+
+  const handleVMSonfirm = async () => {
+    let newChilds = [...childDevices];
+    for (let i = 0; i < selectedRows.length; i++) {
+      let data = {
+        DeviceConfiguration: {
+          Category: "VMSIPC",
+          DeviceId: availableDeviceIdList[i],
+          Name: selectedRows[i].ModelName,
+          VMSDeviceId: deviceConfig.DeviceId,
+          DeviceSetting: {
+            Brand: "VIVOTEK",
+            CamName: selectedRows[i].CamName,
+            IPAddress: selectedRows[i].IPAddress,
+            Mac: selectedRows[i].Mac,
+            ModelName: selectedRows[i].ModelName,
+            Stream: selectedRows[i].Stream,
+          }
+        }
+      }
+      // console.log(selectedRows[i])
+      // console.log(data)
+      let { id } = await authedApi.addVMSIPC({ data })
+      newChilds.push({
+        id,
+        deviceid: availableDeviceIdList[i],
+        name: selectedRows[i].ModelName,
+        config: {
+          DeviceConfiguration: data.DeviceConfiguration
+        }
+      })
+    }
+    setChildDevices(newChilds)
+  }
+
+  const handleConfirm = () => {
+    if (deviceConfig.Category === "ACC") {
+      handleACConfirm()
+    }
+    if (deviceConfig.Category === "VMS") {
+      handleVMSonfirm()
+    }
+    setSelected([])
     setModal({
       ...modal,
       isOpen: false
@@ -174,7 +230,7 @@ export default ({
                   {row.config.DeviceConfiguration.DeviceSetting.Brand}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  <IconButton onClick={() => handleDeleteAccr(row)}><Close /></IconButton>
+                  <IconButton onClick={() => handleDeleteChild(row)}><Close /></IconButton>
                 </TableCell>
               </TableRow>
             ))}
@@ -200,37 +256,36 @@ export default ({
               <TableRow>
                 <TableCell padding="checkbox">
                   {/* <Checkbox
-                    indeterminate={selected.length > 0 && selected.length < doors.length}
-                    checked={doors.length > 0 && selected.length === doors.length}
+                    indeterminate={selected.length > 0 && selected.length < childs.length}
+                    checked={childs.length > 0 && selected.length === childs.length}
                     onChange={onSelectAllClick}
                   inputProps={{ 'aria-label': 'select all desserts' }}
                   /> */}
                 </TableCell>
-                <TableCell>SN</TableCell>
-                <TableCell>ModelId</TableCell>
+                {
+                  config[deviceConfig.Category].map(column => <TableCell key={column}>{column}</TableCell>)
+                }
               </TableRow>
             </TableHead>
             <TableBody>
-              {doors.map((row) => {
-                const isItemSelected = isSelected(row.SN);
-                const childSNs = childDevices.map(child => child.config.DeviceConfiguration.DeviceSetting.Door[0].SN)
-                // console.log(childSNs)
+              {childs.map((row) => {
+                const isItemSelected = isSelected(row.key);
+
                 return (
-                  <TableRow key={row.SN}>
+                  <TableRow key={row.key}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isItemSelected}
-                        disabled={childSNs.includes(row.SN)}
-                        onChange={(event) => handleClick(event, row.SN)}
+                        disabled={childSNs.includes(row.key)}
+                        onChange={(event) => handleClick(event, row.key)}
                       // inputProps={{ 'aria-labelledby': labelId }}
                       />
                     </TableCell>
-                    <TableCell component="th" scope="row">
-                      {row.SN}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {row.ModelId}
-                    </TableCell>
+                    {
+                      config[deviceConfig.Category].map(column => <TableCell key={column} component="th" scope="row">
+                        {row[column]}
+                      </TableCell>)
+                    }
                   </TableRow>
                 )
               })}

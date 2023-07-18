@@ -35,7 +35,7 @@ export default ({
     <Paper className={classes.paper} style={{ ...style }}>
       <div style={{ padding: 16, display: 'flex', alignItems: 'center' }} onClick={() => setOpen(!open)}>
         <span style={{ flex: 1, fontSize: 16 }}>{title}</span>
-        {showButton && <Button onClick={e => {
+        {showButton && open && <Button onClick={e => {
           e.stopPropagation()
           onClick()
         }} variant="contained" color="primary">{buttonText}</Button>}

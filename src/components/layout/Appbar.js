@@ -100,17 +100,13 @@ const Appbar = ({ open }) => {
   const history = useHistory();
 
   const md5 = require("md5");
-  const { logout, token } = useContext(AuthContext);
+  const { logout, token, setSnakcBar } = useContext(AuthContext);
   const { locale, changeLocale } = useContext(LocaleContext);
   const [wsData, setWsData] = React.useState({})
   const [anchor, setAnchor] = React.useState(null);
   const [eventAnchor, setEventAnchor] = React.useState(null);
   const [events, setEvents] = React.useState([])
-  const [eventSnackBar, setEventSnakcBar] = React.useState({
-    isOpen: false,
-    severity: '',
-    message: ''
-  })
+
   const languageMenuOpen = !!anchor;
   const eventMenuOpen = !!eventAnchor;
 
@@ -163,7 +159,7 @@ const Appbar = ({ open }) => {
         prevEvents_.push({ ...wsData['Event'], isReaded: 0 })
         return prevEvents_
       })
-      setEventSnakcBar({
+      setSnakcBar({
         isOpen: true,
         severity: {
           1: 'success',
@@ -260,25 +256,6 @@ const Appbar = ({ open }) => {
           <MenuItem selected={locale === 'en'} onClick={() => handleChangeLocale('en')}>English</MenuItem>
           <MenuItem selected={locale === 'zh-TW'} onClick={() => handleChangeLocale('zh-TW')}>繁體中文</MenuItem>
         </Menu>
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          open={eventSnackBar.isOpen}
-          autoHideDuration={3000}
-          onClose={() => setEventSnakcBar({
-            ...eventSnackBar,
-            isOpen: false,
-          })}
-        >
-          <Alert
-            elevation={6}
-            variant="filled"
-            onClose={() => setEventSnakcBar({
-              ...eventSnackBar,
-              isOpen: false,
-            })} severity={eventSnackBar.severity}>
-            {eventSnackBar.message}
-          </Alert>
-        </Snackbar>
       </Toolbar>
     </AppBar>)
 }

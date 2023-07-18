@@ -23,9 +23,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const config = {
-  "PMS": ["Child"],
-  "VMS": ["CameraBind"],
   "ACC": ["Child"],
+  "PMS": ["Child"],
+  "VMS": ["Child"],
   "ACR": ["DoorControl", "Schedule", "CameraBind"]
 }
 
@@ -48,12 +48,11 @@ export default () => {
     _fri: false,
     _sat: false
   });
-  const [camerabinds, setCamerabinds] = React.useState([]);
   const [securityLevel, setSecurityLevel] = React.useState({});
 
   React.useEffect(() => {
     (async () => {
-      const { config, child, schedule, camerabind } = await authedApi.getDeviceById({ id: deviceid })
+      const { config, child, schedule } = await authedApi.getDeviceById({ id: deviceid })
       let apb = config.DeviceConfiguration.DeviceSetting.apb || ""
       apb = apb.toString();
       const apb1 = apb.split("")[0];
@@ -82,7 +81,6 @@ export default () => {
         setScheduleType(isAll ? "all" : "custom")
       }
 
-      setCamerabinds(camerabind)
     })()
   }, [])
   return (
@@ -103,6 +101,5 @@ export default () => {
         childDevices={childDevices}
         setChildDevices={setChildDevices}
         deviceConfig={deviceConfig} />}
-      {config[deviceConfig.Category]?.includes("CameraBind") && <CameraBind camerabinds={camerabinds} />}
     </div>)
 }
