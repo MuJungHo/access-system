@@ -53,7 +53,6 @@ export default ({
         </div>
         <div style={{ flex: 1 }}>
           <span>持續開門</span>
-
           <Button
             style={{ marginLeft: 20 }} color="primary" variant="outlined">解鎖</Button>
           <Button

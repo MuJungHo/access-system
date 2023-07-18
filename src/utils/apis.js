@@ -6,18 +6,6 @@ export const instance = axios.create({
   timeout: 10000
 })
 
-const Promise_ = (instance_) => {
-  return new Promise((response, reject) => {
-    instance_
-      .then((data) => {
-        response(data.data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-}
-
 export const api = (token, logout, setSnakcBar) => {
   const timestamp = Date.now()
   const sign = md5(timestamp + '#' + token)
@@ -29,10 +17,12 @@ export const api = (token, logout, setSnakcBar) => {
           response(data.data);
         })
         .catch((error) => {
-          if (error.message === 'Network Error') return logout()
+          // if (error.message === 'Network Error') return logout()
           if (error.response?.statusText) {
             const json = JSON.parse(error.response.statusText);
-
+            if (json.code === 400124) {
+              logout()
+            }
             setSnakcBar({
               message: json.code,
               isOpen: true,
@@ -150,6 +140,61 @@ export const api = (token, logout, setSnakcBar) => {
     }))
   }
 
+  const editACCDevice = async ({ data, ...rest }) => {
+    return promise_(instance.post('/db/acc/edit', {
+      ...data
+    }, {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
+  const getAccAccrList = async ({ data, ...rest }) => {
+    return promise_(instance.post('/device/accaccrlist', {
+      ...data
+    }, {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
+  const deleteAccAccr = async ({ ...rest }) => {
+    return promise_(instance.delete('/db/accr/delete', {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
+  const getAvailableDeviceIdList = async ({ ...rest }) => {
+    return promise_(instance.get('/db/deviceid/list', {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
+  const addAccAccr = async ({ data }) => {
+    return promise_(instance.post('/db/accr/add', {
+      ...data
+    }, {
+      params: {
+        sign,
+        timestamp
+      }
+    }))
+  }
+
   const getDevcieGroupList = async ({ ...rest }) => {
     return promise_(instance.get('/db/group/list', {
       params: {
@@ -161,7 +206,7 @@ export const api = (token, logout, setSnakcBar) => {
   }
 
   const getAccessGroupListById = async ({ ...rest }) => {
-    return promise_(instance.get('/db/access/group/list', {
+    return promise_(instance.get('/db/deviceid/list', {
       params: {
         sign,
         timestamp,
@@ -262,6 +307,11 @@ export const api = (token, logout, setSnakcBar) => {
     editVMSDevice,
     editPMSDevice,
     editACRDevice,
+    editACCDevice,
+    getAccAccrList,
+    deleteAccAccr,
+    getAvailableDeviceIdList,
+    addAccAccr,
     getDevcieGroupList,
     getAccessGroupListById,
     getStaffGroupList,
@@ -272,6 +322,18 @@ export const api = (token, logout, setSnakcBar) => {
     editAccountCustomizeById,
     getDeviceById
   }
+}
+
+const Promise_ = (instance_) => {
+  return new Promise((response, reject) => {
+    instance_
+      .then((data) => {
+        response(data.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
 //auth

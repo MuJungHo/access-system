@@ -33,7 +33,7 @@ export default () => {
   const classes = useStyles();
   const history = useHistory();
   const { t } = useContext(LocaleContext);
-  const { authedApi, loading } = useContext(AuthContext);
+  const { authedApi } = useContext(AuthContext);
   const { deviceid } = useParams();
   const [deviceConfig, setDeviceConfig] = React.useState({});
   const [childDevices, setChildDevices] = React.useState([]);
@@ -99,7 +99,10 @@ export default () => {
         setScheduleTimes={setScheduleTimes}
         scheduleWeek={scheduleWeek}
         setScheduleWeek={setScheduleWeek} />}
-      {config[deviceConfig.Category]?.includes("Child") && <Child childDevices={childDevices} />}
+      {config[deviceConfig.Category]?.includes("Child") && <Child
+        childDevices={childDevices}
+        setChildDevices={setChildDevices}
+        deviceConfig={deviceConfig} />}
       {config[deviceConfig.Category]?.includes("CameraBind") && <CameraBind camerabinds={camerabinds} />}
     </div>)
 }

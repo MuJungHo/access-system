@@ -63,6 +63,16 @@ export default ({
     if (deviceConfig.Category === "ACR") {
       await authedApi.editACRDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
     }
+    if (deviceConfig.Category === "ACC") {
+      await authedApi.editACCDevice({
+        data: {
+          DeviceConfiguration: deviceConfig,
+          SN: deviceConfig.DeviceSetting.SN,
+          ModelId: deviceConfig.DeviceSetting.ModelId,
+          Tcp: deviceConfig.Ports.Tcp
+        }, id: deviceid
+      })
+    }
   }
 
   return (
@@ -81,14 +91,6 @@ export default ({
           <span>{t("deviceid")}</span>
           <span>{deviceConfig.DeviceId}</span>
         </div>
-        {config[deviceConfig.Category]?.includes("Mac") && <div className={classes.info}>
-          <span>Mac</span>
-          <span>{deviceConfig?.DeviceSetting?.Mac || "--"}</span>
-        </div>}
-        {config[deviceConfig.Category]?.includes("Brand") && <div className={classes.info}>
-          <span>{t("brand")}</span>
-          <span>{deviceConfig?.DeviceSetting?.Brand || "--"}</span>
-        </div>}
         <div className={classes.info}>
           <span>{t("name")}</span>
           <TextField
@@ -98,6 +100,22 @@ export default ({
             })}
             value={deviceConfig?.Name || ""} />
         </div>
+        {config[deviceConfig.Category]?.includes("Mac") && <div className={classes.info}>
+          <span>Mac</span>
+          <span>{deviceConfig?.DeviceSetting?.Mac || "--"}</span>
+        </div>}
+        {config[deviceConfig.Category]?.includes("Brand") && <div className={classes.info}>
+          <span>{t("brand")}</span>
+          <span>{deviceConfig?.DeviceSetting?.Brand || "--"}</span>
+        </div>}
+        {config[deviceConfig.Category]?.includes("SN") && <div className={classes.info}>
+          <span>SN</span>
+          <span>{deviceConfig?.DeviceSetting?.SN || ""}</span>
+        </div>}
+        {config[deviceConfig.Category]?.includes("ModelName") && <div className={classes.info}>
+          <span>ModelName</span>
+          <span>{deviceConfig?.DeviceSetting?.ModelName || ""}</span>
+        </div>}
         {config[deviceConfig.Category]?.includes("IPAddress") && <div className={classes.info}>
           <span>IPAddress</span>
           <span>{deviceConfig?.DeviceSetting?.IPAddress || "--"}</span>
@@ -137,20 +155,11 @@ export default ({
         </div>}
         {config[deviceConfig.Category]?.includes("Tcp") && <div className={classes.info}>
           <span>Tcp</span>
-          <TextField value={deviceConfig?.Ports?.Tcp || ""} />
+          <TextField type="number" value={deviceConfig?.Ports?.Tcp || ""} />
         </div>}
-
         {config[deviceConfig.Category]?.includes("VCSHost") && <div className={classes.info}>
           <span>VCSHost</span>
           <TextField value={deviceConfig?.DeviceSetting?.VCSHost || ""} />
-        </div>}
-        {config[deviceConfig.Category]?.includes("ModelName") && <div className={classes.info}>
-          <span>ModelName</span>
-          <TextField value={deviceConfig?.DeviceSetting?.ModelName || ""} />
-        </div>}
-        {config[deviceConfig.Category]?.includes("SN") && <div className={classes.info}>
-          <span>SN</span>
-          <TextField value={deviceConfig?.DeviceSetting?.SN || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("DoorTimeout") && <div className={classes.info}>
           <span>DoorTimeout</span>
@@ -227,6 +236,6 @@ export default ({
           </div>
         </div>}
       </div>
-    </DetailCard>
+    </DetailCard >
   )
 }
