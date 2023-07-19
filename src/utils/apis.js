@@ -3,7 +3,7 @@ const md5 = require("md5");
 
 export const instance = axios.create({
   baseURL: `http://${process.env.REACT_APP_DOMAIN}/cgi-bin`,
-  timeout: 10000
+  timeout: 30000
 })
 
 export const api = (token, logout, setSnakcBar, t) => {
@@ -116,18 +116,6 @@ export const api = (token, logout, setSnakcBar, t) => {
     }))
   }
 
-  const editPMSDevice = async ({ data, ...rest }) => {
-    return promise_(instance.post('/db/pms/edit', {
-      ...data
-    }, {
-      params: {
-        sign,
-        timestamp,
-        ...rest
-      }
-    }))
-  }
-
   const editACRDevice = async ({ data, ...rest }) => {
     return promise_(instance.post('/db/acr/edit', {
       ...data
@@ -154,6 +142,42 @@ export const api = (token, logout, setSnakcBar, t) => {
 
   const editFRSDevice = async ({ data, ...rest }) => {
     return promise_(instance.post('/db/frs/edit', {
+      ...data
+    }, {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
+  const editPMSDevice = async ({ data, ...rest }) => {
+    return promise_(instance.post('/db/pms/edit', {
+      ...data
+    }, {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
+  const getFRSFRDList = async ({ data, ...rest }) => {
+    return promise_(instance.post('/device/frsfrdlist', {
+      ...data
+    }, {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
+  const getPMSPMSGList = async ({ data, ...rest }) => {
+    return promise_(instance.post('/device/pmspmsglist', {
       ...data
     }, {
       params: {
@@ -208,6 +232,15 @@ export const api = (token, logout, setSnakcBar, t) => {
     }))
   }
 
+  const deleteFRSFRD = async ({ ...rest }) => {
+    return promise_(instance.delete('/db/frd/delete', {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
 
   const getAvailableDeviceIdList = async ({ ...rest }) => {
     return promise_(instance.get('/db/deviceid/list', {
@@ -357,8 +390,11 @@ export const api = (token, logout, setSnakcBar, t) => {
     editFRSDevice,
     getAccAccrList,
     getVmsVmsipcList,
+    getFRSFRDList,
+    getPMSPMSGList,
     deleteAccAccr,
     deleteVmsVmsipc,
+    deleteFRSFRD,
     getAvailableDeviceIdList,
     addAccAccr,
     addVMSIPC,

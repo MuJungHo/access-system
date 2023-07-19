@@ -43,7 +43,8 @@ export default ({
   const [selected, setSelected] = React.useState([]);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [childs, setChilds] = React.useState([])
-  
+  const [isLoading, setLoading] = React.useState(false)
+
   const [availableDeviceIdList, setAvailableDeviceIdList] = React.useState([])
 
   const config = {
@@ -73,6 +74,9 @@ export default ({
     if (deviceConfig.Category === "VMS") {
       await authedApi.deleteVmsVmsipc({ id: item.id })
     }
+    if (deviceConfig.Category === "FRS") {
+      await authedApi.deleteFRSFRD({ id: item.id })
+    }
     newChilds = newChilds.filter(child => child.id !== item.id)
     // console.log(childDevices, item.id)
     setChildDevices(newChilds)
@@ -80,6 +84,7 @@ export default ({
 
   React.useEffect(() => {
     (async () => {
+      setLoading(true)
       if (deviceConfig.Category === "ACC") {
         let { DoorList } = await authedApi.getAccAccrList({ data: { DeviceConfiguration: deviceConfig } })
         DoorList = DoorList.map(door => door.Door[0])
@@ -91,6 +96,15 @@ export default ({
         VMSIPCConfig = VMSIPCConfig.map(config => ({ ...config, key: config.Mac }))
         setChilds(VMSIPCConfig)
       }
+      if (deviceConfig.Category === "FRS") {
+        let { FRDConfig } = await authedApi.getFRSFRDList({ data: { DeviceConfiguration: deviceConfig } })
+        setChilds(FRDConfig)
+      }
+      if (deviceConfig.Category === "PMS") {
+        let { PMSGConfig } = await authedApi.getPMSPMSGList({ data: { DeviceConfiguration: deviceConfig } })
+        setChilds(PMSGConfig)
+      }
+      setLoading(false)
       // console.log(DoorList)
     })()
   }, [])
@@ -210,61 +224,64 @@ export default ({
 
   const handleOpenModal = () => {
     showModal({
-      title: "關聯設備",
+      title: "上線設備",
       component: modalComponent,
       onConfirm: handleConfirm
     })
   }
   const modalComponent = (
-    <TableContainer>
-      <Table
-        className={classes.table}
-      // aria-label="simple table"
-      >
-        <TableHead>
-          <TableRow>
-            <TableCell padding="checkbox">
-              {/* <Checkbox
+    childs.length === 0
+      ? <h6>沒有上線的設備</h6>
+      :
+      <TableContainer>
+        <Table
+          className={classes.table}
+        // aria-label="simple table"
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell padding="checkbox">
+                {/* <Checkbox
                 indeterminate={selected.length > 0 && selected.length < childs.length}
                 checked={childs.length > 0 && selected.length === childs.length}
                 onChange={onSelectAllClick}
               inputProps={{ 'aria-label': 'select all desserts' }}
               /> */}
-            </TableCell>
-            {
-              config[deviceConfig.Category].map(column => <TableCell key={column}>{column}</TableCell>)
-            }
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {childs.map((row) => {
-            const isItemSelected = isSelected(row.key);
+              </TableCell>
+              {
+                config[deviceConfig.Category].map(column => <TableCell key={column}>{column}</TableCell>)
+              }
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {childs.map((row) => {
+              const isItemSelected = isSelected(row.key);
 
-            return (
-              <TableRow key={row.key}>
-                {/* {row.key} */}
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={isItemSelected}
-                    disabled={getDisabledChilds().includes(row.key)}
-                    onChange={(event) => handleClick(event, row.key)}
-                  // inputProps={{ 'aria-labelledby': labelId }}
-                  />
-                </TableCell>
-                {
-                  config[deviceConfig.Category].map(column => <TableCell key={column} component="th" scope="row">
-                    {row[column]}
-                  </TableCell>)
-                }
-              </TableRow>
-            )
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>)
+              return (
+                <TableRow key={row.key}>
+                  {/* {row.key} */}
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={isItemSelected}
+                      disabled={getDisabledChilds().includes(row.key)}
+                      onChange={(event) => handleClick(event, row.key)}
+                    // inputProps={{ 'aria-labelledby': labelId }}
+                    />
+                  </TableCell>
+                  {
+                    config[deviceConfig.Category].map(column => <TableCell key={column} component="th" scope="row">
+                      {row[column]}
+                    </TableCell>)
+                  }
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>)
 
   return (
-    <DetailCard onClick={handleOpenModal} buttonText="關聯" title="關聯設備" style={{ marginBottom: 20 }}>
+    <DetailCard loading={isLoading} onClick={handleOpenModal} buttonText="關聯" title="已關聯設備" style={{ marginBottom: 20 }}>
       {childDevices.length > 0 && <TableContainer>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>

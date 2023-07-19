@@ -2,13 +2,14 @@ import React, { useContext } from "react";
 // import TextField from '@material-ui/core/TextField';
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { makeStyles } from '@material-ui/core/styles';
-import Select from "../../components/Select"
+// import Select from "../../components/Select"
 
 import {
   Paper,
   Divider,
   Collapse,
-  Button
+  Button,
+  CircularProgress
 } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +26,8 @@ export default ({
   children,
   onClick,
   buttonText = "儲存",
-  showButton = true
+  showButton = true,
+  loading = false
 }) => {
   const { t } = useContext(LocaleContext);
   const classes = useStyles();
@@ -35,7 +37,8 @@ export default ({
     <Paper className={classes.paper} style={{ ...style }}>
       <div style={{ padding: 16, display: 'flex', alignItems: 'center' }} onClick={() => setOpen(!open)}>
         <span style={{ flex: 1, fontSize: 16 }}>{title}</span>
-        {showButton && open && <Button onClick={e => {
+        {loading && <CircularProgress />}
+        {showButton && open && !loading && <Button onClick={e => {
           e.stopPropagation()
           onClick()
         }} variant="contained" color="primary">{buttonText}</Button>}

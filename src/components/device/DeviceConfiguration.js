@@ -10,10 +10,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import DetailCard from "./DetailCard";
 
 import {
-  Paper,
-  Divider,
-  Button,
-  MenuItem,
+  // Paper,
+  // Divider,
+  // Button,
+  // MenuItem,
   TextField,
   Checkbox
 } from '@material-ui/core'
@@ -81,6 +81,9 @@ export default ({
     }
     if (deviceConfig.Category === "FRS") {
       await authedApi.editFRSDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    }
+    if (deviceConfig.Category === "PMS") {
+      await authedApi.editPMSDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
     }
     setSnakcBar({
       message: t('saveSucceed'),
