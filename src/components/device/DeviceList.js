@@ -13,11 +13,8 @@ import {
 
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import Player from "../../components/Player";
 import Table from "../../components/table/Table";
 import Select from '../../components/Select';
-import ConfirmDialog from '../../components/ConfirmDialog';
-import VMSEditModalContent from "../../components/device/VMSEditModalContent";
 
 // const useStyles = makeStyles((theme) => ({
 //   root: {
@@ -66,11 +63,6 @@ export default function Devices() {
     category: "",
     locationid: "",
     groupid: ""
-  });
-  const [playerModal, setPlayerModal] = React.useState({
-    playerId: null,
-    playerName: null,
-    isOpen: false
   });
   const [devices, setDevices] = React.useState([])
   const [locations, setLocations] = React.useState([])
@@ -133,16 +125,7 @@ export default function Devices() {
       }))
     }
   }, [wsData, setDevices])
-
-  const handleOpenPlayer = (e, device) => {
-    e.stopPropagation()
-    setPlayerModal({
-      isOpen: true,
-      playerId: device.deviceid,
-      playerName: device.name
-    })
-  }
-
+  
   const handleEditDeviceOpen = (e, device) => {
     e.stopPropagation()
     history.push(`/device/item/${device.id}`)
@@ -234,22 +217,9 @@ export default function Devices() {
           { key: 'ip', label: t('ip'), enable: true },
         ]}
         actions={[
-          { name: t('play'), onClick: handleOpenPlayer, icon: <PlayArrow /> },
           { name: t('edit'), onClick: handleEditDeviceOpen, icon: <BorderColorSharp /> }
         ]}
       />
-      <ConfirmDialog
-        title={playerModal.playerName}
-        open={playerModal.isOpen}
-        maxWidth="lg"
-        onClose={() => setPlayerModal({
-          playerId: null,
-          playerName: null,
-          isOpen: false
-        })}
-      >
-        <Player id={playerModal.playerId} />
-      </ConfirmDialog>
     </React.Fragment>
   );
 }

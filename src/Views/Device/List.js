@@ -80,12 +80,7 @@ export default function Devices() {
         </StyledTabs>
 
         <Paper className={classes.paper}>
-          {
-            {
-              0: <DeviceList />,
-              1: <DeviceGroup />
-            }[tabIndex]
-          }
+          <DeviceList />
         </Paper>
 
       </div>

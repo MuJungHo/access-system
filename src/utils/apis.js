@@ -152,6 +152,18 @@ export const api = (token, logout, setSnakcBar, t) => {
     }))
   }
 
+  const editFRSDevice = async ({ data, ...rest }) => {
+    return promise_(instance.post('/db/frs/edit', {
+      ...data
+    }, {
+      params: {
+        sign,
+        timestamp,
+        ...rest
+      }
+    }))
+  }
+
   const getVmsVmsipcList = async ({ data, ...rest }) => {
     return promise_(instance.post('/device/vmsipclist', {
       ...data
@@ -342,6 +354,7 @@ export const api = (token, logout, setSnakcBar, t) => {
     editPMSDevice,
     editACRDevice,
     editACCDevice,
+    editFRSDevice,
     getAccAccrList,
     getVmsVmsipcList,
     deleteAccAccr,

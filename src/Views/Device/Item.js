@@ -26,6 +26,7 @@ const config = {
   "ACC": ["Child"],
   "PMS": ["Child"],
   "VMS": ["Child"],
+  "FRS": ["Child"],
   "ACR": ["DoorControl", "Schedule", "CameraBind"]
 }
 

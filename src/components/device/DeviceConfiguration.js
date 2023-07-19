@@ -4,8 +4,9 @@ import { useParams } from "react-router-dom"
 // import TextField from '@material-ui/core/TextField';
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { AuthContext } from "../../contexts/AuthContext";
+import { LayoutContext } from "../../contexts/LayoutContext";
 import { makeStyles } from '@material-ui/core/styles';
-import Select from "../../components/Select"
+// import Select from "../../components/Select"
 import DetailCard from "./DetailCard";
 
 import {
@@ -43,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 const config = {
   "ACC": ["Brand", "IPAddress", "ModelName", "SN", "Mac", "Tcp"],
   "VMS": ["Account", "Password", "Brand", "IPAddress", "Mac", "Http", "Rtsp"],
+  "FRS": ["Brand", "IPAddress", "LinkType", "BypassQualityCheck", "Http", "Ws", "Security", "ApiKey", "ApiSecret"],
   "PMS": ["Account", "Password", "Brand", "IPAddress", "Mac", "Http"],
   "ACR": ["Brand", "IPAddress", "Mac", "DoorTimeout", "LockTimeout", "apb", "RS485MasterMode", "DoorForce", "DoorStatus"]
 }
@@ -53,7 +55,8 @@ export default ({
 }) => {
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
-  const { authedApi, setSnakcBar } = useContext(AuthContext);
+  const { authedApi } = useContext(AuthContext);
+  const { setSnakcBar } = useContext(LayoutContext);
   const { deviceid } = useParams();
 
   const handleSaveDeviceConfiguration = async () => {
@@ -75,6 +78,9 @@ export default ({
           Tcp: deviceConfig.Ports.Tcp
         }, id: deviceid
       })
+    }
+    if (deviceConfig.Category === "FRS") {
+      await authedApi.editFRSDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
     }
     setSnakcBar({
       message: t('saveSucceed'),
@@ -104,6 +110,8 @@ export default ({
             })}
             value={deviceConfig?.Name || ""} />
         </div>
+
+        {/* DeviceSetting */}
         {config[deviceConfig.Category]?.includes("Mac") && <div className={classes.info}>
           <span>Mac</span>
           <TextField
@@ -163,70 +171,6 @@ export default ({
               }
             })}
             value={deviceConfig?.DeviceSetting?.IPAddress || ""} />
-        </div>}
-        {config[deviceConfig.Category]?.includes("Account") && <div className={classes.info}>
-          <span>{t("account")}</span>
-          <TextField
-            onChange={e => setDeviceConfig({
-              ...deviceConfig,
-              Authentication: {
-                ...deviceConfig.Authentication,
-                Account: e.target.value
-              }
-            })}
-            value={deviceConfig?.Authentication?.Account || ""} />
-        </div>}
-        {config[deviceConfig.Category]?.includes("Password") && <div className={classes.info}>
-          <span>{t("password")}</span>
-          <TextField
-            type="password"
-            onChange={e => setDeviceConfig({
-              ...deviceConfig,
-              Authentication: {
-                ...deviceConfig.Authentication,
-                Password: e.target.value
-              }
-            })}
-            value={deviceConfig?.Authentication?.Password || ""} />
-        </div>}
-        {config[deviceConfig.Category]?.includes("Http") && <div className={classes.info}>
-          <span>Http</span>
-          <TextField
-            type="number"
-            onChange={e => setDeviceConfig({
-              ...deviceConfig,
-              Ports: {
-                ...deviceConfig.Ports,
-                Http: Number(e.target.value)
-              }
-            })}
-            value={deviceConfig?.Ports?.Http || ""} />
-        </div>}
-        {config[deviceConfig.Category]?.includes("Rtsp") && <div className={classes.info}>
-          <span>Rtsp</span>
-          <TextField
-            type="number"
-            onChange={e => setDeviceConfig({
-              ...deviceConfig,
-              Ports: {
-                ...deviceConfig.Ports,
-                Rtsp: Number(e.target.value)
-              }
-            })}
-            value={deviceConfig?.Ports?.Rtsp || ""} />
-        </div>}
-        {config[deviceConfig.Category]?.includes("Tcp") && <div className={classes.info}>
-          <span>Tcp</span>
-          <TextField
-            type="number"
-            onChange={e => setDeviceConfig({
-              ...deviceConfig,
-              Ports: {
-                ...deviceConfig.Ports,
-                Tcp: Number(e.target.value)
-              }
-            })}
-            value={deviceConfig?.Ports?.Tcp || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("VCSHost") && <div className={classes.info}>
           <span>VCSHost</span>
@@ -332,6 +276,144 @@ export default ({
               })} checked={deviceConfig?.DeviceSetting?.DoorStatus === 1} />
           </div>
         </div>}
+        {config[deviceConfig.Category]?.includes("BypassQualityCheck") && <div className={classes.info}>
+          <span>BypassQualityCheck</span>
+          <div>
+            <Checkbox
+              onChange={e => setDeviceConfig({
+                ...deviceConfig,
+                DeviceSetting: {
+                  ...deviceConfig.DeviceSetting,
+                  BypassQualityCheck: e.target.checked ? 1 : 0
+                }
+              })} checked={deviceConfig?.DeviceSetting?.BypassQualityCheck === 1} />
+          </div>
+        </div>}
+        {config[deviceConfig.Category]?.includes("LinkType") && <div className={classes.info}>
+          <span>LinkType</span>
+          <span>{deviceConfig?.DeviceSetting?.LinkType}</span>
+        </div>}
+        {/* DeviceSetting */}
+
+        {/* Authentication */}
+        {config[deviceConfig.Category]?.includes("ApiKey") && <div className={classes.info}>
+          <span>ApiKey</span>
+          <TextField
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Authentication: {
+                ...deviceConfig.Authentication,
+                ApiKey: e.target.value
+              }
+            })}
+            value={deviceConfig?.Authentication?.ApiKey || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("ApiSecret") && <div className={classes.info}>
+          <span>ApiSecret</span>
+          <TextField
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Authentication: {
+                ...deviceConfig.Authentication,
+                ApiSecret: e.target.value
+              }
+            })}
+            value={deviceConfig?.Authentication?.ApiSecret || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("Account") && <div className={classes.info}>
+          <span>{t("account")}</span>
+          <TextField
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Authentication: {
+                ...deviceConfig.Authentication,
+                Account: e.target.value
+              }
+            })}
+            value={deviceConfig?.Authentication?.Account || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("Password") && <div className={classes.info}>
+          <span>{t("password")}</span>
+          <TextField
+            type="password"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Authentication: {
+                ...deviceConfig.Authentication,
+                Password: e.target.value
+              }
+            })}
+            value={deviceConfig?.Authentication?.Password || ""} />
+        </div>}
+        {/* Authentication */}
+
+        {/* Ports */}
+        {config[deviceConfig.Category]?.includes("Http") && <div className={classes.info}>
+          <span>Http</span>
+          <TextField
+            type="number"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Ports: {
+                ...deviceConfig.Ports,
+                Http: Number(e.target.value)
+              }
+            })}
+            value={deviceConfig?.Ports?.Http || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("Rtsp") && <div className={classes.info}>
+          <span>Rtsp</span>
+          <TextField
+            type="number"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Ports: {
+                ...deviceConfig.Ports,
+                Rtsp: Number(e.target.value)
+              }
+            })}
+            value={deviceConfig?.Ports?.Rtsp || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("Tcp") && <div className={classes.info}>
+          <span>Tcp</span>
+          <TextField
+            type="number"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Ports: {
+                ...deviceConfig.Ports,
+                Tcp: Number(e.target.value)
+              }
+            })}
+            value={deviceConfig?.Ports?.Tcp || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("Ws") && <div className={classes.info}>
+          <span>Ws</span>
+          <TextField
+            type="number"
+            onChange={e => setDeviceConfig({
+              ...deviceConfig,
+              Ports: {
+                ...deviceConfig.Ports,
+                Ws: Number(e.target.value)
+              }
+            })}
+            value={deviceConfig?.Ports?.Ws || ""} />
+        </div>}
+        {config[deviceConfig.Category]?.includes("Security") && <div className={classes.info}>
+          <span>SSL</span>
+          <div>
+            <Checkbox
+              onChange={e => setDeviceConfig({
+                ...deviceConfig,
+                Ports: {
+                  ...deviceConfig.Ports,
+                  Security: e.target.checked
+                }
+              })} checked={deviceConfig?.Ports?.Security} />
+          </div>
+        </div>}
+        {/* Ports */}
       </div>
     </DetailCard >
   )
