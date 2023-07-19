@@ -2,8 +2,9 @@ import React, { useContext } from "react";
 // import TextField from '@material-ui/core/TextField';
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { AuthContext } from "../../contexts/AuthContext";
+import { LayoutContext } from "../../contexts/LayoutContext";
 import { makeStyles } from '@material-ui/core/styles';
-import Select from "../../components/Select"
+// import Select from "../../components/Select"
 import DetailCard from "./DetailCard";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,7 +12,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import ConfirmDialog from '../ConfirmDialog';
 import {
   Close
 } from '@material-ui/icons';
@@ -39,21 +39,30 @@ export default ({
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
   const { authedApi } = useContext(AuthContext);
+  const { showModal, modal, hideModal } = useContext(LayoutContext);
   const [selected, setSelected] = React.useState([]);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [childs, setChilds] = React.useState([])
-  const [modal, setModal] = React.useState({
-    title: "關聯設備",
-    isOpen: false
-  });
+  
   const [availableDeviceIdList, setAvailableDeviceIdList] = React.useState([])
-
-  // const childSNs = childDevices.map(child => child.config.DeviceConfiguration.DeviceSetting.Door[0].SN)
-  const childSNs = []
 
   const config = {
     "ACC": ["SN", "ModelId"],
     "VMS": ["ModelName", "IPAddress", "Mac", "Stream"],
+    "FRS": [],
+    "PMS": []
+  }
+
+  const getDisabledChilds = () => {
+    let result = []
+    if (deviceConfig.Category === "ACC") {
+      result = childDevices.map(child => child.config.DeviceConfiguration.DeviceSetting.Door[0].SN)
+    }
+    if (deviceConfig.Category === "VMS") {
+      result = childDevices.map(child => child.config.DeviceConfiguration.DeviceSetting.Mac)
+    }
+    // console.log(result, childDevices)
+    return result
   }
 
   const handleDeleteChild = async (item) => {
@@ -195,18 +204,67 @@ export default ({
     if (deviceConfig.Category === "VMS") {
       handleVMSonfirm()
     }
+    hideModal()
     setSelected([])
-    setModal({
-      ...modal,
-      isOpen: false
-    })
   }
 
+  const handleOpenModal = () => {
+    showModal({
+      title: "關聯設備",
+      component: modalComponent,
+      onConfirm: handleConfirm
+    })
+  }
+  const modalComponent = (
+    <TableContainer>
+      <Table
+        className={classes.table}
+      // aria-label="simple table"
+      >
+        <TableHead>
+          <TableRow>
+            <TableCell padding="checkbox">
+              {/* <Checkbox
+                indeterminate={selected.length > 0 && selected.length < childs.length}
+                checked={childs.length > 0 && selected.length === childs.length}
+                onChange={onSelectAllClick}
+              inputProps={{ 'aria-label': 'select all desserts' }}
+              /> */}
+            </TableCell>
+            {
+              config[deviceConfig.Category].map(column => <TableCell key={column}>{column}</TableCell>)
+            }
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {childs.map((row) => {
+            const isItemSelected = isSelected(row.key);
+
+            return (
+              <TableRow key={row.key}>
+                {/* {row.key} */}
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    checked={isItemSelected}
+                    disabled={getDisabledChilds().includes(row.key)}
+                    onChange={(event) => handleClick(event, row.key)}
+                  // inputProps={{ 'aria-labelledby': labelId }}
+                  />
+                </TableCell>
+                {
+                  config[deviceConfig.Category].map(column => <TableCell key={column} component="th" scope="row">
+                    {row[column]}
+                  </TableCell>)
+                }
+              </TableRow>
+            )
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>)
+
   return (
-    <DetailCard onClick={() => setModal({
-      ...modal,
-      isOpen: true
-    })} buttonText="關聯" title="關聯設備" style={{ marginBottom: 20 }}>
+    <DetailCard onClick={handleOpenModal} buttonText="關聯" title="關聯設備" style={{ marginBottom: 20 }}>
       {childDevices.length > 0 && <TableContainer>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
@@ -237,62 +295,6 @@ export default ({
           </TableBody>
         </Table>
       </TableContainer>}
-      <ConfirmDialog
-        title={modal.title}
-        open={modal.isOpen}
-        maxWidth="sm"
-        onConfirm={handleConfirm}
-        onClose={() => setModal({
-          ...modal,
-          isOpen: false
-        })}
-      >
-        <TableContainer>
-          <Table
-            className={classes.table}
-          // aria-label="simple table"
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  {/* <Checkbox
-                    indeterminate={selected.length > 0 && selected.length < childs.length}
-                    checked={childs.length > 0 && selected.length === childs.length}
-                    onChange={onSelectAllClick}
-                  inputProps={{ 'aria-label': 'select all desserts' }}
-                  /> */}
-                </TableCell>
-                {
-                  config[deviceConfig.Category].map(column => <TableCell key={column}>{column}</TableCell>)
-                }
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {childs.map((row) => {
-                const isItemSelected = isSelected(row.key);
-
-                return (
-                  <TableRow key={row.key}>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={isItemSelected}
-                        disabled={childSNs.includes(row.key)}
-                        onChange={(event) => handleClick(event, row.key)}
-                      // inputProps={{ 'aria-labelledby': labelId }}
-                      />
-                    </TableCell>
-                    {
-                      config[deviceConfig.Category].map(column => <TableCell key={column} component="th" scope="row">
-                        {row[column]}
-                      </TableCell>)
-                    }
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </ConfirmDialog>
     </DetailCard>
   )
 }

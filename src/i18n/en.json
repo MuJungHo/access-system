@@ -6,8 +6,10 @@
     "brand": "Brand",
     "card": "Card",
     "category": "Category",
+    "confirm": "confirm",
     "condition": "condition",
     "company": "company",
+    "close": "close",
     "dashboard": "Dashboard",
     "date": "Date",
     "daterangepicker": {
