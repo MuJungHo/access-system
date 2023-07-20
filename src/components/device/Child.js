@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useHistory, useParams } from "react-router-dom"
 // import TextField from '@material-ui/core/TextField';
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -13,7 +14,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import {
-  Close
+  Close,
+  ExitToApp
 } from '@material-ui/icons';
 
 import {
@@ -37,9 +39,11 @@ export default ({
   deviceConfig
 }) => {
   const classes = useStyles();
+  const history = useHistory();
   const { t } = useContext(LocaleContext);
   const { authedApi } = useContext(AuthContext);
   const { showModal, modal, hideModal } = useContext(LayoutContext);
+  const { deviceid } = useParams();
   const [selected, setSelected] = React.useState([]);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [childs, setChilds] = React.useState([])
@@ -231,7 +235,7 @@ export default ({
   }
   const modalComponent = (
     childs.length === 0
-      ? <h6>沒有上線的設備</h6>
+      ? <h6>無</h6>
       :
       <TableContainer>
         <Table
@@ -281,7 +285,7 @@ export default ({
       </TableContainer>)
 
   return (
-    <DetailCard loading={isLoading} onClick={handleOpenModal} buttonText="關聯" title="已關聯設備" style={{ marginBottom: 20 }}>
+    <DetailCard loading={isLoading} onClick={handleOpenModal} buttonText="新增" title="已連線設備" style={{ marginBottom: 20 }}>
       {childDevices.length > 0 && <TableContainer>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
@@ -305,6 +309,7 @@ export default ({
                   {row.config.DeviceConfiguration.DeviceSetting.Brand}
                 </TableCell>
                 <TableCell component="th" scope="row">
+                  <IconButton onClick={() => history.push(`/device/child/${deviceid}/${row.id}`)}><ExitToApp/></IconButton>
                   <IconButton onClick={() => handleDeleteChild(row)}><Close /></IconButton>
                 </TableCell>
               </TableRow>

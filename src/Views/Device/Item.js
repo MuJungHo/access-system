@@ -14,7 +14,6 @@ import DoorControl from '../../components/device/DoorControl';
 import Schedule from '../../components/device/Schedule';
 import DeviceConfiguration from '../../components/device/DeviceConfiguration';
 import Child from '../../components/device/Child';
-import CameraBind from '../../components/device/CameraBind';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +34,7 @@ export default () => {
   const history = useHistory();
   const { t } = useContext(LocaleContext);
   const { authedApi } = useContext(AuthContext);
-  const { deviceid } = useParams();
+  const { deviceid, parentid } = useParams();
   const [deviceConfig, setDeviceConfig] = React.useState({});
   const [childDevices, setChildDevices] = React.useState([]);
   const [scheduleType, setScheduleType] = React.useState("all");
@@ -86,7 +85,11 @@ export default () => {
   }, [])
   return (
     <div className={classes.root}>
-      <IconButton onClick={() => history.push('/device/list')}><ArrowBackIcon /></IconButton>
+      <IconButton onClick={() => history.push(
+        parentid === undefined
+        ? '/device/list'
+        : `/device/item/${parentid}`
+      )}><ArrowBackIcon /></IconButton>
       <DeviceConfiguration
         deviceConfig={deviceConfig}
         setDeviceConfig={setDeviceConfig} />

@@ -33,6 +33,11 @@ const routes = [
     siderlink: false
   },
   {
+    path: '/device/child/:parentid/:deviceid',
+    component: Device,
+    siderlink: false
+  },
+  {
     path: '/device/list',
     component: Devices,
     icon: DevicesOtherIcon,

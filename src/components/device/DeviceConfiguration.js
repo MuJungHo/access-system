@@ -46,7 +46,8 @@ const config = {
   "VMS": ["Account", "Password", "Brand", "IPAddress", "Mac", "Http", "Rtsp"],
   "FRS": ["Brand", "IPAddress", "LinkType", "BypassQualityCheck", "Http", "Ws", "Security", "ApiKey", "ApiSecret"],
   "PMS": ["Account", "Password", "Brand", "IPAddress", "Mac", "Http"],
-  "ACR": ["Brand", "IPAddress", "Mac", "DoorTimeout", "LockTimeout", "apb", "RS485MasterMode", "DoorForce", "DoorStatus"]
+  "ACR": ["Brand", "IPAddress", "Mac", "DoorTimeout", "LockTimeout", "apb", "RS485MasterMode", "DoorForce", "DoorStatus"],
+  "VMSIPC": [],
 }
 
 export default ({
