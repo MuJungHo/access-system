@@ -43,21 +43,37 @@ export const api = (token, logout, setSnakcBar, t) => {
     getLogList: ({ ...rest }) => promise_(instance.get('/db/log', { params: { sign, timestamp, ...rest } })),
     getLocationList: ({ ...rest }) => promise_(instance.get('/db/location/list', { params: { sign, timestamp, ...rest } })),
     getCheckinLogList: ({ ...rest }) => promise_(instance.get('/db/reservation/checkin/loglist', { params: { sign, timestamp, ...rest } })),
-    editVMSDevice: ({ data, ...rest }) => promise_(instance.post('/db/vms/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
-    editPMSDevice: ({ data, ...rest }) => promise_(instance.post('/db/pms/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
-    editACRDevice: ({ data, ...rest }) => promise_(instance.post('/db/acr/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+
+    // edit device
     editACCDevice: ({ data, ...rest }) => promise_(instance.post('/db/acc/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+    editPMSDevice: ({ data, ...rest }) => promise_(instance.post('/db/pms/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+    editVMSDevice: ({ data, ...rest }) => promise_(instance.post('/db/vms/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
     editFRSDevice: ({ data, ...rest }) => promise_(instance.post('/db/frs/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
-    getAccAccrList: ({ data, ...rest }) => promise_(instance.post('/device/accaccrlist', { ...data }, { params: { sign, timestamp, ...rest } })),
-    getVmsVmsipcList: ({ data, ...rest }) => promise_(instance.post('/device/vmsipclist', { ...data }, { params: { sign, timestamp, ...rest } })),
+    editACRDevice: ({ data, ...rest }) => promise_(instance.post('/db/acr/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+    editACCRDevice: ({ data, ...rest }) => promise_(instance.post('/db/accr/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+    editFRDDevice: ({ data, ...rest }) => promise_(instance.post('/db/frd/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+    editELEVCDevice: ({ data, ...rest }) => promise_(instance.post('/db/elevc/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+    editELEVFDevice: ({ data, ...rest }) => promise_(instance.post('/db/elevf/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+    editVMSIPCDevice: ({ data, ...rest }) => promise_(instance.post('/db/vmsipc/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+    editPMSGDevice: ({ data, ...rest }) => promise_(instance.post('/db/pmsg/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+
+    // get child device list
+    getACCACCRList: ({ data, ...rest }) => promise_(instance.post('/device/accaccrlist', { ...data }, { params: { sign, timestamp, ...rest } })),
+    getVMSVMSIPCList: ({ data, ...rest }) => promise_(instance.post('/device/vmsipclist', { ...data }, { params: { sign, timestamp, ...rest } })),
     getFRSFRDList: ({ data, ...rest }) => promise_(instance.post('/device/frsfrdlist', { ...data }, { params: { sign, timestamp, ...rest } })),
     getPMSPMSGList: ({ data, ...rest }) => promise_(instance.post('/device/pmspmsglist', { ...data }, { params: { sign, timestamp, ...rest } })),
-    deleteAccAccr: ({ ...rest }) => promise_(instance.delete('/db/accr/delete', { params: { sign, timestamp, ...rest } })),
-    deleteVmsVmsipc: ({ ...rest }) => promise_(instance.delete('/db/vmsipc/delete', { params: { sign, timestamp, ...rest } })),
+
+
+    deleteACCACCR: ({ ...rest }) => promise_(instance.delete('/db/accr/delete', { params: { sign, timestamp, ...rest } })),
+    deleteVMSVMSIPC: ({ ...rest }) => promise_(instance.delete('/db/vmsipc/delete', { params: { sign, timestamp, ...rest } })),
     deleteFRSFRD: ({ ...rest }) => promise_(instance.delete('/db/frd/delete', { params: { sign, timestamp, ...rest } })),
-    getAvailableDeviceIdList: ({ ...rest }) => promise_(instance.get('/db/deviceid/list', { params: { sign, timestamp, ...rest } })),
-    addAccAccr: ({ data, ...rest }) => promise_(instance.post('/db/accr/add', { ...data }, { params: { sign, timestamp, ...rest } })),
+
+    // add child device
+    addACCACCR: ({ data, ...rest }) => promise_(instance.post('/db/accr/add', { ...data }, { params: { sign, timestamp, ...rest } })),
     addVMSIPC: ({ data, ...rest }) => promise_(instance.post('/db/vmsipc/add', { ...data }, { params: { sign, timestamp, ...rest } })),
+
+
+    getAvailableDeviceIdList: ({ ...rest }) => promise_(instance.get('/db/deviceid/list', { params: { sign, timestamp, ...rest } })),
     getDevcieGroupList: ({ ...rest }) => promise_(instance.get('/db/group/list', { params: { sign, timestamp, ...rest } })),
     getAccessGroupListById: ({ ...rest }) => promise_(instance.get('/db/deviceid/list', { params: { sign, timestamp, ...rest } })),
     getStaffGroupList: ({ ...rest }) => promise_(instance.get('/db/staffgroup/list', { params: { sign, timestamp, ...rest } })),

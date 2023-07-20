@@ -14,6 +14,8 @@ import DoorControl from '../../components/device/DoorControl';
 import Schedule from '../../components/device/Schedule';
 import DeviceConfiguration from '../../components/device/DeviceConfiguration';
 import Child from '../../components/device/Child';
+import Camera from '../../components/device/Camera';
+import Player from '../../components/device/Player';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,7 +28,13 @@ const config = {
   "PMS": ["Child"],
   "VMS": ["Child"],
   "FRS": ["Child"],
-  "ACR": ["DoorControl", "Schedule", "CameraBind"]
+  "ACR": ["DoorControl", "Schedule", "Camera"],
+  "ACCR": ["DoorControl", "Schedule", "Camera"],
+  "FRD": ["DoorControl", "Schedule", "Camera"],
+  "ELEVC": ["Schedule", "Camera"],
+  "ELEVF": [],
+  "VMSIPC": ["Player"],
+  "PMSG": ["Camera"]
 }
 
 export default () => {
@@ -85,10 +93,11 @@ export default () => {
   }, [])
   return (
     <div className={classes.root}>
+      {/* {console.log(deviceConfig)} */}
       <IconButton onClick={() => history.push(
         parentid === undefined
-        ? '/device/list'
-        : `/device/item/${parentid}`
+          ? '/device/list'
+          : `/device/item/${parentid}`
       )}><ArrowBackIcon /></IconButton>
       <DeviceConfiguration
         deviceConfig={deviceConfig}
@@ -105,5 +114,7 @@ export default () => {
         childDevices={childDevices}
         setChildDevices={setChildDevices}
         deviceConfig={deviceConfig} />}
+      {config[deviceConfig.Category]?.includes("Camera") && <Camera camerabinds={[]} />}
+      {config[deviceConfig.Category]?.includes("Player") && <Player id={deviceConfig.DeviceId} />}
     </div>)
 }

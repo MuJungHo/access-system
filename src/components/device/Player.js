@@ -1,8 +1,15 @@
 import React, { useRef, useContext } from 'react'
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
+
+import {
+  Paper,
+
+  Divider,
+} from '@material-ui/core'
 
 const Player = ({ id }) => {
+  // console.log(id)
   const videoRef = useRef()
   const { token } = useContext(AuthContext);
   const md5 = require("md5");
@@ -51,7 +58,7 @@ const Player = ({ id }) => {
           ) {
             videoSourceBuffer.remove(0, video.currentTime - 1);
           }
-          
+
           if (
             videoSourceBuffer.updating ||
             queue.length > 0
@@ -69,10 +76,20 @@ const Player = ({ id }) => {
   }, [md5, token, id])
 
   return (
-    <video
-      width="700" height="480"
-      ref={videoRef}
-    />)
+    <Paper style={{ margin: 'auto', width: 700, }}>
+      <div style={{ padding: 16, display: 'flex', alignItems: 'center' }}>
+        <span style={{ fontSize: 16 }}>播放畫面</span>
+      </div>
+      <Divider />
+      <div style={{ padding: 16 }}>
+        <video
+          width="660"
+          // height="480"
+          ref={videoRef}
+          style={{ margin: 'auto', display: 'block' }}
+        />
+      </div>
+    </Paper>)
 }
 
 export default Player

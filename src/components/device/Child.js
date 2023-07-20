@@ -73,10 +73,10 @@ export default ({
   const handleDeleteChild = async (item) => {
     let newChilds = [...childDevices];
     if (deviceConfig.Category === "ACC") {
-      await authedApi.deleteAccAccr({ id: item.id })
+      await authedApi.deleteACCACCR({ id: item.id })
     }
     if (deviceConfig.Category === "VMS") {
-      await authedApi.deleteVmsVmsipc({ id: item.id })
+      await authedApi.deleteVMSVMSIPC({ id: item.id })
     }
     if (deviceConfig.Category === "FRS") {
       await authedApi.deleteFRSFRD({ id: item.id })
@@ -90,13 +90,13 @@ export default ({
     (async () => {
       setLoading(true)
       if (deviceConfig.Category === "ACC") {
-        let { DoorList } = await authedApi.getAccAccrList({ data: { DeviceConfiguration: deviceConfig } })
+        let { DoorList } = await authedApi.getACCACCRList({ data: { DeviceConfiguration: deviceConfig } })
         DoorList = DoorList.map(door => door.Door[0])
         DoorList = DoorList.map(door => ({ ...door, key: door.SN }))
         setChilds(DoorList)
       }
       if (deviceConfig.Category === "VMS") {
-        let { VMSIPCConfig } = await authedApi.getVmsVmsipcList({ data: { DeviceConfiguration: deviceConfig } })
+        let { VMSIPCConfig } = await authedApi.getVMSVMSIPCList({ data: { DeviceConfiguration: deviceConfig } })
         VMSIPCConfig = VMSIPCConfig.map(config => ({ ...config, key: config.Mac }))
         setChilds(VMSIPCConfig)
       }
@@ -168,7 +168,7 @@ export default ({
         }
       }
       // console.log(data)
-      let { id } = await authedApi.addAccAccr({ data })
+      let { id } = await authedApi.addACCACCR({ data })
       newChilds.push({
         id,
         deviceid: availableDeviceIdList[i],

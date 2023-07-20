@@ -12,7 +12,6 @@ function LayoutProvider({ children, ...rest }) {
 
   const [modal, setModal] = useState({
     title: "",
-    severity: "",
     component: <></>,
     isOpen: false,
     onConfirm: () => { },
@@ -38,7 +37,6 @@ function LayoutProvider({ children, ...rest }) {
   const hideModal = () => {
     setModal({
       title: "",
-      severity: "",
       component: <></>,
       isOpen: false,
       onConfirm: () => { },
@@ -62,7 +60,7 @@ function LayoutProvider({ children, ...rest }) {
       autoHideDuration={3000}
       onClose={() => setSnakcBar({
         isOpen: false,
-        severity: '',
+        severity: 'info',
         message: ''
       })}>
       <Alert
@@ -70,7 +68,7 @@ function LayoutProvider({ children, ...rest }) {
         variant="filled"
         onClose={() => setSnakcBar({
           isOpen: false,
-          severity: '',
+          severity: 'info',
           message: ''
         })} severity={snackBar.severity}>
         {snackBar.message}

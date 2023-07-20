@@ -35,19 +35,18 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// const allfunction = [
-//   "Account", "Password", "Brand", "IPAddress",
-//   "VCSHost", "ModelName", "SN", "DoorTimeout",
-//   "LockTimeout", "apb", "RS485MasterMode", "DoorForce",
-//   "DoorStatus", "Mac", "Http", "Rtsp", "Tcp"]
-
 const config = {
-  "ACC": ["Brand", "IPAddress", "ModelName", "SN", "Mac", "Tcp"],
-  "VMS": ["Account", "Password", "Brand", "IPAddress", "Mac", "Http", "Rtsp"],
+  "ACC": ["Brand", "IPAddress", "Mac", "ModelName", "SN", "Tcp"],
+  "PMS": ["Brand", "IPAddress", "Mac", "Account", "Password", "Http"],
+  "VMS": ["Brand", "IPAddress", "Mac", "Account", "Password", "Http", "Rtsp"],
   "FRS": ["Brand", "IPAddress", "LinkType", "BypassQualityCheck", "Http", "Ws", "Security", "ApiKey", "ApiSecret"],
-  "PMS": ["Account", "Password", "Brand", "IPAddress", "Mac", "Http"],
   "ACR": ["Brand", "IPAddress", "Mac", "DoorTimeout", "LockTimeout", "apb", "RS485MasterMode", "DoorForce", "DoorStatus"],
+  "ACCR": ["apb", "DoorTimeout", "LockTimeout", "DoorStatus", "DoorForce"],
+  "FRD": ["DoorStatus",],
+  "ELEVC": ["Brand", "IPAddress", "Mac", "Tcp", "SN"],
+  "ELEVF": [],
   "VMSIPC": [],
+  "PMSG": []
 }
 
 export default ({
@@ -61,15 +60,6 @@ export default ({
   const { deviceid } = useParams();
 
   const handleSaveDeviceConfiguration = async () => {
-    if (deviceConfig.Category === "PMS") {
-      await authedApi.editPMSDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
-    }
-    if (deviceConfig.Category === "ACR") {
-      await authedApi.editACRDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
-    }
-    if (deviceConfig.Category === "VMS") {
-      await authedApi.editVMSDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
-    }
     if (deviceConfig.Category === "ACC") {
       await authedApi.editACCDevice({
         data: {
@@ -80,11 +70,35 @@ export default ({
         }, id: deviceid
       })
     }
+    if (deviceConfig.Category === "PMS") {
+      await authedApi.editPMSDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    }
+    if (deviceConfig.Category === "VMS") {
+      await authedApi.editVMSDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    }
     if (deviceConfig.Category === "FRS") {
       await authedApi.editFRSDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
     }
-    if (deviceConfig.Category === "PMS") {
-      await authedApi.editPMSDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    if (deviceConfig.Category === "ACR") {
+      await authedApi.editACRDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    }
+    if (deviceConfig.Category === "ACCR") {
+      await authedApi.editACCRDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    }
+    if (deviceConfig.Category === "FRD") {
+      await authedApi.editFRDDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    }
+    if (deviceConfig.Category === "ELEVC") {
+      await authedApi.editELEVCDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    }
+    if (deviceConfig.Category === "ELEVF") {
+      await authedApi.editELEVFDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    }
+    if (deviceConfig.Category === "VMSIPC") {
+      await authedApi.editVMSIPCDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
+    }
+    if (deviceConfig.Category === "PMSG") {
+      await authedApi.editPMSGDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
     }
     setSnakcBar({
       message: t('saveSucceed'),
@@ -245,6 +259,7 @@ export default ({
           <span>RS485MasterMode</span>
           <div>
             <Checkbox
+              color="primary"
               onChange={e => setDeviceConfig({
                 ...deviceConfig,
                 DeviceSetting: {
@@ -258,6 +273,7 @@ export default ({
           <span>DoorForce</span>
           <div>
             <Checkbox
+              color="primary"
               onChange={e => setDeviceConfig({
                 ...deviceConfig,
                 DeviceSetting: {
@@ -271,6 +287,7 @@ export default ({
           <span>DoorStatus</span>
           <div>
             <Checkbox
+              color="primary"
               onChange={e => setDeviceConfig({
                 ...deviceConfig,
                 DeviceSetting: {
@@ -284,6 +301,7 @@ export default ({
           <span>BypassQualityCheck</span>
           <div>
             <Checkbox
+              color="primary"
               onChange={e => setDeviceConfig({
                 ...deviceConfig,
                 DeviceSetting: {
@@ -408,6 +426,7 @@ export default ({
           <span>SSL</span>
           <div>
             <Checkbox
+              color="primary"
               onChange={e => setDeviceConfig({
                 ...deviceConfig,
                 Ports: {
