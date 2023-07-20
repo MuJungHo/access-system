@@ -255,6 +255,7 @@ export default ({
               {
                 config[deviceConfig.Category].map(column => <TableCell key={column}>{column}</TableCell>)
               }
+              <TableCell>狀態</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -277,6 +278,8 @@ export default ({
                       {row[column]}
                     </TableCell>)
                   }
+
+                  <TableCell>{getDisabledChilds().includes(row.key) ? "已連接": "可連接"}</TableCell>
                 </TableRow>
               )
             })}
@@ -285,7 +288,7 @@ export default ({
       </TableContainer>)
 
   return (
-    <DetailCard loading={isLoading} onClick={handleOpenModal} buttonText="新增" title="已連線設備" style={{ marginBottom: 20 }}>
+    <DetailCard loading={isLoading} onClick={handleOpenModal} buttonText="新增" title="已連接設備" style={{ marginBottom: 20 }}>
       {childDevices.length > 0 && <TableContainer>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
@@ -309,7 +312,7 @@ export default ({
                   {row.config.DeviceConfiguration.DeviceSetting.Brand}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  <IconButton onClick={() => history.push(`/device/child/${deviceid}/${row.id}`)}><ExitToApp/></IconButton>
+                  <IconButton onClick={() => history.push(`/device/child/${deviceid}/${row.id}`)}><ExitToApp /></IconButton>
                   <IconButton onClick={() => handleDeleteChild(row)}><Close /></IconButton>
                 </TableCell>
               </TableRow>
