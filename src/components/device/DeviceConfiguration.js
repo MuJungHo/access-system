@@ -40,7 +40,7 @@ const config = {
   "PMS": ["Brand", "IPAddress", "Mac", "Account", "Password", "Http"],
   "VMS": ["Brand", "IPAddress", "Mac", "Account", "Password", "Http", "Rtsp"],
   "FRS": ["Brand", "IPAddress", "LinkType", "BypassQualityCheck", "Http", "Ws", "Security", "ApiKey", "ApiSecret"],
-  "ACR": ["Brand", "IPAddress", "Mac", "DoorTimeout", "LockTimeout", "apb", "RS485MasterMode", "DoorForce", "DoorStatus"],
+  "ACR": ["Brand", "IPAddress", "Mac", "DoorTimeout", "LockTimeout", "apb", "RS485MasterMode", "DoorForce", "DoorStatus", "Tcp"],
   "ACCR": ["apb", "DoorTimeout", "LockTimeout", "DoorStatus", "DoorForce"],
   "FRD": ["DoorStatus",],
   "ELEVC": ["Brand", "IPAddress", "Mac", "Tcp", "SN"],
@@ -179,7 +179,7 @@ export default ({
             value={deviceConfig?.DeviceSetting?.ModelName || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("IPAddress") && <div className={classes.info}>
-          <span>IPAddress</span>
+          <span>IP</span>
           <TextField
             onChange={e => setDeviceConfig({
               ...deviceConfig,
@@ -203,7 +203,7 @@ export default ({
             value={deviceConfig?.DeviceSetting?.VCSHost || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("DoorTimeout") && <div className={classes.info}>
-          <span>DoorTimeout</span>
+          <span>{t("doorTimeout")}</span>
           <TextField
             type="number"
             onChange={e => setDeviceConfig({
@@ -216,7 +216,7 @@ export default ({
             value={deviceConfig?.DeviceSetting?.DoorTimeout || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("LockTimeout") && <div className={classes.info}>
-          <span>LockTimeout</span>
+          <span>{t("lockTimeout")}</span>
           <TextField
             type="number"
             onChange={e => setDeviceConfig({
@@ -229,7 +229,7 @@ export default ({
             value={deviceConfig?.DeviceSetting?.LockTimeout || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("apb") && <div className={classes.info}>
-          <span>apb</span>
+          <span>{t("apb")}</span>
           <TextField
             style={{ flex: .5, marginRight: 10 }}
             type="number"
@@ -256,7 +256,7 @@ export default ({
             value={deviceConfig?.DeviceSetting?.apb2 || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("RS485MasterMode") && <div className={classes.info}>
-          <span>RS485MasterMode</span>
+          <span>{t("rS485MasterMode")}</span>
           <div>
             <Checkbox
               color="primary"
@@ -270,7 +270,7 @@ export default ({
           </div>
         </div>}
         {config[deviceConfig.Category]?.includes("DoorForce") && <div className={classes.info}>
-          <span>DoorForce</span>
+          <span>{t("doorForce")}</span>
           <div>
             <Checkbox
               color="primary"
@@ -284,7 +284,7 @@ export default ({
           </div>
         </div>}
         {config[deviceConfig.Category]?.includes("DoorStatus") && <div className={classes.info}>
-          <span>DoorStatus</span>
+          <span>{t("doorStatus")}</span>
           <div>
             <Checkbox
               color="primary"
@@ -397,7 +397,7 @@ export default ({
             value={deviceConfig?.Ports?.Rtsp || ""} />
         </div>}
         {config[deviceConfig.Category]?.includes("Tcp") && <div className={classes.info}>
-          <span>Tcp</span>
+          <span>Port</span>
           <TextField
             type="number"
             onChange={e => setDeviceConfig({
