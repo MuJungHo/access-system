@@ -1,5 +1,4 @@
 import React from "react";
-import { DeviceProvider } from "../../contexts/DeviceContext";
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
@@ -64,26 +63,24 @@ export default function Devices() {
 
 
   return (
-    <DeviceProvider>
-      <div className={classes.root}>
-        <StyledTabs
-          value={tabIndex}
-          TabIndicatorProps={{ style: { background: 'white' } }}
-          onChange={(event, newValue) => {
-            setTabIndex(newValue);
-          }}
-          variant="fullWidth"
-          textColor="primary"
-        >
-          <StyledTab label="設備列表" />
-          <StyledTab label="設備群組" />
-        </StyledTabs>
+    <div className={classes.root}>
+      <StyledTabs
+        value={tabIndex}
+        TabIndicatorProps={{ style: { background: 'white' } }}
+        onChange={(event, newValue) => {
+          setTabIndex(newValue);
+        }}
+        variant="fullWidth"
+        textColor="primary"
+      >
+        <StyledTab label="設備列表" />
+        <StyledTab label="設備群組" />
+      </StyledTabs>
 
-        <Paper className={classes.paper}>
-          <DeviceList />
-        </Paper>
+      <Paper className={classes.paper}>
+        <DeviceList />
+      </Paper>
 
-      </div>
-    </DeviceProvider>
+    </div>
   );
 }
