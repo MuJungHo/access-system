@@ -9,6 +9,7 @@ import Location from '../Views/Location'
 import Access from '../Views/Access'
 
 import Device from '../Views/Device/Item'
+import CardStatus from '../Views/Device/CardStatus'
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
@@ -35,6 +36,11 @@ const routes = [
   {
     path: '/device/child/:parentid/:deviceid',
     component: Device,
+    siderlink: false
+  },
+  {
+    path: '/device/card-status/:deviceid',
+    component: CardStatus,
     siderlink: false
   },
   {

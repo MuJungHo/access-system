@@ -216,7 +216,8 @@ export default function Devices() {
           { key: 'ip', label: t('ip'), enable: true },
         ]}
         actions={[
-          { name: t('edit'), onClick: handleEditDeviceOpen, icon: <BorderColorSharp /> }
+          { name: t('edit'), onClick: handleEditDeviceOpen, icon: <BorderColorSharp /> },
+          { name: "出入", onClick: (e, row) => history.push(`/device/card-status/${row.id}`), icon: <BorderColorSharp /> }
         ]}
       />
     </React.Fragment>

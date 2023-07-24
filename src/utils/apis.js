@@ -33,7 +33,7 @@ export const api = (token, logout, setSnakcBar, t) => {
         })
     });
   }
-  
+
   return {
     getDeviceList: ({ ...rest }) => promise_(instance.get('/db/device/list', { params: { sign, timestamp, ...rest } })),
     getStaffList: ({ ...rest }) => promise_(instance.get('/db/staff/list', { params: { sign, timestamp, ...rest } })),
@@ -72,7 +72,7 @@ export const api = (token, logout, setSnakcBar, t) => {
     addACCACCR: ({ data, ...rest }) => promise_(instance.post('/db/accr/add', { ...data }, { params: { sign, timestamp, ...rest } })),
     addVMSIPC: ({ data, ...rest }) => promise_(instance.post('/db/vmsipc/add', { ...data }, { params: { sign, timestamp, ...rest } })),
 
-
+    getDeviceCardStatusList: ({ data, ...rest }) => promise_(instance.post('/db/device/card_status', { ...data }, { params: { sign, timestamp, ...rest } })),
     getAvailableDeviceIdList: ({ ...rest }) => promise_(instance.get('/db/deviceid/list', { params: { sign, timestamp, ...rest } })),
     getDevcieGroupList: ({ ...rest }) => promise_(instance.get('/db/group/list', { params: { sign, timestamp, ...rest } })),
     getAccessGroupListById: ({ ...rest }) => promise_(instance.get('/db/deviceid/list', { params: { sign, timestamp, ...rest } })),

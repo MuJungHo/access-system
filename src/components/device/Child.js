@@ -228,7 +228,7 @@ export default ({
 
   const handleOpenModal = () => {
     showModal({
-      title: "上線設備",
+      title: "可連接設備",
       component: modalComponent,
       onConfirm: handleConfirm
     })
