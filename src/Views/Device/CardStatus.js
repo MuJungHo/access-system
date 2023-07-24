@@ -98,7 +98,7 @@ export default function Location() {
       setRows(tableData)
 
     })();
-  }, [authedApi, filter])
+  }, [filter])
 
   const handleResetCardStatus = async (e, row) => {
     await authedApi.postResetDeviceCardStatus({ data: { card_id: [row.id] }, id: deviceid });
