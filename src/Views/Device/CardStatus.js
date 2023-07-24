@@ -2,15 +2,22 @@ import React, { useContext } from "react";
 import { useHistory, useParams } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
+import { LayoutContext } from "../../contexts/LayoutContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from "../../components/table/Table";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Select from '../../components/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import moment from 'moment'
 import {
-  IconButton
+  IconButton,
 } from '@material-ui/core'
+import {
+  ExitToApp,
+
+  RotateLeft
+} from '@material-ui/icons';
 
 const identities = [
   { value: "staff", label: "staff" },
@@ -51,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Location() {
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
+  const { setSnackBar } = useContext(LayoutContext);
   const { deviceid } = useParams();
   const history = useHistory();
   const [rows, setRows] = React.useState([]);
@@ -58,6 +66,8 @@ export default function Location() {
   const [filter, setFilter] = React.useState({
     order: 'desc',
     orderBy: 'datetime',
+    start: moment().startOf('date').valueOf(),
+    end: moment().endOf('date').valueOf(),
     page: 0,
     limit: 5,
     identity: [],
@@ -79,6 +89,9 @@ export default function Location() {
         return {
           ...data,
           id: data.id,
+          photo: data.photo ? <img src={`data:image/png;base64,${data.photo}`} style={{ borderRadius: '50%', height: 50, width: 50 }} /> : '--',
+          timestamp: data.timestamp > 0 ? moment(data.timestamp).format('YYYY-MM-DD hh:mm:ss') : '--',
+          status: data.status === 1 ? <ExitToApp color="secondary" /> : '--'
         }
       })
       setTotal(total)
@@ -87,6 +100,19 @@ export default function Location() {
     })();
   }, [authedApi, filter])
 
+  const handleResetCardStatus = async (e, row) => {
+    await authedApi.postResetDeviceCardStatus({ data: { card_id: [row.id] }, id: deviceid });
+
+    setSnackBar({
+      message: "重設成功",
+      isOpen: true,
+      severity: "success"
+    })
+
+    const tableData = rows.filter(row_ => row_.id !== row.id)
+    setTotal(total - 1)
+    setRows(tableData)
+  }
   return (
     <div className={classes.root}>
       <IconButton onClick={() => history.push('/device/list')}><ArrowBackIcon /></IconButton>
@@ -108,7 +134,7 @@ export default function Location() {
                   status: e.target.value
                 })}
                 multiple
-                label={"status"}
+                label={t('status')}
               >
                 {
                   states
@@ -144,12 +170,17 @@ export default function Location() {
           }
           columns={[
             { key: 'name', label: t('name'), enable: true },
+            { key: 'photo', label: t('photo'), enable: true },
             { key: 'identity', label: t('identity'), enable: true },
-            { key: 'code', label: "code", enable: true },
-            { key: 'timestamp', label: "timestamp", enable: true },
+            { key: 'status', label: t('status'), enable: true },
+
+            // { key: 'code', label: "code", enable: true },
+            { key: 'timestamp', label: t("date"), enable: true },
             { key: 'uid', label: t("uid"), enable: true },
           ]}
-          actions={[]}
+          actions={[
+            { name: t('reset'), onClick: handleResetCardStatus, icon: <RotateLeft /> },
+          ]}
         />
       </Paper>
     </div>

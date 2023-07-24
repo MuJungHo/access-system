@@ -6,7 +6,7 @@ export const instance = axios.create({
   timeout: 30000
 })
 
-export const api = (token, logout, setSnakcBar, t) => {
+export const api = (token, logout, setSnackBar, t) => {
   const timestamp = Date.now()
   const sign = md5(timestamp + '#' + token)
 
@@ -23,7 +23,7 @@ export const api = (token, logout, setSnakcBar, t) => {
             if (json.code === 400124) {
               logout()
             }
-            setSnakcBar({
+            setSnackBar({
               message: t(json.code),
               isOpen: true,
               severity: "error"
@@ -73,6 +73,7 @@ export const api = (token, logout, setSnakcBar, t) => {
     addVMSIPC: ({ data, ...rest }) => promise_(instance.post('/db/vmsipc/add', { ...data }, { params: { sign, timestamp, ...rest } })),
 
     getDeviceCardStatusList: ({ data, ...rest }) => promise_(instance.post('/db/device/card_status', { ...data }, { params: { sign, timestamp, ...rest } })),
+    postResetDeviceCardStatus: ({ data, ...rest }) => promise_(instance.post('/db/device/reset_card_status', { ...data }, { params: { sign, timestamp, ...rest } })),
     getAvailableDeviceIdList: ({ ...rest }) => promise_(instance.get('/db/deviceid/list', { params: { sign, timestamp, ...rest } })),
     getDevcieGroupList: ({ ...rest }) => promise_(instance.get('/db/group/list', { params: { sign, timestamp, ...rest } })),
     getAccessGroupListById: ({ ...rest }) => promise_(instance.get('/db/deviceid/list', { params: { sign, timestamp, ...rest } })),

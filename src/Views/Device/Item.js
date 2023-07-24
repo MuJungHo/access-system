@@ -69,7 +69,14 @@ export default () => {
       config.DeviceConfiguration.DeviceSetting.apb2 = apb2
 
       setDeviceConfig(config.DeviceConfiguration)
-      setChildDevices(child)
+
+      let child_ = child;
+      child_ = child_.map(c => ({
+        ...c,
+        categort: c.config.DeviceConfiguration.Category || "--",
+        brand: c.config.DeviceConfiguration.DeviceSetting.Brand || "--"
+      }))
+      setChildDevices(child_)
 
       if (schedule) {
         const time_table = schedule?.time_table || []

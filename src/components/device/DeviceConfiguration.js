@@ -56,7 +56,7 @@ export default ({
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
   const { authedApi } = useContext(AuthContext);
-  const { setSnakcBar } = useContext(LayoutContext);
+  const { setSnackBar } = useContext(LayoutContext);
   const { deviceid } = useParams();
 
   const handleSaveDeviceConfiguration = async () => {
@@ -100,7 +100,7 @@ export default ({
     if (deviceConfig.Category === "PMSG") {
       await authedApi.editPMSGDevice({ data: { DeviceConfiguration: deviceConfig }, id: deviceid })
     }
-    setSnakcBar({
+    setSnackBar({
       message: t('saveSucceed'),
       isOpen: true,
       severity: "success"

@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { useHistory, useLocation } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
+import { LayoutContext } from "../../contexts/LayoutContext";
 import { makeStyles } from '@material-ui/core/styles';
 // import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -71,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
 const PathComponent = () => {
   const location = useLocation();
   const history = useHistory();
+  // console.log(location.pathname)
   if (location.pathname === "/device/list") return "設備管理"
   if (location.pathname === "/event") return "事件管理"
   if (location.pathname === "/log") return "系統紀錄"
@@ -92,6 +94,20 @@ const PathComponent = () => {
       設備詳情
     </Link>
   </Breadcrumbs>)
+  if (location.pathname.includes("/device/card-status/")) return (<Breadcrumbs aria-label="breadcrumb">
+    <Link color="inherit" onClick={e => {
+      e.preventDefault();
+      history.push("/device/list")
+
+    }}>
+      設備管理
+    </Link>
+    <Link
+      color="textPrimary"
+    >
+      卡片狀況
+    </Link>
+  </Breadcrumbs>)
   return ""
 }
 
@@ -100,7 +116,8 @@ const Appbar = ({ open }) => {
   const history = useHistory();
 
   const md5 = require("md5");
-  const { logout, token, setSnakcBar } = useContext(AuthContext);
+  const { logout, token } = useContext(AuthContext);
+  const { setSnackBar } = useContext(LayoutContext)
   const { locale, changeLocale } = useContext(LocaleContext);
   const [wsData, setWsData] = React.useState({})
   const [anchor, setAnchor] = React.useState(null);
@@ -159,7 +176,7 @@ const Appbar = ({ open }) => {
         prevEvents_.push({ ...wsData['Event'], isReaded: 0 })
         return prevEvents_
       })
-      setSnakcBar({
+      setSnackBar({
         isOpen: true,
         severity: {
           1: 'success',

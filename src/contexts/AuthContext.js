@@ -9,7 +9,7 @@ const AuthContext = createContext();
 
 function AuthProvider(props) {
   const { t } = useContext(LocaleContext);
-  const { setSnakcBar } = useContext(LayoutContext);
+  const { setSnackBar } = useContext(LayoutContext);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [authedUser, setAuthedUser] = useState(JSON.parse(localStorage.getItem('user')));
   const [authedCustomize, setAuthedCustomize] = useState(JSON.parse(localStorage.getItem('customize')))
@@ -54,7 +54,7 @@ function AuthProvider(props) {
     authedUser,
     authedCustomize,
     editAuthedUserCustomize,
-    authedApi: api(token, logout, setSnakcBar, t),
+    authedApi: api(token, logout, setSnackBar, t),
   };
 
   return <AuthContext.Provider value={value} {...props} />;

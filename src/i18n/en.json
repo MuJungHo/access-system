@@ -30,6 +30,7 @@
         "last7Days": "Last 7 Days"
     },
     "department": "department",
+    "delete": "delete",
     "detail": "detail",
     "description": "description",
     "device": "Device",
@@ -61,6 +62,7 @@
     "photo": "photo",
     "phonenumber": "Phone Number",
     "play": "play",
+    "reset": "reset",
     "role": "Role",
     "rS485MasterMode": "Bidirectional control",
     "rtsp": "RTSP",

@@ -18,7 +18,7 @@ function LayoutProvider({ children, ...rest }) {
     size: "sm"
   })
 
-  const [snackBar, setSnakcBar] = useState({
+  const [snackBar, setSnackBar] = useState({
     isOpen: false,
     severity: 'info',
     message: ''
@@ -45,7 +45,7 @@ function LayoutProvider({ children, ...rest }) {
   }
 
   const value = {
-    setSnakcBar,
+    setSnackBar,
     modal,
     showModal,
     hideModal
@@ -58,18 +58,16 @@ function LayoutProvider({ children, ...rest }) {
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       open={snackBar.isOpen}
       autoHideDuration={3000}
-      onClose={() => setSnakcBar({
+      onClose={() => setSnackBar({
+        ...snackBar,
         isOpen: false,
-        severity: 'info',
-        message: ''
       })}>
       <Alert
         elevation={6}
         variant="filled"
-        onClose={() => setSnakcBar({
+        onClose={() => setSnackBar({
+          ...snackBar,
           isOpen: false,
-          severity: 'info',
-          message: ''
         })} severity={snackBar.severity}>
         {snackBar.message}
       </Alert>

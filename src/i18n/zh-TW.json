@@ -30,6 +30,7 @@
         "last7Days": "七日內"
     },
     "department": "部門",
+    "delete": "刪除",
     "detail": "細節",
     "description": "描述",
     "device": "設備管理",
@@ -61,6 +62,7 @@
     "photo": "相片",
     "phonenumber": "電話號碼",
     "play": "播放",
+    "reset": "重設",
     "role": "權限",
     "rS485MasterMode": "雙向管制",
     "rtsp": "RTSP",

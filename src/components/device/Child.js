@@ -7,6 +7,7 @@ import { LayoutContext } from "../../contexts/LayoutContext";
 import { makeStyles } from '@material-ui/core/styles';
 // import Select from "../../components/Select"
 import DetailCard from "./DetailCard";
+import SimpleTable from "../table/SimpleTable"
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -66,7 +67,6 @@ export default ({
     if (deviceConfig.Category === "VMS") {
       result = childDevices.map(child => child.config.DeviceConfiguration.DeviceSetting.Mac)
     }
-    // console.log(result, childDevices)
     return result
   }
 
@@ -233,6 +233,8 @@ export default ({
       onConfirm: handleConfirm
     })
   }
+
+
   const modalComponent = (
     childs.length === 0
       ? <h6>無</h6>
@@ -279,7 +281,7 @@ export default ({
                     </TableCell>)
                   }
 
-                  <TableCell>{getDisabledChilds().includes(row.key) ? "已連接": "可連接"}</TableCell>
+                  <TableCell>{getDisabledChilds().includes(row.key) ? "已連接" : "可連接"}</TableCell>
                 </TableRow>
               )
             })}
@@ -289,37 +291,19 @@ export default ({
 
   return (
     <DetailCard loading={isLoading} onClick={handleOpenModal} buttonText="新增" title="已連接設備" style={{ marginBottom: 20 }}>
-      {childDevices.length > 0 && <TableContainer>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Brand</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {childDevices.map((row) => (
-              <TableRow key={row.name}>
-                <TableCell component="th" scope="row">
-                  {row.name}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.config.DeviceConfiguration.Category}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.config.DeviceConfiguration.DeviceSetting.Brand}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  <IconButton onClick={() => history.push(`/device/child/${deviceid}/${row.id}`)}><ExitToApp /></IconButton>
-                  <IconButton onClick={() => handleDeleteChild(row)}><Close /></IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>}
+      <SimpleTable
+        columns={
+          [
+            { key: 'name', label: t('name') },
+            { key: 'category', label: t('category') },
+            { key: 'brand', label: t('brand') },
+          ]}
+        data={childDevices}
+        actions={[
+          { name: t('edit'), onClick: (e, row) => history.push(`/device/child/${deviceid}/${row.id}`), icon: <ExitToApp /> },
+          { name: t('delete'), onClick: (e, row) => handleDeleteChild(row), icon: <Close /> },
+        ]}
+      />
     </DetailCard>
   )
 }

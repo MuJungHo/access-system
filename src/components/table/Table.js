@@ -15,8 +15,6 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -29,14 +27,12 @@ import Switch from '@material-ui/core/Switch';
 
 
 import SearchIcon from "@material-ui/icons/Search"
-import SettingsIcon from '@material-ui/icons/Settings';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import TableChartIcon from '@material-ui/icons/TableChart';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 
 import ConfirmDialog from "../ConfirmDialog";
-
+import Actions from "./Actions"
 import { DateRangePicker } from 'rsuite';
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -390,58 +386,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Actions = ({ actions, row }) => {
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null)
-
-  const handleActionClick = event => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
-  const handleItemClick = (event, action) => {
-    setAnchorEl(null)
-    action.onClick(event, row)
-  }
-
-  return (
-    <div onClick={e => e.stopPropagation()}>
-      <SettingsIcon onClick={handleActionClick} />
-      <Menu
-        open={Boolean(anchorEl)}
-        className={classes.menu}
-        classes={{ list: classes.list }}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        getContentAnchorEl={null}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        {
-          actions.map(action =>
-            <MenuItem
-              key={action.name}
-              onClick={(event) => handleItemClick(event, action)}
-              className={classes.item}
-            >
-              {action.icon ? action.icon : null}
-              <Typography color="textSecondary" variant="caption">{action.name}</Typography>
-            </MenuItem>
-          )
-        }
-
-      </Menu>
-    </div>
-  );
-};
 
 export default ({
   data,

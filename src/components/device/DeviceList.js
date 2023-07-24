@@ -4,10 +4,10 @@ import { useHistory } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
 import {
-  PlayArrow,
   BorderColorSharp,
   FiberManualRecord,
-  Close
+  Close,
+  MeetingRoom
 } from '@material-ui/icons';
 
 import MenuItem from '@material-ui/core/MenuItem';
@@ -130,6 +130,8 @@ export default function Devices() {
     history.push(`/device/item/${device.id}`)
   }
 
+  const handleActionShow = device => device.category === "ACR" || device.category === "ACCR"
+
   return (
     <React.Fragment>
       <Table
@@ -216,8 +218,8 @@ export default function Devices() {
           { key: 'ip', label: t('ip'), enable: true },
         ]}
         actions={[
+          { show: handleActionShow, name: "進出", onClick: (e, row) => history.push(`/device/card-status/${row.id}`), icon: <MeetingRoom /> },
           { name: t('edit'), onClick: handleEditDeviceOpen, icon: <BorderColorSharp /> },
-          { name: "出入", onClick: (e, row) => history.push(`/device/card-status/${row.id}`), icon: <BorderColorSharp /> }
         ]}
       />
     </React.Fragment>
