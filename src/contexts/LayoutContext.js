@@ -36,11 +36,8 @@ function LayoutProvider({ children, ...rest }) {
 
   const hideModal = () => {
     setModal({
-      title: "",
-      component: <></>,
-      isOpen: false,
-      onConfirm: () => { },
-      size: "sm"
+      ...modal,
+      isOpen: false
     })
   }
 

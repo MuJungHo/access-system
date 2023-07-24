@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Location() {
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
-  const { setSnackBar } = useContext(LayoutContext);
+  const { setSnackBar, showModal } = useContext(LayoutContext);
   const { deviceid } = useParams();
   const history = useHistory();
   const [rows, setRows] = React.useState([]);
@@ -89,7 +89,15 @@ export default function Location() {
         return {
           ...data,
           id: data.id,
-          photo: data.photo ? <img src={`data:image/png;base64,${data.photo}`} style={{ borderRadius: '50%', height: 50, width: 50 }} /> : '--',
+          photo: data.photo ? <img src={`data:image/png;base64,${data.photo}`} style={{ borderRadius: '50%', height: 50, width: 50 }} onClick={() => {
+
+            showModal({
+              title: "相片",
+              component: <img src={`data:image/png;base64,${data.photo}`} style={{ display: 'block', margin: 'auto' }} />,
+              onConfirm: () => { },
+              size: "xs"
+            })
+          }} /> : '--',
           timestamp: data.timestamp > 0 ? moment(data.timestamp).format('YYYY-MM-DD hh:mm:ss') : '--',
           status: data.status === 1 ? <ExitToApp color="secondary" /> : '--'
         }
