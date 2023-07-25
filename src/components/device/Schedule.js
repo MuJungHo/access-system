@@ -1,13 +1,14 @@
 import React, { useContext } from "react";
 // import TextField from '@material-ui/core/TextField';
 import { LocaleContext } from "../../contexts/LocaleContext";
+import { AuthContext } from "../../contexts/AuthContext";
+import { LayoutContext } from "../../contexts/LayoutContext";
 import { makeStyles } from '@material-ui/core/styles';
-import Select from "../../components/Select"
+// import Select from "../../components/Select"
 import DetailCard from "./DetailCard";
 
 import {
-  Paper,
-  Divider,
+
   Radio,
   RadioGroup,
   FormControlLabel,
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default ({
+  id,
   scheduleTimes,
   setScheduleTimes,
   scheduleWeek,
@@ -43,9 +45,15 @@ export default ({
   setScheduleType
 }) => {
   const { t } = useContext(LocaleContext);
+  const { authedApi } = useContext(AuthContext);
+  const { setSnackBar } = useContext(LayoutContext);
+  // console.log(scheduleTimes)
   const classes = useStyles();
   const isCheckedAll = Object.values(scheduleWeek).every(e => e)
   const isIndeterminate = Object.values(scheduleWeek).some(e => e)
+
+  const [isLoading, setLoading] = React.useState(false)
+
   const handleCheckedAll = e => {
     setScheduleWeek({
       _sun: e.target.checked,
@@ -57,8 +65,31 @@ export default ({
       _sat: e.target.checked
     })
   }
+
+  const handleSaveSchedule = async () => {
+    setLoading(true)
+    const time_table = scheduleTimes.map(time => `${time.start}-${time.end}`)
+    const weekArr = []
+    if (scheduleWeek._mon) weekArr.push("1")
+    if (scheduleWeek._tue) weekArr.push("2")
+    if (scheduleWeek._wed) weekArr.push("3")
+    if (scheduleWeek._thu) weekArr.push("4")
+    if (scheduleWeek._fri) weekArr.push("5")
+    if (scheduleWeek._sat) weekArr.push("6")
+    if (scheduleWeek._sun) weekArr.push("7")
+    // console.log(scheduleTimes, weekArr)
+    await authedApi.putDeviceSchedule({ data: { time_table, week: weekArr.join(",") }, id })
+    setLoading(false)
+
+    setSnackBar({
+      message: "儲存成功",
+      isOpen: true,
+      severity: "success"
+    })
+  }
+
   return (
-    <DetailCard title={"時間設定"} style={{ marginBottom: 20 }}>
+    <DetailCard loading={isLoading} title={"時間設定"} style={{ marginBottom: 20 }} onClick={handleSaveSchedule}>
       <div style={{ padding: 16 }}>
         <RadioGroup value={scheduleType} onChange={e => setScheduleType(e.target.value)} row>
           <FormControlLabel value="all" control={<Radio color="primary" />} label="全時段" />

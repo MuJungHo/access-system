@@ -35,7 +35,9 @@ export default ({
   // console.log(deviceEditModal)
   return (
     <Paper className={classes.paper} style={{ ...style }}>
-      <div style={{ padding: 16, display: 'flex', alignItems: 'center' }} onClick={() => setOpen(!open)}>
+      <div
+        // onClick={() => setOpen(!open)}
+        style={{ padding: 16, display: 'flex', alignItems: 'center' }} >
         <span style={{ flex: 1, fontSize: 16 }}>{title}</span>
         {loading && <CircularProgress />}
         {showButton && open && !loading && <Button onClick={e => {
@@ -43,10 +45,10 @@ export default ({
           onClick()
         }} variant="contained" color="primary">{buttonText}</Button>}
       </div>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <Divider />
-        {children}
-      </Collapse>
+      {/* <Collapse in={open} timeout="auto" unmountOnExit> */}
+      <Divider />
+      {children}
+      {/* </Collapse> */}
     </Paper>
   )
 }

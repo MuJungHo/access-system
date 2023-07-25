@@ -7,8 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Select from "../../components/Select"
 import DetailCard from "./DetailCard";
 import {
-  Paper,
-  Divider,
+  // Paper,
+  // Divider,
   Button,
   MenuItem
 } from '@material-ui/core'

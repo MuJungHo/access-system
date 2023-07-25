@@ -109,8 +109,9 @@ export default () => {
       <DeviceConfiguration
         deviceConfig={deviceConfig}
         setDeviceConfig={setDeviceConfig} />
-      {config[deviceConfig.Category]?.includes("DoorControl") && <DoorControl id={deviceid}/>}
+      {config[deviceConfig.Category]?.includes("DoorControl") && <DoorControl id={deviceid} />}
       {config[deviceConfig.Category]?.includes("Schedule") && <Schedule
+        id={deviceid}
         scheduleType={scheduleType}
         setScheduleType={setScheduleType}
         scheduleTimes={scheduleTimes}
