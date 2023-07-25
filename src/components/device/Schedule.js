@@ -66,10 +66,32 @@ export default ({
     })
   }
 
+  const handleUpdateStartTimeRange = (e, time) => {
+    let newTimes = scheduleTimes.map(t => {
+      return t.time === time.time
+        ? { ...t, start: e.target.value } : { ...t }
+    })
+    setScheduleTimes(newTimes)
+  }
+
+  const handleUpdateEndTimeRange = (e, time) => {
+    let newTimes = scheduleTimes.map(t => {
+      return t.time === time.time
+        ? { ...t, end: e.target.value } : { ...t }
+    })
+    setScheduleTimes(newTimes)
+  }
+
+  const handleDeleteTimeRange = (time) => {
+    let newTimes = scheduleTimes.filter(t => t.time !== time.time)
+    setScheduleTimes(newTimes)
+    // console.log(scheduleTimes, time)
+  }
+
   const handleSaveSchedule = async () => {
     setLoading(true)
-    const time_table = scheduleTimes.map(time => `${time.start}-${time.end}`)
-    const weekArr = []
+    let time_table = scheduleTimes.map(time => `${time.start}-${time.end}`)
+    let weekArr = []
     if (scheduleWeek._mon) weekArr.push("1")
     if (scheduleWeek._tue) weekArr.push("2")
     if (scheduleWeek._wed) weekArr.push("3")
@@ -78,6 +100,10 @@ export default ({
     if (scheduleWeek._sat) weekArr.push("6")
     if (scheduleWeek._sun) weekArr.push("7")
     // console.log(scheduleTimes, weekArr)
+    if (scheduleType === 'all') {
+      time_table = ["00:00-23:59"]
+      weekArr = ["1", "2", "3", "4", "5", "6", "7"]
+    }
     await authedApi.putDeviceSchedule({ data: { time_table, week: weekArr.join(",") }, id })
     setLoading(false)
 
@@ -126,6 +152,7 @@ export default ({
                     type="time"
                     style={{ marginRight: 20 }}
                     defaultValue={time.start}
+                    onChange={(e) => handleUpdateStartTimeRange(e, time)}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -137,6 +164,7 @@ export default ({
                     type="time"
                     style={{ marginRight: 10 }}
                     defaultValue={time.end}
+                    onChange={(e) => handleUpdateEndTimeRange(e, time)}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -144,13 +172,13 @@ export default ({
                       step: 300, // 5 min
                     }}
                   />
-                  <IconButton><Close /></IconButton>
+                  {scheduleTimes.length > 1 && < IconButton onClick={() => handleDeleteTimeRange(time)}><Close /></IconButton>}
 
                 </div>)
             }
           </div>
         </React.Fragment>}
       </div>
-    </DetailCard>
+    </DetailCard >
   )
 }
