@@ -72,6 +72,7 @@ export const api = (token, logout, setSnackBar, t) => {
     addACCACCR: ({ data, ...rest }) => promise_(instance.post('/db/accr/add', { ...data }, { params: { sign, timestamp, ...rest } })),
     addVMSIPC: ({ data, ...rest }) => promise_(instance.post('/db/vmsipc/add', { ...data }, { params: { sign, timestamp, ...rest } })),
 
+    putDeviceOpenDoor: ({ data, ...rest }) => promise_(instance.put('/db/device/opendoor', { ...data }, { params: { sign, timestamp, ...rest } })),
     getDeviceCardStatusList: ({ data, ...rest }) => promise_(instance.post('/db/device/card_status', { ...data }, { params: { sign, timestamp, ...rest } })),
     postResetDeviceCardStatus: ({ data, ...rest }) => promise_(instance.post('/db/device/reset_card_status', { ...data }, { params: { sign, timestamp, ...rest } })),
     getAvailableDeviceIdList: ({ ...rest }) => promise_(instance.get('/db/deviceid/list', { params: { sign, timestamp, ...rest } })),
