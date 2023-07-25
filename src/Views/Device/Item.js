@@ -56,11 +56,11 @@ export default () => {
     _fri: false,
     _sat: false
   });
-  const [securityLevel, setSecurityLevel] = React.useState({});
+  const [camerabinds, setCamerabinds] = React.useState([]);
 
   React.useEffect(() => {
     (async () => {
-      const { config, child, schedule } = await authedApi.getDeviceById({ id: deviceid })
+      const { config, child, schedule, camerabind } = await authedApi.getDeviceById({ id: deviceid })
       let apb = config.DeviceConfiguration.DeviceSetting.apb || ""
       apb = apb.toString();
       const apb1 = apb.split("")[0];
@@ -96,6 +96,12 @@ export default () => {
         setScheduleType(isAll ? "all" : "custom")
       }
 
+      if (camerabind) {
+        let cameraids = camerabind.map(c => c.camera_id)
+        // console.log(camerabind)
+        setCamerabinds(cameraids)
+      }
+
     })()
   }, [])
   return (
@@ -122,7 +128,7 @@ export default () => {
         childDevices={childDevices}
         setChildDevices={setChildDevices}
         deviceConfig={deviceConfig} />}
-      {config[deviceConfig.Category]?.includes("Camera") && <Camera camerabinds={[]} />}
+      {config[deviceConfig.Category]?.includes("Camera") && <Camera reader_id={deviceid} camerabinds={camerabinds} setCamerabinds={setCamerabinds}/>}
       {config[deviceConfig.Category]?.includes("Player") && <Player id={deviceConfig.DeviceId} />}
     </div>)
 }

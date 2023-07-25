@@ -1,21 +1,17 @@
 import React, { useContext } from "react";
 // import TextField from '@material-ui/core/TextField';
 import { LocaleContext } from "../../contexts/LocaleContext";
+import { LayoutContext } from "../../contexts/LayoutContext";
+import { AuthContext } from "../../contexts/AuthContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Select from "../../components/Select"
 import DetailCard from "./DetailCard";
 import {
-  Paper,
-  Divider,
-  Button,
+  // Paper,
+  // Divider,
+  // Button,
   MenuItem
 } from '@material-ui/core'
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -25,36 +21,58 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default ({
-  camerabinds
+  camerabinds,
+  setCamerabinds,
+  reader_id
 }) => {
   const { t } = useContext(LocaleContext);
-  const classes = useStyles();
+  const { authedApi } = useContext(AuthContext);
+  const { setSnackBar } = useContext(LayoutContext);
+  // const classes = useStyles();
+
+  const [cameras, setCameras] = React.useState([])
+
+  React.useEffect(() => {
+    (async () => {
+      const { result } = await authedApi.getDeviceList({
+        category: "VMSIPC"
+        , limit: 10000
+        , page: 1
+      })
+      let options = result.map(c => ({ value: c.id, label: c.name }))
+      setCameras(options)
+
+    })()
+  }, [])
+
+  const handleSaveCamera = async () => {
+    await authedApi.postDeviceBindCamera({ data: { reader_id: Number(reader_id), camera_id: camerabinds } })
+    setSnackBar({
+      message: "儲存成功",
+      isOpen: true,
+      severity: "success"
+    })
+  }
 
   return (
-    <DetailCard buttonText="新增" title="相機綁定" style={{ marginBottom: 20 }}>
-
-      <TableContainer>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Camera ID</TableCell>
-              <TableCell>Name</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {camerabinds.map((row) => (
-              <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
-                {row.camera_id}
-              </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.name}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <DetailCard onClick={handleSaveCamera} title="相機綁定" style={{ marginBottom: 20 }}>
+      <Select
+        style={{ margin: 20 }}
+        value={camerabinds}
+        onChange={(e) => setCamerabinds(e.target.value)}
+        multiple
+        label={t("camera")}
+      >
+        {
+          cameras
+            .map(camera =>
+              <MenuItem
+                key={camera.value}
+                value={camera.value}>
+                {camera.label}
+              </MenuItem>)
+        }
+      </Select>
     </DetailCard>
   )
 }
