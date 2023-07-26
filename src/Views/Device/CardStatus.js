@@ -88,8 +88,6 @@ export default function Location() {
             showModal({
               title: "相片",
               component: <img src={`data:image/png;base64,${data.photo}`} style={{ display: 'block', margin: 'auto' }} />,
-              onConfirm: () => { },
-              size: "xs"
             })
           }} /> : '--',
           timestamp: data.timestamp > 0 ? moment(data.timestamp).format('YYYY-MM-DD hh:mm:ss') : '--',

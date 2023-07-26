@@ -14,6 +14,11 @@ import {
   MenuItem
 } from '@material-ui/core'
 
+import {
+  Close,
+  ExitToApp
+} from '@material-ui/icons';
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     width: '100%',
@@ -52,6 +57,10 @@ export default ({
             { key: 'endtime', label: t('endtime') },
           ]}
         data={vehicles}
+        actions={[
+          { name: t('edit'), onClick: (e, row) => { }, icon: <ExitToApp /> },
+          { name: t('delete'), onClick: (e, row) => { }, icon: <Close /> },
+        ]}
       />}
     </DetailCard>
   )

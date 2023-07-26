@@ -1,21 +1,55 @@
 import React, { useState, createContext } from 'react'
 import Alert from '@material-ui/lab/Alert';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
 
 import {
   Snackbar,
 } from '@material-ui/core'
-import ConfirmDialog from "../components/ConfirmDialog_"
+
+import Dialog from '@material-ui/core/Dialog';
+
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
 
 const LayoutContext = createContext();
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
 
 function LayoutProvider({ children, ...rest }) {
 
   const [modal, setModal] = useState({
     title: "",
     component: <></>,
-    isOpen: false,
-    onConfirm: () => { },
-    size: "sm"
+    isOpen: false
   })
 
   const [snackBar, setSnackBar] = useState({
@@ -24,13 +58,11 @@ function LayoutProvider({ children, ...rest }) {
     message: ''
   })
 
-  const showModal = ({ title = "", component = <></>, onConfirm = () => { }, size = "sm" }) => {
+  const showModal = ({ title = "", component = <></> }) => {
     setModal({
       title,
       component,
-      isOpen: true,
-      onConfirm,
-      size
+      isOpen: true
     })
   }
 
@@ -69,16 +101,13 @@ function LayoutProvider({ children, ...rest }) {
         {snackBar.message}
       </Alert>
     </Snackbar>
-
-    <ConfirmDialog
-      title={modal.title}
-      open={modal.isOpen}
-      maxWidth={modal.size}
-      onConfirm={modal.onConfirm}
-      onClose={hideModal}
-    >
+    <Dialog onClose={hideModal} open={modal.isOpen}>
+      <DialogTitle id="customized-dialog-title" onClose={hideModal}>
+        {modal.title}
+      </DialogTitle>
       {modal.component}
-    </ConfirmDialog>
+
+    </Dialog>
     {children}
   </LayoutContext.Provider>;
 }

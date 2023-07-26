@@ -14,6 +14,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+
 import {
   Close,
   ExitToApp
@@ -229,8 +230,7 @@ export default ({
   const handleOpenModal = () => {
     showModal({
       title: "可連接設備",
-      component: modalComponent,
-      onConfirm: handleConfirm
+      component: modalComponent
     })
   }
 

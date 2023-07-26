@@ -9,8 +9,8 @@ import Vehicle from "../../components/staff/Vehicle"
 import Card from "../../components/staff/Card"
 import Face from "../../components/staff/Face"
 import {
-  Paper,
-  Button,
+  // Paper,
+  // Button,
   IconButton,
 
   Avatar,
@@ -78,7 +78,7 @@ const Person = () => {
           id: c.faceidid,
           starttime: moment(c.starttime).format('YYYY-MM-DD hh:mm:ss'),
           endtime: moment(c.endtime).format('YYYY-MM-DD hh:mm:ss'),
-          photo: c.photo.length > 0 && <AvatarGroup >{
+          avatar: c.photo.length > 0 && <AvatarGroup >{
             c.photo.map(p => <Avatar key={p.faceidphotoid} src={`data:image/png;base64,${p.photo}`} />)
           }</AvatarGroup>,
         }

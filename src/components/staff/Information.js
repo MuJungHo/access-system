@@ -80,8 +80,6 @@ export default ({
             showModal({
               title: "相片",
               component: <img src={`data:image/png;base64,${staff.photo}`} style={{ display: 'block', margin: 'auto', height: 150, width: 150 }} />,
-              onConfirm: () => { },
-              size: "xs"
             })
           }} /> : '--'}
           </div>

@@ -5,9 +5,9 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { LayoutContext } from "../../contexts/LayoutContext";
 import {
-  PlayArrow,
+  // PlayArrow,
   BorderColorSharp,
-  FiberManualRecord
+  // FiberManualRecord
 } from '@material-ui/icons';
 
 import Table from "../../components/table/Table";
@@ -71,8 +71,6 @@ export default function Devices() {
             showModal({
               title: "相片",
               component: <img src={`data:image/png;base64,${data.photo}`} style={{ display: 'block', margin: 'auto' }} />,
-              onConfirm: () => { },
-              size: "xs"
             })
           }} /> : '--',
           card,
