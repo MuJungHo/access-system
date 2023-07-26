@@ -15,17 +15,10 @@ import {
 } from '@material-ui/core'
 import {
   ExitToApp,
-
   RotateLeft
 } from '@material-ui/icons';
 
-const identities = [
-  { value: "staff", label: "staff" },
-  { value: "guest", label: "guest" },
-  { value: "vip", label: "vip" },
-  { value: "blacklist", label: "blacklist" },
-  { value: "stranger", label: "stranger" },
-]
+import { identities } from "../../utils/constants"
 
 const states = [
   { value: 1, label: "in" },
@@ -89,6 +82,7 @@ export default function Location() {
         return {
           ...data,
           id: data.id,
+          identity: t(data.identity?.toLowerCase()),
           photo: data.photo ? <img src={`data:image/png;base64,${data.photo}`} style={{ borderRadius: '50%', height: 50, width: 50 }} onClick={() => {
 
             showModal({
@@ -170,7 +164,7 @@ export default function Location() {
                       <MenuItem
                         key={identity.value}
                         value={identity.value}>
-                        {identity.label}
+                        {t(identity.value)}
                       </MenuItem>)
                 }
               </Select>

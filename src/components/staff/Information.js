@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-// import TextField from '@material-ui/core/TextField';
+import { useHistory, useParams } from "react-router-dom"
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { LayoutContext } from "../../contexts/LayoutContext";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -13,6 +13,7 @@ import {
   MenuItem,
   TextField
 } from '@material-ui/core'
+import { identities } from "../../utils/constants"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,15 +32,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const identities = [{
-  label: "Staff", value: 1,
-}]
-
 export default ({
   staff,
   setStaff
 }) => {
   const classes = useStyles();
+  const { staffid } = useParams();
   const { t } = useContext(LocaleContext);
   const { authedApi } = useContext(AuthContext);
   const { setSnackBar, showModal } = useContext(LayoutContext);
@@ -54,15 +52,27 @@ export default ({
     })()
   }, [])
 
+  const handleSaveStaff = async () => {
+    await authedApi.editStaff({ data: { ...staff }, staffid })
+    setSnackBar({
+      message: "儲存成功",
+      isOpen: true,
+      severity: "success"
+    })
+  }
+
   return (
     <DetailCard
       title="人員資訊"
-      // onClick={handleSaveCamera} 
+      onClick={handleSaveStaff}
       style={{ marginBottom: 20 }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', padding: 8 }}>
         <div className={classes.info}>
           <span>{t("name")}</span>
-          <TextField value={staff.name || ''} />
+          <TextField value={staff.name || ''} onChange={e => setStaff({
+            ...staff,
+            name: e.target.value
+          })} />
         </div>
         <div className={classes.info}>
           <span>{t("photo")}</span>
@@ -81,7 +91,10 @@ export default ({
           <Select
             style={{ margin: 20 }}
             value={staff.identity || ''}
-          // onChange={(e) => setCamerabinds(e.target.value)}
+            onChange={e => setStaff({
+              ...staff,
+              identity: e.target.value
+            })}
           // label={t("identity")}
           >
             {
@@ -89,35 +102,11 @@ export default ({
                 .map(i =>
                   <MenuItem
                     key={i.value}
-                    value={i.value}>
-                    {i.label}
+                    value={i.index}>
+                    {t(i.value)}
                   </MenuItem>)
             }
           </Select>
-        </div>
-        <div className={classes.info}>
-          <span>{t("idcardnumber")}</span>
-          <TextField value={staff.idcardnumber || ''} />
-        </div>
-        <div className={classes.info}>
-          <span>{t("phonenumber")}</span>
-          <TextField value={staff.phonenumber || ''} />
-        </div>
-        <div className={classes.info}>
-          <span>{t("company")}</span>
-          <TextField value={staff.company || ''} />
-        </div>
-        <div className={classes.info}>
-          <span>{t("department")}</span>
-          <TextField value={staff.department || ''} />
-        </div>
-        <div className={classes.info}>
-          <span>{t("email")}</span>
-          <TextField value={staff.email || ''} />
-        </div>
-        <div className={classes.info}>
-          <span>{t("note")}</span>
-          <TextField value={staff.note || ''} />
         </div>
         <div className={classes.info}>
           <span>{t("group")}</span>
@@ -125,7 +114,10 @@ export default ({
             style={{ margin: 20 }}
             value={staff.groups || []}
             multiple
-            // onChange={(e) => setCamerabinds(e.target.value)}
+            onChange={e => setStaff({
+              ...staff,
+              groups: e.target.value
+            })}
             label={t("group")}
           >
             {
@@ -138,6 +130,62 @@ export default ({
                   </MenuItem>)
             }
           </Select>
+        </div>
+        <div className={classes.info}>
+          <span>{t("staffnumber")}</span>
+          <TextField value={staff.staffnumber || ''}
+            onChange={e => setStaff({
+              ...staff,
+              staffnumber: e.target.value
+            })} />
+        </div>
+        <div className={classes.info}>
+          <span>{t("idcardnumber")}</span>
+          <TextField value={staff.idcardnumber || ''}
+            onChange={e => setStaff({
+              ...staff,
+              idcardnumber: e.target.value
+            })} />
+        </div>
+        <div className={classes.info}>
+          <span>{t("phonenumber")}</span>
+          <TextField value={staff.phonenumber || ''}
+            onChange={e => setStaff({
+              ...staff,
+              phonenumber: e.target.value
+            })} />
+        </div>
+        <div className={classes.info}>
+          <span>{t("company")}</span>
+          <TextField value={staff.company || ''}
+            onChange={e => setStaff({
+              ...staff,
+              company: e.target.value
+            })} />
+        </div>
+        <div className={classes.info}>
+          <span>{t("department")}</span>
+          <TextField value={staff.department || ''}
+            onChange={e => setStaff({
+              ...staff,
+              department: e.target.value
+            })} />
+        </div>
+        <div className={classes.info}>
+          <span>{t("email")}</span>
+          <TextField value={staff.email || ''}
+            onChange={e => setStaff({
+              ...staff,
+              email: e.target.value
+            })} />
+        </div>
+        <div className={classes.info}>
+          <span>{t("note")}</span>
+          <TextField value={staff.note || ''}
+            onChange={e => setStaff({
+              ...staff,
+              note: e.target.value
+            })} />
         </div>
       </div>
     </DetailCard>

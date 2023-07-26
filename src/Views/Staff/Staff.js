@@ -78,16 +78,9 @@ const Person = () => {
           id: c.faceidid,
           starttime: moment(c.starttime).format('YYYY-MM-DD hh:mm:ss'),
           endtime: moment(c.endtime).format('YYYY-MM-DD hh:mm:ss'),
-          photo: <AvatarGroup max={4}>
-            <Avatar src={`data:image/png;base64,${c.photo[0].photo}`} />
-            <Avatar src={`data:image/png;base64,`} />
-            <Avatar src={`data:image/png;base64,`} />
-            <Avatar src={`data:image/png;base64,`} />
-            <Avatar src={`data:image/png;base64,`} />
-            <Avatar src={`data:image/png;base64,`} /></AvatarGroup>
-          // photo: c.photo.length > 0 && <AvatarGroup >{
-          //   c.photo.map(p => <Avatar key={p.faceidphotoid} src={`data:image/png;base64,${p.photo}`} />)
-          // }</AvatarGroup>,
+          photo: c.photo.length > 0 && <AvatarGroup >{
+            c.photo.map(p => <Avatar key={p.faceidphotoid} src={`data:image/png;base64,${p.photo}`} />)
+          }</AvatarGroup>,
         }
       }) || []
       setFaces(faces_)
