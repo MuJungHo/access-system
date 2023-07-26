@@ -5,7 +5,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { LayoutContext } from "../../contexts/LayoutContext";
 import { makeStyles } from '@material-ui/core/styles';
 // import Select from "../../components/Select"
-import DetailCard from "./DetailCard";
+import DetailCard from "../DetailCard";
 
 import {
 

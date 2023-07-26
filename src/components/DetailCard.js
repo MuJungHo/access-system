@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 // import TextField from '@material-ui/core/TextField';
-import { LocaleContext } from "../../contexts/LocaleContext";
+import { LocaleContext } from "../contexts/LocaleContext";
 import { makeStyles } from '@material-ui/core/styles';
 // import Select from "../../components/Select"
 

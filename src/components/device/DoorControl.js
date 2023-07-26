@@ -5,7 +5,7 @@ import { LayoutContext } from "../../contexts/LayoutContext";
 import { AuthContext } from "../../contexts/AuthContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Select from "../../components/Select"
-import DetailCard from "./DetailCard";
+import DetailCard from "../DetailCard";
 import {
   // Paper,
   // Divider,

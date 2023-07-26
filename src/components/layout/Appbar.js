@@ -108,6 +108,19 @@ const PathComponent = () => {
       卡片狀況
     </Link>
   </Breadcrumbs>)
+  if (location.pathname.includes("/staff/person/")) return (<Breadcrumbs aria-label="breadcrumb">
+    <Link color="inherit" onClick={e => {
+      e.preventDefault();
+      history.push("/staff/list")
+    }}>
+      人員管理
+    </Link>
+    <Link
+      color="textPrimary"
+    >
+      詳細資料
+    </Link>
+  </Breadcrumbs>)
   return ""
 }
 

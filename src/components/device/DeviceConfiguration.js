@@ -7,7 +7,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { LayoutContext } from "../../contexts/LayoutContext";
 import { makeStyles } from '@material-ui/core/styles';
 // import Select from "../../components/Select"
-import DetailCard from "./DetailCard";
+import DetailCard from "../DetailCard";
 
 import {
   // Paper,
@@ -25,10 +25,10 @@ const useStyles = makeStyles((theme) => ({
   },
   info: {
     display: 'flex',
-    width: 'calc(50% - 16px)',
+    width: 'calc(50% - 24px)',
     alignItems: 'center',
-    height: 36,
-    margin: 8,
+    height: 45,
+    margin: '6px 12px',
     '& > *': {
       flex: 1
     },

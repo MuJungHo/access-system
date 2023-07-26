@@ -51,7 +51,7 @@ const routes = [
     siderlink: true
   },
   {
-    path: '/staff/staff/:staffid',
+    path: '/staff/person/:staffid',
     component: Staff,
     siderlink: false
   },

@@ -3,6 +3,7 @@ import { useHistory, useRouteMatch } from "react-router-dom"
 import { makeStyles } from '@material-ui/core/styles';
 import { AuthContext } from "../../contexts/AuthContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
+import { LayoutContext } from "../../contexts/LayoutContext";
 import {
   PlayArrow,
   BorderColorSharp,
@@ -11,6 +12,7 @@ import {
 
 import Table from "../../components/table/Table";
 import Paper from '@material-ui/core/Paper';
+import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,10 +45,11 @@ export default function Devices() {
   const classes = useStyles();
   const history = useHistory();
   const { t } = useContext(LocaleContext);
+  const { setSnackBar, showModal } = useContext(LayoutContext);
   const [rows, setRows] = React.useState([]);
   const [total, setTotal] = React.useState(0);
   const [filter, setFilter] = React.useState({
-    order: 'asc',
+    order: 'desc',
     orderBy: 'datetime',
     page: 0,
     limit: 5
@@ -56,7 +59,7 @@ export default function Devices() {
   React.useEffect(() => {
     (async () => {
       const { result, total } = await authedApi.getStaffList({ ...filter, page: filter.page + 1 })
-
+      // console.log(result)
       const tableData = result.map(data => {
         const card = data.cardid.map(c => (c.uhfnumber && `UHF number  ${c.uhfnumber}`) || (c.mifarenumber && `Mifare number  ${c.mifarenumber}`)) || '--'
         const vehicle = data.vehicleid.map(v => v.vin).join(' ,') || '--'
@@ -64,12 +67,21 @@ export default function Devices() {
         return {
           ...data,
           id: data.staffid,
+          photo: data.photo ? <Avatar src={`data:image/png;base64,${data.photo}`} onClick={() => {
+            showModal({
+              title: "相片",
+              component: <img src={`data:image/png;base64,${data.photo}`} style={{ display: 'block', margin: 'auto' }} />,
+              onConfirm: () => { },
+              size: "xs"
+            })
+          }} /> : '--',
           card,
           vehicle,
           group,
           groups: undefined,
           cardid: undefined,
           vehicleid: undefined,
+          faceid: undefined
         }
       })
       setTotal(total)
@@ -92,19 +104,19 @@ export default function Devices() {
           setFilter={setFilter}
           columns={[
             { key: "name", label: t('name'), enable: true, sortable: true },
-            { key: "faceid", label: '頭像', enable: true },
-            { key: "cardid", label: '卡片', enable: true },
+            { key: "photo", label: '頭像', enable: true },
+            // { key: "cardid", label: '卡片', enable: true },
             { key: "company", label: t('company'), enable: true },
             { key: "department", label: t('department'), enable: true },
-            { key: "vehicleid", label: '車輛', enable: true },
+            // { key: "vehicleid", label: '車輛', enable: true },
             { key: "email", label: t('email'), enable: false },
-            { key: "groups", label: t('group'), enable: false },
+            // { key: "groups", label: t('group'), enable: false },
             { key: "idcardnumber", label: t('idcardnumber'), enable: false },
             { key: "staffnumber", label: t('staffnumber'), enable: false },
             { key: "note", label: t('note'), enable: false },
           ]}
           actions={[
-            { name: t('edit'), onClick: (e, person) => history.push(`/person/${person.staffid}`), icon: <BorderColorSharp /> }]}
+            { name: t('edit'), onClick: (e, person) => history.push(`/staff/person/${person.staffid}`), icon: <BorderColorSharp /> }]}
         />
       </Paper>
     </div>

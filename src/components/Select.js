@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default ({
-  label,
+  label = "",
   children,
   value,
   onChange,
