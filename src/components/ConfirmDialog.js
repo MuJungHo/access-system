@@ -5,8 +5,10 @@ import {
   DialogContent,
   DialogTitle,
   Dialog,
-  Button
+  Button,
+  Divider
 } from '@material-ui/core'
+import { palette } from '../customTheme'
 
 export default ({
   open,
@@ -14,7 +16,7 @@ export default ({
   children,
   onClose,
   onConfirm,
-  maxWidth
+  maxWidth,
 }) => {
   return (
     <Dialog
@@ -24,15 +26,17 @@ export default ({
       maxWidth={maxWidth}
     >
       <DialogTitle>{title}</DialogTitle>
+      <Divider />
       <DialogContent>
         {children}
       </DialogContent>
       <DialogActions style={{ padding: 16 }}>
-        <Button color="primary"
+        <Button color="default"
           onClick={onClose}>
           Close
         </Button>
         {typeof onConfirm === 'function' && <Button variant="contained" color="primary"
+          style={{ backgroundColor: palette.error.main }}
           onClick={onConfirm}>
           Confirm
         </Button>}

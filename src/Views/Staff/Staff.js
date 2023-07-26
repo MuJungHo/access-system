@@ -65,8 +65,8 @@ const Person = () => {
         return {
           ...c,
           id: c.vehicleidid,
-          starttime: moment(c.starttime).format('YYYY-MM-DD hh:mm:ss'),
-          endtime: moment(c.endtime).format('YYYY-MM-DD hh:mm:ss'),
+          starttimeFormat: moment(c.starttime).format('YYYY-MM-DD hh:mm:ss'),
+          endtimeFormat: moment(c.endtime).format('YYYY-MM-DD hh:mm:ss'),
         }
       }) || []
       setVehicles(vehicles_)

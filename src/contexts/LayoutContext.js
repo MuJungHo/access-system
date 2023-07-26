@@ -1,16 +1,14 @@
 import React, { useState, createContext } from 'react'
 import Alert from '@material-ui/lab/Alert';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-
+import ConfirmDialog from '../components/ConfirmDialog'
 import {
   Snackbar,
+  Divider
 } from '@material-ui/core'
 
 import Dialog from '@material-ui/core/Dialog';
@@ -46,6 +44,12 @@ const DialogTitle = withStyles(styles)((props) => {
 
 function LayoutProvider({ children, ...rest }) {
 
+  const [confirmDialog, setConfirmDialog] = useState({
+    title: "",
+    component: <></>,
+    isOpen: false
+  })
+
   const [modal, setModal] = useState({
     title: "",
     component: <></>,
@@ -73,11 +77,29 @@ function LayoutProvider({ children, ...rest }) {
     })
   }
 
+  const showConfirm = ({ title = "", component = <></>, onConfirm = () => { } }) => {
+    setConfirmDialog({
+      title,
+      component,
+      isOpen: true,
+      onConfirm
+    })
+  }
+
+  const handleConfirm = () => {
+    confirmDialog.onConfirm()
+    setConfirmDialog({
+      ...confirmDialog,
+      isOpen: false
+    })
+  }
+
   const value = {
     setSnackBar,
     modal,
     showModal,
-    hideModal
+    hideModal,
+    showConfirm
   };
 
   return <LayoutContext.Provider
@@ -102,12 +124,23 @@ function LayoutProvider({ children, ...rest }) {
       </Alert>
     </Snackbar>
     <Dialog onClose={hideModal} open={modal.isOpen}>
-      <DialogTitle id="customized-dialog-title" onClose={hideModal}>
+      <DialogTitle onClose={hideModal}>
         {modal.title}
       </DialogTitle>
+      <Divider />
       {modal.component}
-
     </Dialog>
+    <ConfirmDialog
+      title={confirmDialog.title}
+      open={confirmDialog.isOpen}
+      maxWidth={confirmDialog.maxWidth}
+      onConfirm={handleConfirm}
+      onClose={() => setConfirmDialog({
+        ...confirmDialog,
+        isOpen: false
+      })}>
+      {confirmDialog.component}
+    </ConfirmDialog>
     {children}
   </LayoutContext.Provider>;
 }
