@@ -36,7 +36,7 @@ export const api = (token, logout, setSnackBar, t) => {
 
   return {
     getDeviceList: ({ ...rest }) => promise_(instance.get('/db/device/list', { params: { sign, timestamp, ...rest } })),
-    getStaffList: ({ ...rest }) => promise_(instance.get('/db/staff/list', { params: { sign, timestamp, ...rest } })),
+    getStaffList: ({ data, ...rest }) => promise_(instance.post('/db/staff/list', { ...data }, { params: { sign, timestamp, ...rest } })),
     getNewCardList: ({ ...rest }) => promise_(instance.get('/db/newcard/list', { params: { sign, timestamp, ...rest } })),
     getEventList: ({ ...rest }) => promise_(instance.get('/db/event/search', { params: { sign, timestamp, ...rest } })),
     getUserList: ({ ...rest }) => promise_(instance.get('/db/account/list', { params: { sign, timestamp, ...rest } })),

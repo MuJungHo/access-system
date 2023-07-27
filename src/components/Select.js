@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
       padding: 10
     },
     "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-      transform: "translate(10px, 3px) scale(0.75)" 
+      transform: "translate(10px, 3px) scale(0.75)"
     },
     // "& .MuiInputLabel-root": {
     //   color: "green"
@@ -53,7 +53,6 @@ export default ({
 }) => {
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
-
   return (
     <FormControl
       style={{ ...style }}
@@ -67,9 +66,9 @@ export default ({
         onChange={onChange}
         multiple={multiple}
       >
-        <MenuItem value="">
+        {!multiple && <MenuItem value="">
           <em>{t("select-thing", { "thing": label })}</em>
-        </MenuItem>
+        </MenuItem>}
         {children}
       </Select>
     </FormControl>)

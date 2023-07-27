@@ -5,3 +5,9 @@ export const identities = [
   { index: 4, value: "blacklist" },
   { index: 5, value: "stranger" },
 ]
+
+export const credentials = [
+  { value: "faceid" },
+  { value: "cardid" },
+  { value: "vehicleid" },
+]
