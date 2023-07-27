@@ -55,8 +55,8 @@ const Person = () => {
           id: c.cardidid,
           card_type: (c.mifare && 'mifare') || (c.em && 'em') || (c.uhf && 'uhf'),
           card_number: c.mifarenumber || c.emnumber || c.uhfnumber,
-          starttime: moment(c.starttime).format('YYYY-MM-DD hh:mm:ss'),
-          endtime: moment(c.endtime).format('YYYY-MM-DD hh:mm:ss'),
+          starttimeFormat: moment(c.starttime).format('YYYY-MM-DD hh:mm:ss'),
+          endtimeFormat: moment(c.endtime).format('YYYY-MM-DD hh:mm:ss'),
         }
       }) || []
       setCards(cards_)
