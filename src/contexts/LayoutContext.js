@@ -1,10 +1,5 @@
 import React, { useState, createContext } from 'react'
 import Alert from '@material-ui/lab/Alert';
-import { withStyles } from '@material-ui/core/styles';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Typography from '@material-ui/core/Typography';
 import ConfirmDialog from '../components/ConfirmDialog'
 import {
   Snackbar,
@@ -12,35 +7,9 @@ import {
 } from '@material-ui/core'
 
 import Dialog from '@material-ui/core/Dialog';
-
-const styles = (theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
-  closeButton: {
-    position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
-});
+import { DialogTitle } from '../components/DialogTitle'
 
 const LayoutContext = createContext();
-
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
-  return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
-  );
-});
 
 function LayoutProvider({ children, ...rest }) {
 
@@ -77,7 +46,7 @@ function LayoutProvider({ children, ...rest }) {
     })
   }
 
-  const showConfirm = ({ title = "", component = <></>, onConfirm = () => { } }) => {
+  const showWarningConfirm = ({ title = "", component = <></>, onConfirm = () => { } }) => {
     setConfirmDialog({
       title,
       component,
@@ -99,7 +68,7 @@ function LayoutProvider({ children, ...rest }) {
     modal,
     showModal,
     hideModal,
-    showConfirm
+    showWarningConfirm
   };
 
   return <LayoutContext.Provider
@@ -131,6 +100,7 @@ function LayoutProvider({ children, ...rest }) {
       {modal.component}
     </Dialog>
     <ConfirmDialog
+      warning
       title={confirmDialog.title}
       open={confirmDialog.isOpen}
       maxWidth={confirmDialog.maxWidth}

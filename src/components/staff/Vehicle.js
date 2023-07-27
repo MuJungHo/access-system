@@ -34,7 +34,7 @@ export default ({
 }) => {
   const { t } = useContext(LocaleContext);
   const { authedApi } = useContext(AuthContext);
-  const { setSnackBar, showModal, hideModal, showConfirm } = useContext(LayoutContext);
+  const { setSnackBar, showModal, hideModal, showWarningConfirm } = useContext(LayoutContext);
   // const classes = useStyles();
   const { staffid } = useParams();
 
@@ -55,7 +55,7 @@ export default ({
     })
   }
 
-  const handleAddVehicle = () => {
+  const showAddVehicleModal = () => {
     // console.log(row)
     showModal({
       title: "新增車輛資訊",
@@ -122,9 +122,9 @@ export default ({
   }
 
   const handleDeleteVehicle = (row) => {
-    showConfirm({
+    showWarningConfirm({
       title: '刪除車輛資訊',
-      component: <h6>{`確認刪除車牌 ${row.vin} 的車輛?`}</h6>,
+      component: <h6 style={{ margin: 16 }}>{`確認刪除車牌 ${row.vin} 的車輛?`}</h6>,
       onConfirm: () => handleDoDeleteVehicle(row.vehicleidid)
     })
   }
@@ -144,7 +144,7 @@ export default ({
     <DetailCard
       title="車輛資訊"
       buttonText="新增"
-      onClick={handleAddVehicle}
+      onClick={showAddVehicleModal}
       style={{ marginBottom: 20 }}>
       {vehicles.length > 0 && <SimpleTable
         columns={

@@ -3,12 +3,12 @@ import React from 'react'
 import {
   DialogActions,
   DialogContent,
-  DialogTitle,
   Dialog,
   Button,
   Divider
 } from '@material-ui/core'
 import { palette } from '../customTheme'
+import { DialogTitle } from "./DialogTitle"
 
 export default ({
   open,
@@ -17,6 +17,7 @@ export default ({
   onClose,
   onConfirm,
   maxWidth,
+  warning = false
 }) => {
   return (
     <Dialog
@@ -25,11 +26,9 @@ export default ({
       fullWidth
       maxWidth={maxWidth}
     >
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle warning={warning} onClose={onClose}>{title}</DialogTitle>
       <Divider />
-      <DialogContent>
-        {children}
-      </DialogContent>
+      {children}
       <DialogActions style={{ padding: 16 }}>
         <Button color="default"
           onClick={onClose}>
