@@ -3,6 +3,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -53,13 +54,13 @@ export default ({ actions = [], row }) => {
     action.onClick(event, row)
   }
   if (actions.length === 1) return (
-    <div onClick={(event) => actions[0].onClick(event, row)}>
+    <IconButton onClick={(event) => actions[0].onClick(event, row)}>
       {actions[0].icon}
-    </div>
+    </IconButton>
   )
   return (
     <div onClick={e => e.stopPropagation()}>
-      <SettingsIcon onClick={handleActionClick} />
+      <IconButton onClick={handleActionClick} ><SettingsIcon /></IconButton>
       <Menu
         open={Boolean(anchorEl)}
         className={classes.menu}
@@ -74,8 +75,7 @@ export default ({ actions = [], row }) => {
         transformOrigin={{
           vertical: 'top',
           horizontal: 'center',
-        }}
-      >
+        }}>
         {
           actions.map(action => {
             const isShow = typeof action.show === "function" && action.show(row) || action.show === undefined
@@ -87,10 +87,8 @@ export default ({ actions = [], row }) => {
               {action.icon ? action.icon : null}
               <Typography color="textSecondary" variant="caption">{action.name}</Typography>
             </MenuItem>
-          }
-          )
+          })
         }
-
       </Menu>
     </div>
   );

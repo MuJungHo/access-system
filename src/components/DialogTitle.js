@@ -1,6 +1,4 @@
-
 import React from 'react'
-
 import { withStyles } from '@material-ui/core/styles';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
@@ -26,6 +24,7 @@ const styles = (theme) => ({
     color: theme.palette.warning.main,
   }
 })
+
 export const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, warning = false, ...other } = props;
   return (
