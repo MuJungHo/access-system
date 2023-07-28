@@ -1,6 +1,6 @@
 import React, { useState, createContext } from 'react'
 import Alert from '@material-ui/lab/Alert';
-import ConfirmDialog from '../components/ConfirmDialog"
+import ConfirmDialog from '../components/ConfirmDialog'
 import {
   Snackbar,
   Divider
