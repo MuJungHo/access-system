@@ -4,6 +4,11 @@ import { LocaleContext } from "../../contexts/LocaleContext";
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles, withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -31,7 +36,6 @@ import TableChartIcon from '@material-ui/icons/TableChart';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 
-import ConfirmDialog from "../ConfirmDialog";
 import Actions from "./Actions"
 import TableActions from "./TableActions"
 import { DateRangePicker } from 'rsuite';
@@ -39,6 +43,38 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import moment from 'moment'
 
+const ColumnManageDialog = ({
+  open,
+  title,
+  children,
+  onClose,
+  onConfirm,
+  maxWidth
+}) => {
+  const { t } = useContext(LocaleContext);
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth={maxWidth}
+    >
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>
+        {children}
+      </DialogContent>
+      <DialogActions style={{ padding: 16 }}>
+        <Button color="primary"
+          onClick={onClose}>
+          {t("close")}
+        </Button>
+        {typeof onConfirm === 'function' && <Button variant="contained" color="primary"
+          onClick={onConfirm}>
+          {t("confirm")}
+        </Button>}
+      </DialogActions>
+    </Dialog>)
+}
 const SearchTextField = withStyles(theme => ({
   root: {
     "& .MuiOutlinedInput-notchedOutline": {
@@ -336,7 +372,7 @@ const EnhancedTableToolbar = ({
         )
       }
 
-      <ConfirmDialog
+      <ColumnManageDialog
         title={'欄位管理'}
         open={columnModal.isOpen}
         maxWidth="xs"
@@ -361,7 +397,7 @@ const EnhancedTableToolbar = ({
 
           </FormGroup>
         </FormControl>
-      </ConfirmDialog>
+      </ColumnManageDialog>
     </Toolbar>
   );
 };
