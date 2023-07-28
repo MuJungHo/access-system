@@ -119,6 +119,31 @@ export default function Devices() {
     })();
   }, [filter])
 
+  const showAddStaffModal = () => {
+
+  }
+
+  const showImportStaffModal = () => {
+
+  }
+
+  const handleExportStaffList = async () => {
+    const blob = await authedApi.getStaffExportFile({
+      data: {
+        group: filter.group,
+        location: filter.location,
+        credential: filter.credential,
+        identity: filter.identity
+      }, ...filter, page: filter.page + 1, group: undefined, location: undefined, credential: undefined, identity: undefined
+    })
+    const url = window.URL.createObjectURL(new Blob([blob]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "staff_list.xlsx")
+    link.click();
+    window.URL.revokeObjectURL(url);
+    link.remove();
+  }
 
   return (
     <div className={classes.root}>
@@ -132,9 +157,9 @@ export default function Devices() {
           filter={filter}
           setFilter={setFilter}
           tableActions={[
-            { name: t('add'), onClick: () => {}, icon: <AddBox /> },
-            { name: t('import'), onClick: () => {}, icon: <Backup /> },
-            { name: t('export'), onClick: () => {}, icon: <CloudDownload /> },
+            { name: t('add'), onClick: () => { }, icon: <AddBox /> },
+            { name: t('import'), onClick: () => { }, icon: <Backup /> },
+            { name: t('export'), onClick: handleExportStaffList, icon: <CloudDownload /> },
           ]}
           filterComponent={
             <React.Fragment>
