@@ -33,6 +33,7 @@ import DragHandleIcon from '@material-ui/icons/DragHandle';
 
 import ConfirmDialog from "../ConfirmDialog";
 import Actions from "./Actions"
+import TableActions from "./TableActions"
 import { DateRangePicker } from 'rsuite';
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -225,7 +226,17 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = ({ numSelected, setFilter, filter, dateRangePicker, columns, setColumns, tableKey, filterComponent }) => {
+const EnhancedTableToolbar = ({
+  numSelected,
+  setFilter,
+  filter,
+  dateRangePicker,
+  columns,
+  setColumns,
+  tableKey,
+  filterComponent,
+  tableActions
+}) => {
   const classes = useToolbarStyles();
   const ref = useRef()
   const [columnModal, setColumnModal] = React.useState({
@@ -259,6 +270,9 @@ const EnhancedTableToolbar = ({ numSelected, setFilter, filter, dateRangePicker,
   const nowDateStartTime = moment(filter.start).unix() * 1000
   const nowDateEndTime = moment(filter.end).unix() * 1000
 
+  const actions = [...tableActions,
+  { name: "欄位管理", onClick: () => setColumnModal({ isOpen: true }), icon: <TableChartIcon /> }]
+
   return (
     <Toolbar
       className={clsx(classes.toolbar, {
@@ -270,45 +284,45 @@ const EnhancedTableToolbar = ({ numSelected, setFilter, filter, dateRangePicker,
           {numSelected} selected
         </Typography>
       ) : (
-        <React.Fragment>
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              setFilter({
-                ...filter,
-                keyword: ref.current.value
-              })
-            }}>
-            <SearchTextField
-              inputRef={ref}
-              style={{ width: 270 }}
-              type="search"
-              variant="outlined"
-              placeholder={t('keyword')}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <SearchIcon />
-                  </InputAdornment>
-                )
-              }}
-            />
-          </form>
-          {dateRangePicker && <DateRangePicker
-            locale={t("daterangepicker")}
-            style={{ marginLeft: 20 }}
-            placement="auto"
-            value={[new Date(nowDateStartTime), new Date(nowDateEndTime)]}
-            onChange={e => {
-              setFilter({
-                ...filter,
-                page: 0,
-                start: moment(e[0]).startOf('date').valueOf(),
-                end: moment(e[1]).endOf('date').valueOf()
-              })
-            }} />}
-        </React.Fragment>
-      )}
+          <React.Fragment>
+            <form
+              onSubmit={e => {
+                e.preventDefault()
+                setFilter({
+                  ...filter,
+                  keyword: ref.current.value
+                })
+              }}>
+              <SearchTextField
+                inputRef={ref}
+                style={{ width: 270 }}
+                type="search"
+                variant="outlined"
+                placeholder={t('keyword')}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <SearchIcon />
+                    </InputAdornment>
+                  )
+                }}
+              />
+            </form>
+            {dateRangePicker && <DateRangePicker
+              locale={t("daterangepicker")}
+              style={{ marginLeft: 20 }}
+              placement="auto"
+              value={[new Date(nowDateStartTime), new Date(nowDateEndTime)]}
+              onChange={e => {
+                setFilter({
+                  ...filter,
+                  page: 0,
+                  start: moment(e[0]).startOf('date').valueOf(),
+                  end: moment(e[1]).endOf('date').valueOf()
+                })
+              }} />}
+          </React.Fragment>
+        )}
       {filterComponent}
       <div style={{ flex: 1 }}></div>
       {numSelected > 0 ? (
@@ -317,11 +331,9 @@ const EnhancedTableToolbar = ({ numSelected, setFilter, filter, dateRangePicker,
             <DeleteIcon />
           </IconButton>
         </Tooltip>
-      ) : (<Tooltip title="Filter list">
-        <IconButton onClick={() => setColumnModal({ isOpen: true })}>
-          <TableChartIcon />
-        </IconButton>
-      </Tooltip>)
+      ) : (
+          <TableActions actions={actions}/>
+        )
       }
 
       <ConfirmDialog
@@ -394,6 +406,7 @@ export default ({
   filter,
   setFilter,
   actions = [],
+  tableActions = [],
   dateRangePicker = false,
   allowSelect = false,
   tableKey,
@@ -481,6 +494,7 @@ export default ({
           dateRangePicker={dateRangePicker}
           tableKey={tableKey}
           filterComponent={filterComponent}
+          tableActions={tableActions}
         />
         <TableContainer style={{ maxHeight }}>
           <Table

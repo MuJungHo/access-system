@@ -34,7 +34,7 @@ export default ({
 }) => {
   const { t } = useContext(LocaleContext);
   const { authedApi } = useContext(AuthContext);
-  const { setSnackBar, showModal } = useContext(LayoutContext);
+  const { setSnackBar, showModal, showWarningConfirm } = useContext(LayoutContext);
   // const classes = useStyles();
 
   // React.useEffect(() => {
@@ -67,6 +67,25 @@ export default ({
     })
   }
 
+  const showDeleteConfirmDialog = (row) => {
+    showWarningConfirm({
+      title: '刪除卡片資訊',
+      component: <h6 style={{ margin: 16 }}>{`確認刪除卡號 ${row.cardnumber} 的卡片?`}</h6>,
+      onConfirm: () => handleDeleteCard(row.cardid)
+    })
+  }
+
+  const handleDeleteCard = async (cardid) => {
+    await authedApi.deleteStaffCard({ cardid })
+    const newCards = cards.filter(card => card.cardid !== cardid)
+    setCards(newCards)
+    setSnackBar({
+      message: "刪除成功",
+      isOpen: true,
+      severity: "success"
+    })
+  }
+
   const handleAddCard = () => {
 
   }
@@ -89,7 +108,7 @@ export default ({
         data={cards}
         actions={[
           { name: t('edit'), onClick: (e, row) => handleShowEditCardModal(row), icon: <ExitToApp /> },
-          { name: t('delete'), onClick: (e, row) => { }, icon: <Close /> },
+          { name: t('delete'), onClick: (e, row) => showDeleteConfirmDialog(row), icon: <Close /> },
         ]}
       />}
     </DetailCard>

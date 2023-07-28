@@ -8,9 +8,11 @@ import {
   // PlayArrow,
   BorderColorSharp,
   Close,
+  AddBox,
+  Backup,
+  CloudDownload
   // FiberManualRecord
 } from '@material-ui/icons';
-
 import Table from "../../components/table/Table";
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
@@ -129,6 +131,11 @@ export default function Devices() {
           title="人員管理"
           filter={filter}
           setFilter={setFilter}
+          tableActions={[
+            { name: t('add'), onClick: () => {}, icon: <AddBox /> },
+            { name: t('import'), onClick: () => {}, icon: <Backup /> },
+            { name: t('export'), onClick: () => {}, icon: <CloudDownload /> },
+          ]}
           filterComponent={
             <React.Fragment>
               <Select
