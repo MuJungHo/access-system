@@ -22,6 +22,8 @@ import Button from '@material-ui/core/Button';
 
 import { identities, credentials } from "../../utils/constants"
 
+import StaffModalComponent from "./StaffModalComponent"
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -53,7 +55,7 @@ export default function Devices() {
   const classes = useStyles();
   const history = useHistory();
   const { t } = useContext(LocaleContext);
-  const { setSnackBar, showModal } = useContext(LayoutContext);
+  const { setSnackBar, showModal, hideModal, showWarningConfirm } = useContext(LayoutContext);
   const [rows, setRows] = React.useState([]);
   const [locations, setLocations] = React.useState([]);
   const [groups, setGroups] = React.useState([]);
@@ -81,47 +83,89 @@ export default function Devices() {
   }, [])
 
   React.useEffect(() => {
-    (async () => {
-      const { result, total } = await authedApi.getStaffList({
-        data: {
-          group: filter.group,
-          location: filter.location,
-          credential: filter.credential,
-          identity: filter.identity
-        }, ...filter, page: filter.page + 1, group: undefined, location: undefined, credential: undefined, identity: undefined
-      })
-      // console.log(result)
-      const tableData = result.map(data => {
-        const card = data.cardid.map(c => (c.uhfnumber && `UHF number  ${c.uhfnumber}`) || (c.mifarenumber && `Mifare number  ${c.mifarenumber}`)) || '--'
-        const vehicle = data.vehicleid.map(v => v.vin).join(' ,') || '--'
-        const group = data.groups.map(g => g.name).join(' ,') || '--'
-        return {
-          ...data,
-          id: data.staffid,
-          photo: data.photo ? <Avatar src={`data:image/png;base64,${data.photo}`} onClick={() => {
-            showModal({
-              title: "相片",
-              component: <img src={`data:image/png;base64,${data.photo}`} style={{ display: 'block', margin: 'auto' }} />,
-            })
-          }} /> : '--',
-          card,
-          vehicle,
-          group,
-          groups: undefined,
-          cardid: undefined,
-          vehicleid: undefined,
-          faceid: undefined
-        }
-      })
-      setTotal(total)
-      setRows(tableData)
-
-    })();
+    getStaffList()
   }, [filter])
 
-  const showAddStaffModal = () => {
+  const getStaffList = async () => {
+    const { result, total } = await authedApi.getStaffList({
+      data: {
+        group: filter.group,
+        location: filter.location,
+        credential: filter.credential,
+        identity: filter.identity
+      }, ...filter, page: filter.page + 1, group: undefined, location: undefined, credential: undefined, identity: undefined
+    })
+    // console.log(result)
+    const tableData = result.map(data => {
+      const card = data.cardid.map(c => (c.uhfnumber && `UHF number  ${c.uhfnumber}`) || (c.mifarenumber && `Mifare number  ${c.mifarenumber}`)) || '--'
+      const vehicle = data.vehicleid.map(v => v.vin).join(' ,') || '--'
+      const group = data.groups.map(g => g.name).join(' ,') || '--'
+      return {
+        ...data,
+        id: data.staffid,
+        photo: data.photo ? <Avatar src={`data:image/png;base64,${data.photo}`} onClick={() => {
+          showModal({
+            title: "相片",
+            component: <img src={`data:image/png;base64,${data.photo}`} style={{ display: 'block', margin: 'auto' }} />,
+          })
+        }} /> : '--',
+        card,
+        vehicle,
+        group,
+        groups: undefined,
+        cardid: undefined,
+        vehicleid: undefined,
+        faceid: undefined
+      }
+    })
+    setTotal(total)
+    setRows(tableData)
 
   }
+
+  const showAddStaffModal = () => {
+    showModal({
+      title: "新增人員",
+      component: <StaffModalComponent onSave={handleAddStaff} />
+    })
+  }
+
+  const handleAddStaff = async (state) => {
+
+    await authedApi.addStaff({
+      data: {
+        ...state,
+      }, type: 0
+    })
+
+    getStaffList()
+    hideModal()
+    setSnackBar({
+      message: "儲存成功",
+      isOpen: true,
+      severity: "success"
+    })
+  }
+
+  const showDeteleStaffConfirm = (row) => {
+    showWarningConfirm({
+      title: '刪除人員',
+      component: <h6 style={{ margin: 16 }}>{`確認刪除人員 ${row.name} ?`}</h6>,
+      onConfirm: () => handleDeleteStaff(row.staffid)
+    })
+  }
+
+  const handleDeleteStaff = async (staffid) => {
+    await authedApi.deleteStaff({ staffid })
+    getStaffList()
+    hideModal()
+    setSnackBar({
+      message: "儲存成功",
+      isOpen: true,
+      severity: "success"
+    })
+  }
+
 
   const showImportStaffModal = () => {
 
@@ -134,15 +178,17 @@ export default function Devices() {
         location: filter.location,
         credential: filter.credential,
         identity: filter.identity
-      }, ...filter, page: filter.page + 1, group: undefined, location: undefined, credential: undefined, identity: undefined
+      }, sort: 'datetime', order: 'desc'
     })
     const url = window.URL.createObjectURL(new Blob([blob]));
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute("download", "staff_list.xlsx")
+
+    document.body.appendChild(link)
     link.click();
     window.URL.revokeObjectURL(url);
-    link.remove();
+    document.body.removeChild(link);
   }
 
   return (
@@ -157,7 +203,7 @@ export default function Devices() {
           filter={filter}
           setFilter={setFilter}
           tableActions={[
-            { name: t('add'), onClick: () => { }, icon: <AddBox /> },
+            { name: t('add'), onClick: showAddStaffModal, icon: <AddBox /> },
             { name: t('import'), onClick: () => { }, icon: <Backup /> },
             { name: t('export'), onClick: handleExportStaffList, icon: <CloudDownload /> },
           ]}
@@ -269,7 +315,9 @@ export default function Devices() {
             { key: "note", label: t('note'), enable: false },
           ]}
           actions={[
-            { name: t('edit'), onClick: (e, person) => history.push(`/staff/person/${person.staffid}`), icon: <BorderColorSharp /> }]}
+            { name: t('edit'), onClick: (e, person) => history.push(`/staff/person/${person.staffid}`), icon: <BorderColorSharp /> },
+            { name: t('delete'), onClick: (e, row) => showDeteleStaffConfirm(row), icon: <Close /> },
+          ]}
         />
       </Paper>
     </div>

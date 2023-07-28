@@ -11,7 +11,7 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 200,
+    // maxWidth: 200,
     minWidth: 100,
     "& .MuiInputLabel-formControl": {
       top: -8
@@ -49,7 +49,8 @@ export default ({
   value,
   onChange,
   style = {},
-  multiple = false
+  multiple = false,
+  fullWidth = false
 }) => {
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
