@@ -99,7 +99,10 @@ export default ({
   const showDeleteFaceConfirm = (row) => {
     showWarningConfirm({
       title: '刪除頭像資訊',
-      component: <img src={`data:image/png;base64, ${row.photo}`} style={{ maxWidth: 50, maxHeight: 50 }} />,
+      component: <div style={{ margin: 16 }}>
+        <h6>確認頭像頭像資訊？</h6>
+        <img src={`data:image/png;base64, ${row.photo}`} style={{ maxWidth: 50, maxHeight: 50, marginTop: 20 }} />
+      </div>,
       onConfirm: () => handleDeleteFace(row.faceidid)
     })
   }
