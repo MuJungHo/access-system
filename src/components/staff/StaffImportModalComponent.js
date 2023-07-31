@@ -12,7 +12,7 @@ import {
   IconButton
 } from '@material-ui/core'
 import {
-  Close,
+  Delete,
 } from '@material-ui/icons';
 
 
@@ -65,7 +65,7 @@ export default ({ staff, onSave }) => {
               <IconButton onClick={() => {
                 setState(null)
                 fileRef.current.value = null
-              }}><Close /></IconButton>
+              }}><Delete /></IconButton>
             </div>
             : <label htmlFor="contained-button-file">
               <Button variant="contained" color="primary" variant="outlined" component="span">

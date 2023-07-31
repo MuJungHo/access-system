@@ -1,6 +1,7 @@
 import React, { useContext, useRef } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
+import { LayoutContext } from "../../contexts/LayoutContext";
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles, withStyles } from '@material-ui/core/styles';
@@ -271,7 +272,9 @@ const EnhancedTableToolbar = ({
   setColumns,
   tableKey,
   filterComponent,
-  tableActions
+  tableActions,
+  selected,
+  handleBatchDeleteConfirm
 }) => {
   const classes = useToolbarStyles();
   const ref = useRef()
@@ -280,6 +283,7 @@ const EnhancedTableToolbar = ({
   });
   const [modalColumns, setModalColumns] = React.useState([...columns])
 
+  const { showWarningConfirm } = useContext(LayoutContext);
   const { t } = useContext(LocaleContext);
   const { authedCustomize, editAuthedUserCustomize } = useContext(AuthContext);
 
@@ -308,6 +312,14 @@ const EnhancedTableToolbar = ({
 
   const actions = [...tableActions,
   { name: "欄位管理", onClick: () => setColumnModal({ isOpen: true }), icon: <TableChartIcon /> }]
+
+  const showBatchDeleteConfirm = () => {
+    showWarningConfirm({
+      title: '批次刪除',
+      component: <h6 style={{ margin: 16 }}>{`確認刪除${selected.length}筆資料?`}</h6>,
+      onConfirm: handleBatchDeleteConfirm
+    })
+  }
 
   return (
     <Toolbar
@@ -359,16 +371,16 @@ const EnhancedTableToolbar = ({
               }} />}
           </React.Fragment>
         )}
-      {filterComponent}
+      {numSelected === 0 && filterComponent}
       <div style={{ flex: 1 }}></div>
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton aria-label="delete">
+          <IconButton onClick={showBatchDeleteConfirm}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
       ) : (
-          <TableActions actions={actions}/>
+          <TableActions actions={actions} />
         )
       }
 
@@ -447,7 +459,8 @@ export default ({
   allowSelect = false,
   tableKey,
   maxHeight = 'calc(100vh - 225px)',
-  filterComponent = <></>
+  filterComponent = <></>,
+  handleBatchDeleteConfirm = () => { }
 }) => {
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
@@ -526,11 +539,13 @@ export default ({
           setColumns={setColumns}
           filter={filter}
           setFilter={setFilter}
+          selected={selected}
           numSelected={selected.length}
           dateRangePicker={dateRangePicker}
           tableKey={tableKey}
           filterComponent={filterComponent}
           tableActions={tableActions}
+          handleBatchDeleteConfirm={handleBatchDeleteConfirm}
         />
         <TableContainer style={{ maxHeight }}>
           <Table

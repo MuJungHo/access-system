@@ -16,7 +16,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 import {
-  Close,
+  Delete,
   ExitToApp
 } from '@material-ui/icons';
 
@@ -301,7 +301,7 @@ export default ({
         data={childDevices}
         actions={[
           { name: t('edit'), onClick: (e, row) => history.push(`/device/child/${deviceid}/${row.id}`), icon: <ExitToApp /> },
-          { name: t('delete'), onClick: (e, row) => handleDeleteChild(row), icon: <Close /> },
+          { name: t('delete'), onClick: (e, row) => handleDeleteChild(row), icon: <Delete /> },
         ]}
       />
     </DetailCard>

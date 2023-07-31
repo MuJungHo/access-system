@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core'
 
 import {
-  Close,
+  Delete,
   ExitToApp
 } from '@material-ui/icons';
 
@@ -157,7 +157,7 @@ export default ({
         data={vehicles}
         actions={[
           { name: t('edit'), onClick: (e, row) => handleEditVehicle(row), icon: <ExitToApp /> },
-          { name: t('delete'), onClick: (e, row) => handleDeleteVehicle(row), icon: <Close /> },
+          { name: t('delete'), onClick: (e, row) => handleDeleteVehicle(row), icon: <Delete /> },
         ]}
       />}
     </DetailCard>

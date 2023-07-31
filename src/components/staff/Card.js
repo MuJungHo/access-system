@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core'
 
 import {
-  Close,
+  Delete,
   ExitToApp
 } from '@material-ui/icons';
 
@@ -108,7 +108,7 @@ export default ({
         data={cards}
         actions={[
           { name: t('edit'), onClick: (e, row) => handleShowEditCardModal(row), icon: <ExitToApp /> },
-          { name: t('delete'), onClick: (e, row) => showDeleteConfirmDialog(row), icon: <Close /> },
+          { name: t('delete'), onClick: (e, row) => showDeleteConfirmDialog(row), icon: <Delete /> },
         ]}
       />}
     </DetailCard>

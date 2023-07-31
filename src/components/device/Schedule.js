@@ -20,7 +20,7 @@ import {
 } from '@material-ui/core'
 
 import AddIcon from '@material-ui/icons/Add';
-import Close from '@material-ui/icons/Close';
+import Delete from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -172,7 +172,7 @@ export default ({
                       step: 300, // 5 min
                     }}
                   />
-                  {scheduleTimes.length > 1 && < IconButton onClick={() => handleDeleteTimeRange(time)}><Close /></IconButton>}
+                  {scheduleTimes.length > 1 && < IconButton onClick={() => handleDeleteTimeRange(time)}><Delete /></IconButton>}
 
                 </div>)
             }

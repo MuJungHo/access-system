@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core'
 
 import {
-  Close,
+  Delete,
   ExitToApp
 } from '@material-ui/icons';
 
@@ -99,7 +99,7 @@ export default ({
         data={faces}
         actions={[
           { name: t('edit'), onClick: (e, row) => handleEditFace(row), icon: <ExitToApp /> },
-          { name: t('delete'), onClick: (e, row) => { }, icon: <Close /> },
+          { name: t('delete'), onClick: (e, row) => { }, icon: <Delete /> },
         ]}
       />}
     </DetailCard>

@@ -8,6 +8,7 @@ import {
   // PlayArrow,
   BorderColorSharp,
   Close,
+  Delete,
   AddBox,
   Backup,
   CloudDownload,
@@ -175,7 +176,7 @@ export default function Devices() {
       title: "上傳人員檔案",
       maxWidth: "xs",
       fullWidth: true,
-      component: <StaffImportModalComponent onSave={handleImportFile}/>
+      component: <StaffImportModalComponent onSave={handleImportFile} />
     })
 
   }
@@ -210,6 +211,17 @@ export default function Devices() {
     document.body.removeChild(link);
   }
 
+  const handleBatchDeleteConfirm = (selected) => {
+    
+    getStaffList()
+    hideModal()
+    setSnackBar({
+      message: "儲存成功",
+      isOpen: true,
+      severity: "success"
+    })
+  }
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -221,6 +233,8 @@ export default function Devices() {
           title="人員管理"
           filter={filter}
           setFilter={setFilter}
+          allowSelect
+          handleBatchDeleteConfirm={handleBatchDeleteConfirm}
           tableActions={[
             { name: t('add'), onClick: showAddStaffModal, icon: <AddBox /> },
             { name: t('import'), onClick: showImportStaffModal, icon: <Backup /> },
@@ -335,7 +349,7 @@ export default function Devices() {
           ]}
           actions={[
             { name: t('edit'), onClick: (e, person) => history.push(`/staff/person/${person.staffid}`), icon: <BorderColorSharp /> },
-            { name: t('delete'), onClick: (e, row) => showDeteleStaffConfirm(row), icon: <Close /> },
+            { name: t('delete'), onClick: (e, row) => showDeteleStaffConfirm(row), icon: <Delete /> },
           ]}
         />
       </Paper>
