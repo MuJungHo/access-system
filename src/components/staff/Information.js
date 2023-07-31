@@ -14,6 +14,7 @@ import {
   TextField
 } from '@material-ui/core'
 import { identities } from "../../utils/constants"
+import ImageUploader from './ImageUploader'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -76,13 +77,24 @@ export default ({
         </div>
         <div className={classes.info}>
           <span>{t("photo")}</span>
-          <div>{staff.photo ? <img src={`data:image/png;base64,${staff.photo}`} style={{ height: 50, width: 50 }} onClick={() => {
+          <ImageUploader
+            image={staff.photo}
+            onChange={image => setStaff({
+              ...staff,
+              photo: image
+            })}
+            onClean={() => setStaff({
+              ...staff,
+              photo: ""
+            })}
+          />
+          {/* <div>{staff.photo ? <img src={`data:image/png;base64,${staff.photo}`} style={{ height: 50, width: 50 }} onClick={() => {
             showModal({
               title: "相片",
               component: <img src={`data:image/png;base64,${staff.photo}`} style={{ display: 'block', margin: 'auto', height: 150, width: 150 }} />,
             })
           }} /> : '--'}
-          </div>
+          </div> */}
         </div>
         <div className={classes.info}>
           <span>{t("identity")}</span>
