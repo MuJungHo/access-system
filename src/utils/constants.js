@@ -11,3 +11,9 @@ export const credentials = [
   { value: "cardid" },
   { value: "vehicleid" },
 ]
+
+export const cardtypes = [
+  { value: "em" },
+  { value: "mifare" },
+  { value: "uhf" },
+]

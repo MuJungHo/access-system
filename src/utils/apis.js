@@ -90,6 +90,7 @@ export const api = (token, logout, setSnackBar, t) => {
     editStaff: ({ data, ...rest }) => promise_(instance.post('/db/staff/edit', data, { params: { sign, timestamp, ...rest } })),
     editStaffFace: ({ data, ...rest }) => promise_(instance.put('/db/staff/edit_faceid', data, { params: { sign, timestamp, ...rest } })),
     editStaffVehicle: ({ data, ...rest }) => promise_(instance.put('/db/staff/edit_vehicleid', data, { params: { sign, timestamp, ...rest } })),
+    editStaffCard: ({ data, ...rest }) => promise_(instance.put('/db/staff/edit_cardid', data, { params: { sign, timestamp, ...rest } })),
     addStaff: ({ data, ...rest }) => promise_(instance.post('/db/staff/add', data, { params: { sign, timestamp, ...rest } })),
     deleteStaffVehicle: ({ ...rest }) => promise_(instance.delete('/db/staff/delete_vehicleid', { params: { sign, timestamp, ...rest } })),
     deleteStaffCard: ({ ...rest }) => promise_(instance.delete('/db/staff/delete_cardid', { params: { sign, timestamp, ...rest } })),

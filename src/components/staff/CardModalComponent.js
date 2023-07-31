@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Select from "../../components/Select"
 import { LocaleContext } from "../../contexts/LocaleContext";
+import { cardtypes } from "../../utils/constants"
 
 import {
   // Paper,
@@ -36,16 +37,47 @@ export default ({ card, onSave }) => {
   React.useEffect(() => {
     setState({ ...card })
   }, [card])
-
+  // console.log(card)
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', paddingLeft: 20, paddingRight: 20 }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', paddingLeft: 20, paddingRight: 20, paddingTop: 5 }}>
+      <div className={classes.info}>
+        <span>{t("cardtype")}</span>
+        <Select
+          style={{ margin: 20 }}
+          value={state.card_type || ''}
+          onChange={e => setState({
+            ...state,
+            card_type: e.target.value,
+            em: e.target.value === "em" ? 1 : 0,
+            mifare: e.target.value === "mifare" ? 1 : 0,
+            uhf: e.target.value === "uhf" ? 1 : 0,
+            emnumber: e.target.value === "em" ? state.card_number : "",
+            mifarenumber: e.target.value === "mifare" ? state.card_number : "",
+            uhfnumber: e.target.value === "uhf" ? state.card_number : "",
+          })}
+        // label={t("cardtype")}
+        >
+          {
+            cardtypes
+              .map(type =>
+                <MenuItem
+                  key={type.value}
+                  value={type.value}>
+                  {type.value}
+                </MenuItem>)
+          }
+        </Select>
+      </div>
       <div className={classes.info}>
         <span>{t('cardnumber')}</span>
         <TextField
           value={state.card_number || ''}
           onChange={e => setState({
             ...state,
-            card_number: e.target.value
+            card_number: e.target.value,
+            emnumber: state.card_type === "em" ? e.target.value : "",
+            mifarenumber: state.card_type === "mifare" ? e.target.value : "",
+            uhfnumber: state.card_type === "uhf" ? e.target.value : "",
           })}
         />
       </div>
