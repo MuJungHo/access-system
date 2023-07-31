@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Select from "../../components/Select"
+import Text from "../../components/Text"
 import { LocaleContext } from "../../contexts/LocaleContext";
 
 import {
@@ -41,7 +42,7 @@ export default ({ staff, onSave }) => {
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', paddingLeft: 20, paddingRight: 20 }}>
       <div className={classes.info}>
-        <span>{t('name')}</span>
+        <Text required>{t('name')}</Text>
         <TextField
           value={state.name || ''}
           onChange={e => setState({
@@ -52,7 +53,7 @@ export default ({ staff, onSave }) => {
       </div>
 
       <div className={classes.info}>
-        <span>{t("identity")}</span>
+        <Text required>{t('identity')}</Text>
         <Select
           // style={{ width: '100%' }}
           value={state.identity || ''}
