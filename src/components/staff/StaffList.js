@@ -245,8 +245,9 @@ export default function Devices() {
     document.body.removeChild(link);
   }
 
-  const handleBatchDeleteConfirm = (selected) => {
-
+  const handleBatchDeleteConfirm = async (selected) => {
+    // console.log(selected)
+    await authedApi.deleteStaffs({ data: { staffids: selected } })
     getStaffList()
     hideModal()
     setSnackBar({

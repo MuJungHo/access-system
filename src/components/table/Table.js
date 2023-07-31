@@ -274,6 +274,7 @@ const EnhancedTableToolbar = ({
   filterComponent,
   tableActions,
   selected,
+  setSelected,
   handleBatchDeleteConfirm
 }) => {
   const classes = useToolbarStyles();
@@ -317,7 +318,10 @@ const EnhancedTableToolbar = ({
     showWarningConfirm({
       title: '批次刪除',
       component: <h6 style={{ margin: 16 }}>{`確認刪除${selected.length}筆資料?`}</h6>,
-      onConfirm: handleBatchDeleteConfirm
+      onConfirm: () => {
+        handleBatchDeleteConfirm(selected)
+        setSelected([])
+      }
     })
   }
 
@@ -545,6 +549,7 @@ export default ({
           tableKey={tableKey}
           filterComponent={filterComponent}
           tableActions={tableActions}
+          setSelected={setSelected}
           handleBatchDeleteConfirm={handleBatchDeleteConfirm}
         />
         <TableContainer style={{ maxHeight }}>
