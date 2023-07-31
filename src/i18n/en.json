@@ -130,6 +130,7 @@
     "400053": "Starttime cannot be empty.",
     "400061": "Vin cannot be empty.",
     "400064": "Faceidid cannot be empty.",
+    "400104": "Photo cannot be greater then the max_images.",
     "400107": "Incorrect input parameters.",
     "400110": "Duplicate ip address.",
     "400111": "IP Address cannot be empty.",

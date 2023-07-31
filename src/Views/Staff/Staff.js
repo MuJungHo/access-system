@@ -76,8 +76,11 @@ const Person = () => {
         return {
           ...c,
           id: c.faceidid,
-          starttime: moment(c.starttime).format('YYYY-MM-DD hh:mm:ss'),
-          endtime: moment(c.endtime).format('YYYY-MM-DD hh:mm:ss'),
+          // starttime: moment(c.starttime).format('YYYY-MM-DD hh:mm:ss'),
+          // endtime: moment(c.endtime).format('YYYY-MM-DD hh:mm:ss'),
+          starttimeFormat: moment(c.starttime).format('YYYY-MM-DD hh:mm:ss'),
+          endtimeFormat: moment(c.endtime).format('YYYY-MM-DD hh:mm:ss'),
+          photo: c.photo.length > 0 ? c.photo[0].photo : "", 
           avatar: c.photo.length > 0 && <AvatarGroup >{
             c.photo.map(p => <Avatar key={p.faceidphotoid} src={`data:image/png;base64,${p.photo}`} />)
           }</AvatarGroup>,

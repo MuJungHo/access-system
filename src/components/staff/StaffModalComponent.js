@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core'
 import { identities } from "../../utils/constants"
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   paper: {
     width: '100%',
     // padding: theme.spacing(2)
