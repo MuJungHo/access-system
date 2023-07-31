@@ -2,7 +2,6 @@ import React, { useContext, useRef } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Select from "../../components/Select"
 import { LocaleContext } from "../../contexts/LocaleContext";
-
 import {
   // Paper,
   // Divider,
@@ -16,6 +15,7 @@ import {
 import {
   Delete,
 } from '@material-ui/icons';
+import Text from "../Text"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -69,7 +69,7 @@ export default ({ face, FRSDevices = [], onSave }) => {
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', padding: 20 }}>
       <div className={classes.info}>
-        <span>{"FRS"}</span>
+        <Text required>{"FRS"}</Text>
         <Select
           style={{ margin: 20 }}
           value={state.frs || ''}
@@ -101,7 +101,7 @@ export default ({ face, FRSDevices = [], onSave }) => {
         />
       </div>
       <div className={classes.info}>
-        <span>{t('starttime')}</span>
+        <Text required>{t('starttime')}</Text>
         <TextField
           type="datetime-local"
           value={state.starttime || ''}
@@ -116,7 +116,7 @@ export default ({ face, FRSDevices = [], onSave }) => {
         />
       </div>
       <div className={classes.info}>
-        <span>{t('endtime')}</span>
+        <Text required>{t('endtime')}</Text>
         <TextField
           type="datetime-local"
           value={state.endtime || ''}
@@ -131,7 +131,7 @@ export default ({ face, FRSDevices = [], onSave }) => {
         />
       </div>
       <div className={classes.info}>
-        <span>{"識別頭像"}</span>
+        <Text required>{"識別頭像"}</Text>
         <input
           ref={fileRef}
           accept="image/png, image/jpeg"
