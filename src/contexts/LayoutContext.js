@@ -31,10 +31,17 @@ function LayoutProvider({ children, ...rest }) {
     message: ''
   })
 
-  const showModal = ({ title = "", component = <></> }) => {
+  const showModal = ({
+    title = "",
+    component = <></>,
+    maxWidth = "sm",
+    fullWidth = false
+   }) => {
     setModal({
       title,
       component,
+      maxWidth,
+      fullWidth,
       isOpen: true
     })
   }
@@ -92,7 +99,11 @@ function LayoutProvider({ children, ...rest }) {
         {snackBar.message}
       </Alert>
     </Snackbar>
-    <Dialog onClose={hideModal} open={modal.isOpen}>
+    <Dialog
+      onClose={hideModal}
+      open={modal.isOpen}
+      fullWidth={modal.fullWidth}
+      maxWidth={modal.maxWidth}>
       <DialogTitle onClose={hideModal}>
         {modal.title}
       </DialogTitle>

@@ -86,6 +86,7 @@ export const api = (token, logout, setSnackBar, t) => {
     //staff
     getStaff: ({ ...rest }) => promise_(instance.get('/db/staff/get', { params: { sign, timestamp, ...rest } })),
     getStaffExportFile: ({ data, ...rest }) => promise_(instance({ method: "POST", url: '/db/staff/cardid/exportfile', params: { sign, timestamp, ...rest }, data, responseType: "blob" })),
+    postStaffImportFile: ({ data }) => promise_(instance({ method: "POST", url: '/db/staff/cardid/importfile', headers: { "Content-Type": "multipart/form-data" }, params: { sign, timestamp }, data, responseType: "arraybuffer" })),
     editStaff: ({ data, ...rest }) => promise_(instance.post('/db/staff/edit', data, { params: { sign, timestamp, ...rest } })),
     editStaffFace: ({ data, ...rest }) => promise_(instance.put('/db/staff/edit_faceid', data, { params: { sign, timestamp, ...rest } })),
     editStaffVehicle: ({ data, ...rest }) => promise_(instance.put('/db/staff/edit_vehicleid', data, { params: { sign, timestamp, ...rest } })),

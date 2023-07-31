@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { useHistory } from "react-router-dom"
 import { makeStyles } from '@material-ui/core/styles';
 import { AuthContext } from "../../contexts/AuthContext";
@@ -10,7 +10,8 @@ import {
   Close,
   AddBox,
   Backup,
-  CloudDownload
+  CloudDownload,
+  PhotoCamera
   // FiberManualRecord
 } from '@material-ui/icons';
 import Table from "../../components/table/Table";
@@ -19,10 +20,12 @@ import Avatar from '@material-ui/core/Avatar';
 import Select from '../../components/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 
 import { identities, credentials } from "../../utils/constants"
 
 import StaffModalComponent from "./StaffModalComponent"
+import StaffImportModalComponent from "./StaffImportModalComponent"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,6 +58,7 @@ export default function Devices() {
   const classes = useStyles();
   const history = useHistory();
   const { t } = useContext(LocaleContext);
+  const { authedApi } = useContext(AuthContext);
   const { setSnackBar, showModal, hideModal, showWarningConfirm } = useContext(LayoutContext);
   const [rows, setRows] = React.useState([]);
   const [locations, setLocations] = React.useState([]);
@@ -70,7 +74,6 @@ export default function Devices() {
     group: [],
     credential: []
   })
-  const { authedApi } = useContext(AuthContext);
 
 
   React.useEffect(() => {
@@ -168,7 +171,23 @@ export default function Devices() {
 
 
   const showImportStaffModal = () => {
+    showModal({
+      title: "上傳人員檔案",
+      maxWidth: "xs",
+      fullWidth: true,
+      component: <StaffImportModalComponent onSave={handleImportFile}/>
+    })
 
+  }
+  const handleImportFile = (file) => {
+    // const file = fileRef.current.files[0]
+    // return console.log(file)
+    const reader = new FileReader();
+    reader.onload = async e => {
+      let document = e.target.result
+      await authedApi.postStaffImportFile({ data: document })
+    }
+    reader.readAsArrayBuffer(file);
   }
 
   const handleExportStaffList = async () => {
@@ -204,7 +223,7 @@ export default function Devices() {
           setFilter={setFilter}
           tableActions={[
             { name: t('add'), onClick: showAddStaffModal, icon: <AddBox /> },
-            { name: t('import'), onClick: () => { }, icon: <Backup /> },
+            { name: t('import'), onClick: showImportStaffModal, icon: <Backup /> },
             { name: t('export'), onClick: handleExportStaffList, icon: <CloudDownload /> },
           ]}
           filterComponent={
