@@ -18,6 +18,10 @@ import {
 import Table from "../../components/table/Table";
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
+import AvatarGroup from '@material-ui/lab/AvatarGroup';
+import Tooltip from '@material-ui/core/Tooltip';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
+import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import Select from '../../components/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
@@ -27,6 +31,7 @@ import { identities, credentials } from "../../utils/constants"
 
 import StaffModalComponent from "./StaffModalComponent"
 import StaffImportModalComponent from "./StaffImportModalComponent"
+import { palette } from '../../customTheme'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -107,7 +112,8 @@ export default function Devices() {
       return {
         ...data,
         id: data.staffid,
-        photo: data.photo ? <Avatar src={`data:image/png;base64,${data.photo}`} onClick={() => {
+        photo: data.photo ? <Avatar src={`data:image/png;base64,${data.photo}`} onClick={(e) => {
+          e.stopPropagation()
           showModal({
             title: "相片",
             component: <img src={`data:image/png;base64,${data.photo}`} style={{ display: 'block', margin: 'auto' }} />,
@@ -117,9 +123,37 @@ export default function Devices() {
         vehicle,
         group,
         groups: undefined,
-        cardid: undefined,
-        vehicleid: undefined,
-        faceid: undefined
+        cardid: data.cardid.length > 0 ? <AvatarGroup >{
+          data.cardid.map(p => <Tooltip key={p.cardidid} title={
+            (p.uhfnumber && `UHF number  ${p.uhfnumber}`) ||
+            (p.mifarenumber && `Mifare number  ${p.mifarenumber}`) ||
+            (p.emnumber && `EM number  ${p.emnumber}`)
+          }><Avatar
+            style={{
+              borderRadius: '15%',
+              border: `1px solid ${palette.secondary.main}`,
+              backgroundColor: 'white',
+              color: palette.secondary.main
+            }}>
+              {/* <CreditCardIcon /> */}
+              {(p.uhf && "UH") || (p.mifare && `MF`) || (p.em && `EM`)}
+            </Avatar></Tooltip>)
+        }</AvatarGroup> : '--',
+        vehicleid: data.vehicleid.length > 0 ? <AvatarGroup >{
+          data.vehicleid.map(p => <Tooltip key={p.vehicleidid} title={p.vin}><Avatar
+            style={{
+              borderRadius: '15%',
+              backgroundColor: 'white',
+              border: `1px solid ${palette.secondary.main}`,
+              color: palette.secondary.main
+            }}>
+            <DriveEtaIcon />
+            {/* {(p.uhf && "U") || (p.mifare && `M`) || (p.em && `E`)} */}
+          </Avatar></Tooltip>)
+        }</AvatarGroup> : '--',
+        faceid: data.faceid.length > 0 ? <AvatarGroup >{
+          data.faceid.map(p => <Avatar key={p.faceidid} src={`data:image/png;base64,${p.photo[0].photo}`} />)
+        }</AvatarGroup> : '--',
       }
     })
     setTotal(total)
@@ -212,7 +246,7 @@ export default function Devices() {
   }
 
   const handleBatchDeleteConfirm = (selected) => {
-    
+
     getStaffList()
     hideModal()
     setSnackBar({
@@ -337,10 +371,11 @@ export default function Devices() {
           columns={[
             { key: "name", label: t('name'), enable: true, sortable: true },
             { key: "photo", label: '頭像', enable: true },
-            // { key: "cardid", label: '卡片', enable: true },
+            { key: "faceid", label: t('faceid'), enable: true },
+            { key: "cardid", label: t('cardid'), enable: true },
+            { key: "vehicleid", label: t('vehicleid'), enable: true },
             { key: "company", label: t('company'), enable: true },
             { key: "department", label: t('department'), enable: true },
-            // { key: "vehicleid", label: '車輛', enable: true },
             { key: "email", label: t('email'), enable: false },
             // { key: "groups", label: t('group'), enable: false },
             { key: "idcardnumber", label: t('idcardnumber'), enable: false },
