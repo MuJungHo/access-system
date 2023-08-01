@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core'
 import { identities } from "../../utils/constants"
 import ImageUploader from './ImageUploader'
+import Text from "../Text"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -69,7 +70,7 @@ export default ({
       style={{ marginBottom: 20 }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', padding: 8 }}>
         <div className={classes.info}>
-          <span>{t("name")}</span>
+          <Text required>{t("name")}</Text>
           <TextField value={staff.name || ''} onChange={e => setStaff({
             ...staff,
             name: e.target.value
@@ -88,16 +89,9 @@ export default ({
               photo: ""
             })}
           />
-          {/* <div>{staff.photo ? <img src={`data:image/png;base64,${staff.photo}`} style={{ height: 50, width: 50 }} onClick={() => {
-            showModal({
-              title: "相片",
-              component: <img src={`data:image/png;base64,${staff.photo}`} style={{ display: 'block', margin: 'auto', height: 150, width: 150 }} />,
-            })
-          }} /> : '--'}
-          </div> */}
         </div>
         <div className={classes.info}>
-          <span>{t("identity")}</span>
+          <Text required>{t("identity")}</Text>
           <Select
             style={{ margin: 20 }}
             value={staff.identity || ''}

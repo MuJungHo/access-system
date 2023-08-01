@@ -10,6 +10,7 @@ import {
   TextField,
   MenuItem,
 } from '@material-ui/core'
+import Text from "../Text"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -39,7 +40,7 @@ export default ({ vehicle, onSave }) => {
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', paddingLeft: 20, paddingRight: 20 }}>
       <div className={classes.info}>
-        <span>{t('vin')}</span>
+        <Text required>{t('vin')}</Text>
         <TextField
           value={state.vin || ''}
           onChange={e => setState({
@@ -59,7 +60,7 @@ export default ({ vehicle, onSave }) => {
         />
       </div>
       <div className={classes.info}>
-        <span>{t('starttime')}</span>
+        <Text required>{t('starttime')}</Text>
         <TextField
           type="datetime-local"
           value={state.starttimeFormat || ''}
@@ -74,7 +75,7 @@ export default ({ vehicle, onSave }) => {
         />
       </div>
       <div className={classes.info}>
-        <span>{t('endtime')}</span>
+        <Text required>{t('endtime')}</Text>
         <TextField
           type="datetime-local"
           value={state.endtimeFormat || ''}

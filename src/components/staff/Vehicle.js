@@ -4,7 +4,6 @@ import { LocaleContext } from "../../contexts/LocaleContext";
 import { LayoutContext } from "../../contexts/LayoutContext";
 import { AuthContext } from "../../contexts/AuthContext";
 import { makeStyles } from '@material-ui/core/styles';
-import Select from "../Select"
 import DetailCard from "../DetailCard";
 import SimpleTable from "../table/SimpleTable"
 import VehicleModalComponent from "./VehicleModalComponent"

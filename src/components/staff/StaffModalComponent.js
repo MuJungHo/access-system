@@ -1,7 +1,5 @@
 import React, { useContext } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import Select from "../../components/Select"
-import Text from "../../components/Text"
 import { LocaleContext } from "../../contexts/LocaleContext";
 
 import {
@@ -12,6 +10,9 @@ import {
   MenuItem,
 } from '@material-ui/core'
 import { identities } from "../../utils/constants"
+import Select from "../../components/Select"
+import ImageUploader from './ImageUploader'
+import Text from "../../components/Text"
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -51,7 +52,6 @@ export default ({ staff, onSave }) => {
           })}
         />
       </div>
-
       <div className={classes.info}>
         <Text required>{t('identity')}</Text>
         <Select
@@ -131,6 +131,20 @@ export default ({ staff, onSave }) => {
           onChange={e => setState({
             ...state,
             email: e.target.value
+          })}
+        />
+      </div>
+      <div className={classes.info}>
+        <span>{t("photo")}</span>
+        <ImageUploader
+          image={state.photo}
+          onChange={image => setState({
+            ...state,
+            photo: image
+          })}
+          onClean={() => setState({
+            ...state,
+            photo: ""
           })}
         />
       </div>

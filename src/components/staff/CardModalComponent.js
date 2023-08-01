@@ -12,6 +12,8 @@ import {
   MenuItem,
 } from '@material-ui/core'
 
+import Text from "../Text"
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     width: '100%',
@@ -41,7 +43,7 @@ export default ({ card, onSave }) => {
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', paddingLeft: 20, paddingRight: 20, paddingTop: 5 }}>
       <div className={classes.info}>
-        <span>{t("cardtype")}</span>
+        <Text required>{t("cardtype")}</Text>
         <Select
           style={{ margin: 20 }}
           value={state.card_type || ''}
@@ -69,7 +71,7 @@ export default ({ card, onSave }) => {
         </Select>
       </div>
       <div className={classes.info}>
-        <span>{t('cardnumber')}</span>
+        <Text required>{t('cardnumber')}</Text>
         <TextField
           value={state.card_number || ''}
           onChange={e => setState({
@@ -82,7 +84,7 @@ export default ({ card, onSave }) => {
         />
       </div>
       <div className={classes.info}>
-        <span>{t('starttime')}</span>
+        <Text required>{t('starttime')}</Text>
         <TextField
           type="datetime-local"
           value={state.starttimeFormat || ''}
@@ -97,7 +99,7 @@ export default ({ card, onSave }) => {
         />
       </div>
       <div className={classes.info}>
-        <span>{t('endtime')}</span>
+        <Text required>{t('endtime')}</Text>
         <TextField
           type="datetime-local"
           value={state.endtimeFormat || ''}

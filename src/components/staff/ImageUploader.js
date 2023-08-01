@@ -51,7 +51,7 @@ export default ({ image = "", onChange = () => { }, onClean = () => { } }) => {
     {
       image
         ? <div style={{ display: 'flex', alignItems: 'center' }}>
-          <img src={`data:image/png;base64, ${image}`} style={{ maxWidth: 50, maxHeight: 50 }} />
+          <img src={`data:image/png;base64, ${image}`} style={{ maxWidth: 50, maxHeight: 50, }} />
           <IconButton onClick={() => {
             fileRef.current.value = ""
             onClean()
