@@ -34,11 +34,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default ({ staff, onSave }) => {
-  const { t } = useContext(LocaleContext);
+  const { t, locale } = useContext(LocaleContext);
   const classes = useStyles();
   const [state, setState] = React.useState()
   const fileRef = useRef()
 
+  const onDownload = () => {
+    const link = document.createElement("a");
+    link.download = `download.xlsx`;
+    link.href = `${process.env.PUBLIC_URL}/assets/Staff_import_${{
+      "zh-TW": "cht",
+      "en": "eng",
+      // "jpn": "jpn"
+    }[locale]}.xlsx`
+    link.click();
+  }
   // console.log(state)
 
   return (
@@ -55,9 +65,15 @@ export default ({ staff, onSave }) => {
         }}
         type="file"
       />
+      <div className={classes.info}>
+        <span style={{ flex: 1 }}>{(t("sampleDownload"))}</span>
+        <Button onClick={onDownload} variant="outlined" color="primary">
+          {t("download")}
+        </Button>
+      </div>
 
       <div className={classes.info}>
-        <span style={{ flex: 1 }}>{"選擇要上傳的檔案"}</span>
+        <span style={{ flex: 1 }}>{t("select-thing", { thing: t("file") })}</span>
         {
           state
             ? <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -68,8 +84,8 @@ export default ({ staff, onSave }) => {
               }}><Delete /></IconButton>
             </div>
             : <label htmlFor="contained-button-file">
-              <Button variant="contained" color="primary" variant="outlined" component="span">
-                {"上傳"}
+              <Button color="primary" variant="outlined" component="span">
+                {t("upload")}
               </Button>
             </label>
         }
@@ -82,7 +98,7 @@ export default ({ staff, onSave }) => {
           style={{ float: 'right' }}
           variant="contained"
           onClick={() => onSave(fileRef.current.files[0])}>
-          {"匯入"}
+          {t("import")}
         </Button>
       </div>
     </div>
