@@ -69,16 +69,11 @@ export default ({
       onClick={handleSaveStaff}
       style={{ marginBottom: 20 }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', padding: 8 }}>
-        <div className={classes.info}>
-          <Text required>{t("name")}</Text>
-          <TextField value={staff.name || ''} onChange={e => setStaff({
-            ...staff,
-            name: e.target.value
-          })} />
-        </div>
-        <div className={classes.info}>
-          <span>{t("photo")}</span>
+        <div style={{ display: 'flex', width: '100%', margin: '6px 12px' }}>
           <ImageUploader
+            style={{
+              flex: 1
+            }}
             image={staff.photo}
             onChange={image => setStaff({
               ...staff,
@@ -89,28 +84,40 @@ export default ({
               photo: ""
             })}
           />
-        </div>
-        <div className={classes.info}>
-          <Text required>{t("identity")}</Text>
-          <Select
-            style={{ margin: 20 }}
-            value={staff.identity || ''}
-            onChange={e => setStaff({
-              ...staff,
-              identity: e.target.value
-            })}
-          // label={t("identity")}
-          >
-            {
-              identities
-                .map(i =>
-                  <MenuItem
-                    key={i.value}
-                    value={i.index}>
-                    {t(i.value)}
-                  </MenuItem>)
-            }
-          </Select>
+          <div style={{ flex: 1 }}>
+            <div className={classes.info} style={{ width: 'calc(100% - 12px)' }}>
+              <Text required>{t('name')}</Text>
+              <TextField
+                value={staff.name || ''}
+                onChange={e => setStaff({
+                  ...staff,
+                  name: e.target.value
+                })}
+              />
+            </div>
+            <div className={classes.info} style={{ width: 'calc(100% - 12px)' }}>
+              <Text required>{t('identity')}</Text>
+              <Select
+                // style={{ width: '100%' }}
+                value={staff.identity || ''}
+                onChange={e => setStaff({
+                  ...staff,
+                  identity: e.target.value
+                })}
+                label={t("identity")}
+              >
+                {
+                  identities
+                    .map(i =>
+                      <MenuItem
+                        key={i.value}
+                        value={i.index}>
+                        {t(i.value)}
+                      </MenuItem>)
+                }
+              </Select>
+            </div>
+          </div>
         </div>
         <div className={classes.info}>
           <span>{t("group")}</span>

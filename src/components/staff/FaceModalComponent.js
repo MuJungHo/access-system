@@ -109,9 +109,11 @@ export default ({ face, FRSDevices = [], onSave }) => {
           }}
         />
       </div>
-      <div className={classes.info}>
-        <Text required>{"識別頭像"}</Text>
+      <div style={{ display: 'flex', width: '100%', marginTop: 10 }}>
+        <Text
+          style={{ flex: 1 }} required>{"識別頭像"}</Text>
         <ImageUploader
+          style={{ flex: 1 }}
           image={state.photo}
           onChange={image => setState({
             ...state,

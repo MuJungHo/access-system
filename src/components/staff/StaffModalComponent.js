@@ -42,37 +42,53 @@ export default ({ staff, onSave }) => {
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', paddingLeft: 20, paddingRight: 20 }}>
-      <div className={classes.info}>
-        <Text required>{t('name')}</Text>
-        <TextField
-          value={state.name || ''}
-          onChange={e => setState({
+      <div style={{ display: 'flex', width: '100%', marginTop: 20 }}>
+        <ImageUploader
+          style={{ flex: 1 }}
+          image={state.photo}
+          onChange={image => setState({
             ...state,
-            name: e.target.value
+            photo: image
+          })}
+          onClean={() => setState({
+            ...state,
+            photo: ""
           })}
         />
-      </div>
-      <div className={classes.info}>
-        <Text required>{t('identity')}</Text>
-        <Select
-          // style={{ width: '100%' }}
-          value={state.identity || ''}
-          onChange={e => setState({
-            ...state,
-            identity: e.target.value
-          })}
-          label={t("identity")}
-        >
-          {
-            identities
-              .map(i =>
-                <MenuItem
-                  key={i.value}
-                  value={i.index}>
-                  {t(i.value)}
-                </MenuItem>)
-          }
-        </Select>
+        <div style={{ flex: 1 }}>
+          <div className={classes.info}>
+            <Text required>{t('name')}</Text>
+            <TextField
+              value={state.name || ''}
+              onChange={e => setState({
+                ...state,
+                name: e.target.value
+              })}
+            />
+          </div>
+          <div className={classes.info}>
+            <Text required>{t('identity')}</Text>
+            <Select
+              // style={{ width: '100%' }}
+              value={state.identity || ''}
+              onChange={e => setState({
+                ...state,
+                identity: e.target.value
+              })}
+              label={t("identity")}
+            >
+              {
+                identities
+                  .map(i =>
+                    <MenuItem
+                      key={i.value}
+                      value={i.index}>
+                      {t(i.value)}
+                    </MenuItem>)
+              }
+            </Select>
+          </div>
+        </div>
       </div>
       <div className={classes.info}>
         <span>{t('staffnumber')}</span>
@@ -131,20 +147,6 @@ export default ({ staff, onSave }) => {
           onChange={e => setState({
             ...state,
             email: e.target.value
-          })}
-        />
-      </div>
-      <div className={classes.info}>
-        <span>{t("photo")}</span>
-        <ImageUploader
-          image={state.photo}
-          onChange={image => setState({
-            ...state,
-            photo: image
-          })}
-          onClean={() => setState({
-            ...state,
-            photo: ""
           })}
         />
       </div>
