@@ -20,22 +20,22 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
+// import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
 
-import SearchIcon from "@material-ui/icons/Search"
+// import SearchIcon from "@material-ui/icons/Search"
 import TableChartIcon from '@material-ui/icons/TableChart';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+// import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
+import SearchTextField from "../common/SearchTextField";
 
 import Actions from "./Actions"
 import TableActions from "./TableActions"
@@ -76,40 +76,6 @@ const ColumnManageDialog = ({
       </DialogActions>
     </Dialog>)
 }
-const SearchTextField = withStyles(theme => ({
-  root: {
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: 'rgba(190, 190, 190, 0.4)'
-    },
-    "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.primary.main,
-      transition: 'border-color ease-in-out 0.3s'
-    },
-    '&::placeholder': {
-      fontSize: '1rem'
-    },
-    '& .MuiFormLabel-root': {
-      fontSize: '1.2rem'
-    },
-    '& span': {
-      color: theme.palette.error.main
-    },
-    '& .MuiInputBase-root': {
-      height: 36
-    },
-    '& .MuiOutlinedInput-root': {
-      borderRadius: 6
-    },
-    flex: '1 1 auto'
-  }
-}))((props) => <TextField {...props} inputProps={{
-  style: {
-    ...props.style,
-    fontSize: '1rem',
-    fontWeight: 400,
-    padding: '.5rem',
-  }
-}} />)
 
 const arrayMove = (arr, old_index, new_index) => {
   if (new_index >= arr.length) {
@@ -348,16 +314,7 @@ const EnhancedTableToolbar = ({
               <SearchTextField
                 inputRef={ref}
                 style={{ width: 270 }}
-                type="search"
-                variant="outlined"
                 placeholder={t('keyword')}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <SearchIcon />
-                    </InputAdornment>
-                  )
-                }}
               />
             </form>
             {dateRangePicker && <DateRangePicker

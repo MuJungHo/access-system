@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme) => ({
     },
     "& .MuiOutlinedInput-input": {
       color: "rgba(0, 0, 0, 0.4)",
-      padding: 10
+      padding: 10,
+      paddingRight: 32
     },
     "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
       transform: "translate(10px, 3px) scale(0.75)"
@@ -49,8 +50,8 @@ export default ({
   value,
   onChange,
   style = {},
+  selectStyle = {},
   multiple = false,
-  fullWidth = false
 }) => {
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
@@ -66,6 +67,7 @@ export default ({
         value={value}
         onChange={onChange}
         multiple={multiple}
+        style={{ ...selectStyle }}
       >
         {!multiple && <MenuItem value="">
           <em>{t("select-thing", { "thing": label })}</em>

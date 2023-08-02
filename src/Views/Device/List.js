@@ -1,32 +1,12 @@
 import React from "react";
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-
+import Tab from '../../components/common/Tab';
+import Tabs from "../../components/common/Tabs";
 import DeviceList from '../../components/device/DeviceList'
 import DeviceGroup from '../../components/device/DeviceGroup'
 
-const StyledTabs = withStyles(theme => ({
-  root: {
-    width: '30%',
-    boxShadow: theme.shadows[1],
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
-    // "& .MuiOutlinedInput-notchedOutline": {
-    //   borderColor: 'rgba(190, 190, 190, 0.4)'
-    // }
-  }
-}))((props) => <Tabs {...props} />)
 
-const StyledTab = withStyles(theme => ({
-  root: {
-    // width: '30%',
-    // "& .MuiOutlinedInput-notchedOutline": {
-    //   borderColor: 'rgba(190, 190, 190, 0.4)'
-    // }
-  }
-}))((props) => <Tab {...props} />)
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,7 +44,8 @@ export default function Devices() {
 
   return (
     <div className={classes.root}>
-      <StyledTabs
+      <Tabs
+        style={{ width: 350 }}
         value={tabIndex}
         TabIndicatorProps={{ style: { background: 'white' } }}
         onChange={(event, newValue) => {
@@ -73,9 +54,9 @@ export default function Devices() {
         variant="fullWidth"
         textColor="primary"
       >
-        <StyledTab label="設備列表" />
-        <StyledTab label="設備群組" />
-      </StyledTabs>
+        <Tab label="設備列表" />
+        <Tab label="設備群組" />
+      </Tabs>
 
       <Paper className={classes.paper}>
         <DeviceList />
