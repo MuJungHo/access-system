@@ -27,8 +27,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     width: 350,
-    paddingTop: 20
-    // backgroundColor: '#fff',
   },
   leftContent: {
     flex: 1,
@@ -56,12 +54,11 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    padding: 20,
-    paddingBottom: 0
+    marginLeft: 20
   },
   rightTopSelect: {
     textAlign: 'right',
-    marginBottom: 20
+    height: 48
   },
   rightTopbar: {
     display: 'flex',
