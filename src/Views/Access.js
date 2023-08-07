@@ -1,18 +1,21 @@
 import React from "react";
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import { LayoutContext } from "../contexts/LayoutContext";
 import { AuthContext } from "../contexts/AuthContext";
 import { LocaleContext } from "../contexts/LocaleContext";
-import { Button, MenuItem, IconButton, Paper, Select, TablePagination } from '@material-ui/core';
+import { Button, MenuItem, IconButton, Paper, Select, TablePagination, Avatar } from '@material-ui/core';
 import MuiSelect from "../components/Select"
 import Tab from '../components/common/Tab';
 import Tabs from "../components/common/Tabs"
 import SearchTextField from "../components/common/SearchTextField"
+import AddAccessModalComponent from "../components/access/AddAccessModalComponent"
 import { Router, Person, Delete, SettingsInputComponent, People } from '@material-ui/icons';
 import { palette } from "../customTheme";
 
 const viewBackgroundColor = "#e5e5e5"
 const rightLimit = 14
 const leftLimit = 7
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -128,13 +131,58 @@ const Access = () => {
   const [rightTotal, setRightTotal] = React.useState(0)
   const [rightItems, setRightItems] = React.useState([])
 
-  const [devices, setDevices] = React.useState([])
-  const [deviceGroups, setDeviceGroups] = React.useState([])
+  const [isExisted, setExisted] = React.useState([])
+
   const { authedApi } = React.useContext(AuthContext);
   const { t } = React.useContext(LocaleContext);
+  const { setSnackBar, showModal, hideModal, showWarningConfirm } = React.useContext(LayoutContext);
+
+  const handleChangeRightFilter = (key, value) => {
+    const newFilter = key === "page"
+      ? {
+        ...rightFilter,
+        [key]: value
+      }
+      : {
+        ...rightFilter,
+        page: 0,
+        [key]: value
+      }
+    setRightFilter(newFilter)
+    if (mode === "dtos") {
+      if (leftTabIndex === 0) {
+        if (rightTabIndex === 0) {
+          getDeviceAccessStaffList(newFilter)
+        } else {
+          getDeviceAccessStaffGroupList(newFilter)
+        }
+      } else {
+        if (rightTabIndex === 0) {
+          getDeviceGroupAccessStaffList(newFilter)
+        } else {
+          getDeviceAccessStaffGroupList(newFilter)
+        }
+      }
+    } else {
+      if (leftTabIndex === 0) {
+        if (rightTabIndex === 0) {
+          getStaffAccessDeviceList(newFilter)
+        } else {
+          getStaffAccessDeviceGroupList(newFilter)
+        }
+      } else {
+        if (rightTabIndex === 0) {
+          getStaffGroupAccessDeviceList(newFilter)
+        } else {
+          getStaffGroupAccessDeviceGroupList(newFilter)
+        }
+      }
+    }
+  }
 
   const getStaffGroupAccessDeviceList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
-    const { result, total } = await authedApi.getStaffGroupAccessList({ page: page + 1, keyword, limit, staffgroupid: selected.staffgroupid, private_only: 1 })
+    const { result, total, ids } = await authedApi.getStaffGroupAccessList({ page: page + 1, keyword, limit, staffgroupid: selected.staffgroupid, private_only: 1 })
+    let _ids = ids || []
     const _access = result.map(data => {
       return {
         ...data,
@@ -144,10 +192,12 @@ const Access = () => {
     })
     setRightTotal(total)
     setRightItems(_access)
+    setExisted(_ids)
   }
 
   const getStaffGroupAccessDeviceGroupList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
-    const { result, total } = await authedApi.getStaffGroupAccessList({ page: page + 1, keyword, limit, staffgroupid: selected.staffgroupid, group_only: 1 })
+    const { result, total, groupids } = await authedApi.getStaffGroupAccessList({ page: page + 1, keyword, limit, staffgroupid: selected.staffgroupid, group_only: 1 })
+    let _groupids = groupids || []
     const _access = result.map(data => {
       return {
         ...data,
@@ -157,10 +207,12 @@ const Access = () => {
     })
     setRightTotal(total)
     setRightItems(_access)
+    setExisted(_groupids)
   }
 
   const getStaffAccessDeviceGroupList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
-    const { result, total } = await authedApi.getStaffAccessList({ page: page + 1, keyword, limit, staffid: selected._id, group_only: 1 })
+    const { result, total, groupids_p } = await authedApi.getStaffAccessList({ page: page + 1, keyword, limit, staffid: selected._id, group_only: 1 })
+    let _groupids_p = groupids_p || []
     const _access = result.map(data => {
       return {
         ...data,
@@ -170,38 +222,47 @@ const Access = () => {
     })
     setRightTotal(total)
     setRightItems(_access)
+    setExisted(_groupids_p)
   }
 
   const getStaffAccessDeviceList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
-    const { result, total } = await authedApi.getStaffAccessList({ page: page + 1, keyword, limit, staffid: selected._id, private_only: 1 })
+    const { result, total, ids_p } = await authedApi.getStaffAccessList({ page: page + 1, keyword, limit, staffid: selected._id, private_only: 1 })
+    let _ids_p = ids_p || [];
     const _access = result.map(data => {
       return {
         ...data,
         _id: data.id,
-        name: data.name
+        name: data.name,
+        disabled: !_ids_p.includes(data.id),
       }
     })
     setRightTotal(total)
     setRightItems(_access)
+    setExisted(_ids_p)
   }
 
   const getDeviceAccessStaffList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
     // return console.log(selected)
-    const { result, total } = await authedApi.getDeviceAccessList({ page: page + 1, keyword, limit, id: selected._id, private_only: 1 })
+    const { result, total, staffids_p } = await authedApi.getDeviceAccessList({ page: page + 1, keyword, limit, id: selected._id, private_only: 1 })
+    let _staffids_p = staffids_p || [];
     const _access = result.map(data => {
       return {
         ...data,
         _id: data.staffid,
-        name: data.staffname
+        name: data.staffname,
+        disabled: !_staffids_p.includes(data.staffid),
+        // isG: staffids_g.includes(data.staffid)
       }
     })
     setRightTotal(total)
     setRightItems(_access)
+    setExisted(_staffids_p)
   }
 
   const getDeviceAccessStaffGroupList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
     // return console.log(selected)
-    const { result, total } = await authedApi.getDeviceAccessList({ page: page + 1, keyword, limit, id: selected._id, group_only: 1 })
+    const { result, total, staffgroupids_p } = await authedApi.getDeviceAccessList({ page: page + 1, keyword, limit, id: selected._id, group_only: 1 })
+    let _staffgroupids_p = staffgroupids_p || []
     const _access = result.map(data => {
       return {
         ...data,
@@ -211,6 +272,7 @@ const Access = () => {
     })
     setRightTotal(total)
     setRightItems(_access)
+    setExisted(_staffgroupids_p)
   }
 
   const getDeviceGroupAccessStaffGroupList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
@@ -225,11 +287,13 @@ const Access = () => {
     })
     setRightTotal(total)
     setRightItems(_access)
+    setExisted([])
   }
 
   const getDeviceGroupAccessStaffList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
     // return console.log(selected)
-    const { result, total } = await authedApi.getDeviceGroupAccessList({ page: page + 1, keyword, limit, groupid: selected.groupid, private_only: 1 })
+    const { result, total, staffids } = await authedApi.getDeviceGroupAccessList({ page: page + 1, keyword, limit, groupid: selected.groupid, private_only: 1 })
+    let _staffids = staffids || []
     const _access = result.map(data => {
       return {
         ...data,
@@ -239,6 +303,7 @@ const Access = () => {
     })
     setRightTotal(total)
     setRightItems(_access)
+    setExisted(_staffids)
   }
 
   const getDeviceGroupOptions = async () => {
@@ -261,10 +326,6 @@ const Access = () => {
       }
     })
     setLeftSelectOptions(_options)
-  }
-
-  const handleChangeRightFilter = (key, value) => {
-
   }
 
   const handleChangeLeftFilter = (key, value) => {
@@ -296,7 +357,7 @@ const Access = () => {
   }
 
   const getDeviceList = async ({ page = 0, keyword = "", limit = leftLimit, groupid = "" } = {}) => {
-    const { result, total } = await authedApi.getDeviceList({ page: page + 1, keyword, limit, groupid })
+    const { result, total } = await authedApi.getDeviceList({ page: page + 1, keyword, limit, groupid, access: 1 })
     const _devices = result.map(data => {
       return {
         ...data,
@@ -433,6 +494,148 @@ const Access = () => {
     setRightTabIndex(0)
   }
 
+  const showDeteleAccessConfirm = (item) => {
+    let target = ""
+    if (mode === "dtos") {
+      if (rightTabIndex === 0) {
+        target = "人員 " + item.staffname
+      } else {
+        target = "人員群組 " + item.staffgroupname
+      }
+    } else {
+      if (rightTabIndex === 0) {
+        target = "設備 " + item.name
+      } else {
+        target = "設備群組" + item.groupname
+      }
+    }
+    showWarningConfirm({
+      title: '刪除權限',
+      component: <h6 style={{ margin: 16 }}>{`確認刪除 ${target} 的權限嗎?`}</h6>,
+      onConfirm: () => handleDeleteAccess(item)
+    })
+  }
+
+  const handleDeleteAccess = async (item) => {
+    // console.log(item, selected)
+    let data = {
+      operation: "delete",
+      sn: 0,
+      id: null,
+      staffid: null,
+      staffgroupid: null,
+      groupid: null,
+    }
+    if (mode === "dtos") {
+      if (leftTabIndex === 0) {
+        if (rightTabIndex === 0) {
+          data.id = selected.id
+          data.staffid = item.staffid
+        } else {
+          data.id = selected.id
+          data.staffgroupid = item.staffgroupid
+        }
+      }
+      else {
+        if (rightTabIndex === 0) {
+          data.groupid = selected.groupid
+          data.staffid = item.staffid
+        } else {
+          data.groupid = selected.groupid
+          data.staffgroupid = item.staffgroupid
+        }
+      }
+    } else {
+      if (leftTabIndex === 0) {
+        if (rightTabIndex === 0) {
+          data.staffid = selected.staffid
+          data.id = item.id
+        } else {
+          data.staffid = selected.staffid
+          data.groupid = item.groupid
+        }
+      } else {
+        if (rightTabIndex === 0) {
+          data.staffgroupid = selected.staffgroupid
+          data.id = item.id
+        } else {
+          data.staffgroupid = selected.staffgroupid
+          data.groupid = item.groupid
+        }
+      }
+    }
+    await authedApi.addAccess({ data: [data] })
+    renderRight()
+  }
+  const handleOpenAddModal = () => {
+    showModal({
+      title: "可新增的項目",
+      component: <AddAccessModalComponent
+        mode={mode}
+        leftTabIndex={leftTabIndex}
+        rightTabIndex={rightTabIndex}
+        isExisted={isExisted}
+        authedApi={authedApi}
+        onSave={(state) => handleAddAccess(state)} />
+    })
+  }
+
+  const handleAddAccess = async (state) => {
+    let data = state.map((item, sn) => {
+      let _id = Number(item)
+      let data = {
+        operation: "update",
+        sn,
+        id: null,
+        staffid: null,
+        staffgroupid: null,
+        groupid: null,
+      }
+      if (mode === "dtos") {
+        if (leftTabIndex === 0) {
+          if (rightTabIndex === 0) {
+            data.id = selected.id
+            data.staffid = _id
+          } else {
+            data.id = selected.id
+            data.staffgroupid = _id
+          }
+        }
+        else {
+          if (rightTabIndex === 0) {
+            data.groupid = selected.groupid
+            data.staffid = _id
+          } else {
+            data.groupid = selected.groupid
+            data.staffgroupid = _id
+          }
+        }
+      } else {
+        if (leftTabIndex === 0) {
+          if (rightTabIndex === 0) {
+            data.staffid = selected.staffid
+            data.id = _id
+          } else {
+            data.staffid = selected.staffid
+            data.groupid = _id
+          }
+        } else {
+          if (rightTabIndex === 0) {
+            data.staffgroupid = selected.staffgroupid
+            data.id = _id
+          } else {
+            data.staffgroupid = selected.staffgroupid
+            data.groupid = _id
+          }
+        }
+      }
+      return data
+    })
+    await authedApi.addAccess({ data })
+    hideModal()
+    renderRight()
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.content}>
@@ -462,7 +665,6 @@ const Access = () => {
             </MuiSelect>}
             <div className={classes.leftContentInner}>
               {
-
                 leftItems.map(item => (
                   <div
                     style={selected._id === item._id ? { border: '3px solid' + palette.primary.main } : { border: '3px solid white' }}
@@ -477,10 +679,8 @@ const Access = () => {
                     {item.name}
                   </div>
                 ))
-
               }
             </div>
-
             <TablePagination
               rowsPerPageOptions={[]}
               component="div"
@@ -512,14 +712,16 @@ const Access = () => {
               <Tab label={mode === "dtos" ? "人員" : "設備"} />
               <Tab label="群組" />
             </Tabs>
-            <div><Button variant="contained" color="primary">新增</Button></div>
+            <div>
+              <Button variant="contained" color="primary" onClick={handleOpenAddModal}>新增</Button>
+            </div>
 
           </div>
           <Paper className={classes.rightContet}>
             <div className={classes.rightContetTopbar}>
               {selected.name}
               <div>
-                <SearchTextField placeholder={"搜尋關鍵字"} style={{ width: 300 }} />
+                <SearchTextField placeholder={"搜尋關鍵字"} style={{ width: 300 }} onChange={e => handleChangeRightFilter("keyword", e.target.value)} />
               </div>
             </div>
             <div className={classes.rightContentInner}>
@@ -534,14 +736,14 @@ const Access = () => {
                           : mode === "dtos" ? <People style={{ margin: 10 }} /> : <SettingsInputComponent style={{ margin: 10 }} />
                       }
                       <span style={{ flex: 1 }}>{item.name}</span>
-                      <IconButton>
+                      {/* {item.isG && <Avatar >G</Avatar>} */}
+                      <IconButton disabled={item.disabled} onClick={() => showDeteleAccessConfirm(item)}>
                         <Delete />
                       </IconButton>
                     </div>))
                   : <h6 style={{ margin: 20 }}>{`請選擇一個左側的${mode === "dtos" ? "設備" : "人員"}`}</h6>
               }
             </div>
-
             <TablePagination
               rowsPerPageOptions={[]}
               component="div"

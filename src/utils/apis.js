@@ -82,7 +82,6 @@ export const api = (token, logout, setSnackBar, t) => {
     getAvailableDeviceIdList: ({ ...rest }) => promise_(instance.get('/db/deviceid/list', { params: { sign, timestamp, ...rest } })),
     getAccessGroupListById: ({ ...rest }) => promise_(instance.get('/db/deviceid/list', { params: { sign, timestamp, ...rest } })),
     getStaffGroupList: ({ ...rest }) => promise_(instance.get('/db/staffgroup/list', { params: { sign, timestamp, ...rest } })),
-    addAccess: ({ data, ...rest }) => promise_(instance.post('/db/access/add', data, { params: { sign, timestamp, ...rest } })),
 
     //staff
     getStaff: ({ ...rest }) => promise_(instance.get('/db/staff/get', { params: { sign, timestamp, ...rest } })),
@@ -104,6 +103,11 @@ export const api = (token, logout, setSnackBar, t) => {
     getDeviceAccessList: ({ ...rest }) => promise_(instance.get('/db/access/id/list', { params: { sign, timestamp, ...rest } })),
     getStaffAccessList: ({ ...rest }) => promise_(instance.get('/db/access/staff/list', { params: { sign, timestamp, ...rest } })),
     getStaffGroupAccessList: ({ ...rest }) => promise_(instance.get('/db/access/staffgroup/list', { params: { sign, timestamp, ...rest } })),
+    addAccess: ({ data, ...rest }) => promise_(instance.post('/db/access/add', data, { params: { sign, timestamp, ...rest } })),
+    postDeviceList: ({ data, ...rest }) => promise_(instance.post('/db/device/list', { ...data }, { params: { sign, timestamp, ...rest } })),
+    postDeviceGroupList: ({ data, ...rest }) => promise_(instance.post('/db/group/list', { ...data }, { params: { sign, timestamp, ...rest } })),
+    postStaffList: ({ data, ...rest }) => promise_(instance.post('/db/staff/list', { ...data }, { params: { sign, timestamp, ...rest } })),
+    postStaffGroupList: ({ data, ...rest }) => promise_(instance.post('/db/staffgroup/list', { ...data }, { params: { sign, timestamp, ...rest } })),
 
     getAccountById: ({ ...rest }) => promise_(instance.get('/db/account/get', { params: { sign, timestamp, ...rest } })),
     editAccountCustomizeById: ({ data, ...rest }) => promise_(instance.post('/db/account/customize/edit', data, { params: { sign, timestamp, ...rest } })),
