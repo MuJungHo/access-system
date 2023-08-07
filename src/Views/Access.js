@@ -38,10 +38,12 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
+    paddingTop: 12
   },
   leftContentInner: {
     backgroundColor: viewBackgroundColor,
-    height: '100%',
+    // height: '100%',
+    flex: 1,
     marginTop: 20
   },
   leftContentInnerItem: {
@@ -448,7 +450,7 @@ const Access = () => {
             <Tab label="群組" />
           </Tabs>
           <Paper className={classes.leftContent}>
-            <SearchTextField placeholder={"搜尋關鍵字"} value={leftFilter.keyword} onChange={e => handleChangeLeftFilter('keyword', e.target.value)} />
+            <SearchTextField style={{ flex: 'unset' }} placeholder={"搜尋關鍵字"} value={leftFilter.keyword} onChange={e => handleChangeLeftFilter('keyword', e.target.value)} />
             {leftTabIndex === 0 && <MuiSelect
               onChange={e => handleChangeLeftFilter('groupid', e.target.value)}
               style={{ marginTop: 20 }}
