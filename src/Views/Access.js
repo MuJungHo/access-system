@@ -1,6 +1,8 @@
 import React from "react";
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { Button, MenuItem, IconButton, Paper, Select } from '@material-ui/core';
+import { AuthContext } from "../contexts/AuthContext";
+import { LocaleContext } from "../contexts/LocaleContext";
+import { Button, MenuItem, IconButton, Paper, Select, TablePagination } from '@material-ui/core';
 import MuiSelect from "../components/Select"
 import Tab from '../components/common/Tab';
 import Tabs from "../components/common/Tabs"
@@ -9,7 +11,8 @@ import { Router, Person, Delete, SettingsInputComponent, People } from '@materia
 import { palette } from "../customTheme";
 
 const viewBackgroundColor = "#e5e5e5"
-
+const rightLimit = 14
+const leftLimit = 7
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -90,76 +93,343 @@ const useStyles = makeStyles((theme) => ({
     alignContent: 'flex-start'
   },
   rightContentInnerItem: {
-    width: 'calc(50% - 16px)',
+    width: 'calc(50% - 12px)',
     height: 50,
     backgroundColor: '#fff',
     display: 'flex',
     alignItems: 'center',
     marginLeft: 8,
-    marginRight: 8,
+    // marginRight: 8,
     marginTop: 8,
     borderRadius: 5
   },
 }));
 
-const devices = [
-  { id: 'device1', name: 'device1' },
-  { id: 'device2', name: 'device2' },
-  { id: 'device3', name: 'device3' },
-  { id: 'device4', name: 'device4' },
-  { id: 'device5', name: 'device5' },
-  { id: 'device6', name: 'device6' },
-  // { id: 'device7', name: 'device7' },
-  // { id: 'device8', name: 'device8' },
-  // { id: 'device9', name: 'device9' },
-  // { id: 'device10', name: 'device10' },
-]
-
-const device_groups = [
-  { id: 'group1', name: 'group1' },
-  { id: 'group2', name: 'group2' },
-  { id: 'group3', name: 'group3' },
-  { id: 'group4', name: 'group4' },
-  { id: 'group5', name: 'group5' },
-  { id: 'group6', name: 'group6' }
-]
-
-const staffs = [
-  { id: 'staff1', name: 'staff1' },
-  { id: 'staff2', name: 'staff2' },
-  { id: 'staff3', name: 'staff3' },
-  { id: 'staff4', name: 'staff4' },
-  { id: 'staff5', name: 'staff5' },
-  { id: 'staff6', name: 'staff6' }
-]
-
-const staff_groups = [
-  { id: 'group1', name: 'group1' },
-  { id: 'group2', name: 'group2' },
-  { id: 'group3', name: 'group3' },
-  { id: 'group4', name: 'group4' },
-  { id: 'group5', name: 'group5' },
-  { id: 'group6', name: 'group6' }
-]
-
 const Access = () => {
   const classes = useStyles();
   const [leftTabIndex, setLeftTabIndex] = React.useState(0);
   const [rightTabIndex, setRightTabIndex] = React.useState(0);
-  const [selected, setSelected] = React.useState("");
+  const [selected, setSelected] = React.useState({ _id: 0 });
   const [mode, setMode] = React.useState("dtos");
+  const [leftFilter, setLeftFilter] = React.useState({
+    page: 0,
+    keyword: ""
+  });
+  const [leftSelectOptions, setLeftSelectOptions] = React.useState([])
+  const [leftTotal, setLeftTotal] = React.useState(0)
+  const [leftItems, setLeftItems] = React.useState([])
+
+  const [rightFilter, setRightFilter] = React.useState({
+    page: 0,
+    keyword: ""
+  });
+  const [rightTotal, setRightTotal] = React.useState(0)
+  const [rightItems, setRightItems] = React.useState([])
+
+  const [devices, setDevices] = React.useState([])
+  const [deviceGroups, setDeviceGroups] = React.useState([])
+  const { authedApi } = React.useContext(AuthContext);
+  const { t } = React.useContext(LocaleContext);
+
+  const getStaffGroupAccessDeviceList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
+    const { result, total } = await authedApi.getStaffGroupAccessList({ page: page + 1, keyword, limit, staffgroupid: selected.staffgroupid, private_only: 1 })
+    const _access = result.map(data => {
+      return {
+        ...data,
+        _id: data.id,
+        name: data.name
+      }
+    })
+    setRightTotal(total)
+    setRightItems(_access)
+  }
+
+  const getStaffGroupAccessDeviceGroupList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
+    const { result, total } = await authedApi.getStaffGroupAccessList({ page: page + 1, keyword, limit, staffgroupid: selected.staffgroupid, group_only: 1 })
+    const _access = result.map(data => {
+      return {
+        ...data,
+        _id: data.groupid,
+        name: data.groupname
+      }
+    })
+    setRightTotal(total)
+    setRightItems(_access)
+  }
+
+  const getStaffAccessDeviceGroupList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
+    const { result, total } = await authedApi.getStaffAccessList({ page: page + 1, keyword, limit, staffid: selected._id, group_only: 1 })
+    const _access = result.map(data => {
+      return {
+        ...data,
+        _id: data.groupid,
+        name: data.groupname
+      }
+    })
+    setRightTotal(total)
+    setRightItems(_access)
+  }
+
+  const getStaffAccessDeviceList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
+    const { result, total } = await authedApi.getStaffAccessList({ page: page + 1, keyword, limit, staffid: selected._id, private_only: 1 })
+    const _access = result.map(data => {
+      return {
+        ...data,
+        _id: data.id,
+        name: data.name
+      }
+    })
+    setRightTotal(total)
+    setRightItems(_access)
+  }
+
+  const getDeviceAccessStaffList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
+    // return console.log(selected)
+    const { result, total } = await authedApi.getDeviceAccessList({ page: page + 1, keyword, limit, id: selected._id, private_only: 1 })
+    const _access = result.map(data => {
+      return {
+        ...data,
+        _id: data.staffid,
+        name: data.staffname
+      }
+    })
+    setRightTotal(total)
+    setRightItems(_access)
+  }
+
+  const getDeviceAccessStaffGroupList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
+    // return console.log(selected)
+    const { result, total } = await authedApi.getDeviceAccessList({ page: page + 1, keyword, limit, id: selected._id, group_only: 1 })
+    const _access = result.map(data => {
+      return {
+        ...data,
+        _id: data.staffgroupid,
+        name: data.staffgroupname
+      }
+    })
+    setRightTotal(total)
+    setRightItems(_access)
+  }
+
+  const getDeviceGroupAccessStaffGroupList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
+    // return console.log(selected)
+    const { result, total } = await authedApi.getDeviceGroupAccessList({ page: page + 1, keyword, limit, groupid: selected.groupid, group_only: 1 })
+    const _access = result.map(data => {
+      return {
+        ...data,
+        _id: data.staffgroupid,
+        name: data.staffgroupname
+      }
+    })
+    setRightTotal(total)
+    setRightItems(_access)
+  }
+
+  const getDeviceGroupAccessStaffList = async ({ page = 0, keyword = "", limit = rightLimit } = {}) => {
+    // return console.log(selected)
+    const { result, total } = await authedApi.getDeviceGroupAccessList({ page: page + 1, keyword, limit, groupid: selected.groupid, private_only: 1 })
+    const _access = result.map(data => {
+      return {
+        ...data,
+        _id: data.staffid,
+        name: data.staffname
+      }
+    })
+    setRightTotal(total)
+    setRightItems(_access)
+  }
+
+  const getDeviceGroupOptions = async () => {
+    const { result } = await authedApi.getDevcieGroupList({ page: 1, limit: 10000 })
+    const options = result.map(data => {
+      return {
+        ...data,
+        _id: data.groupid,
+      }
+    })
+    setLeftSelectOptions(options)
+  }
+
+  const getStaffGroupOptions = async () => {
+    const { result: _result } = await authedApi.getStaffGroupList({ page: 1, limit: 10000 })
+    const _options = _result.map(data => {
+      return {
+        ...data,
+        _id: data.staffgroupid,
+      }
+    })
+    setLeftSelectOptions(_options)
+  }
+
+  const handleChangeRightFilter = (key, value) => {
+
+  }
+
+  const handleChangeLeftFilter = (key, value) => {
+
+    const newFilter = key === "page"
+      ? {
+        ...leftFilter,
+        [key]: value
+      }
+      : {
+        ...leftFilter,
+        page: 0,
+        [key]: value
+      }
+    setLeftFilter(newFilter)
+    if (mode === "dtos") {
+      if (leftTabIndex === 0) {
+        getDeviceList(newFilter)
+      } else {
+        getDevcieGroupList(newFilter)
+      }
+    } else {
+      if (leftTabIndex === 0) {
+        getStaffList(newFilter)
+      } else {
+        getStaffGroupList(newFilter)
+      }
+    }
+  }
+
+  const getDeviceList = async ({ page = 0, keyword = "", limit = leftLimit, groupid = "" } = {}) => {
+    const { result, total } = await authedApi.getDeviceList({ page: page + 1, keyword, limit, groupid })
+    const _devices = result.map(data => {
+      return {
+        ...data,
+        _id: data.id,
+      }
+    })
+    setLeftTotal(total)
+    setLeftItems(_devices)
+    if (_devices.length > 0)
+      setSelected(_devices[0])
+  }
+
+  const getDevcieGroupList = async ({ page = 0, keyword = "", limit = leftLimit } = {}) => {
+    const { result, total } = await authedApi.getDevcieGroupList({ page: page + 1, keyword, limit })
+    const _groups = result.map(data => {
+      return {
+        ...data,
+        _id: data.groupid,
+      }
+    })
+    setLeftTotal(total)
+    setLeftItems(_groups)
+    if (_groups.length > 0)
+      setSelected(_groups[0])
+  }
+
+  const getStaffList = async ({ page = 0, keyword = "", limit = leftLimit, groupid = "" } = {}) => {
+    const { result, total } = await authedApi.getStaffList({
+      data: {
+        group: [groupid]
+      },
+      keyword,
+      limit,
+      page: page + 1,
+      group: undefined
+    })
+    const _staffs = result.map(data => {
+      return {
+        ...data,
+        _id: data.staffid,
+      }
+    })
+    setLeftTotal(total)
+    setLeftItems(_staffs)
+    if (_staffs.length > 0)
+      setSelected(_staffs[0])
+  }
+
+  const getStaffGroupList = async ({ page = 0, keyword = "", limit = leftLimit } = {}) => {
+    const { result, total } = await authedApi.getStaffGroupList({ page: page + 1, keyword, limit })
+    const _groups = result.map(data => {
+      return {
+        ...data,
+        _id: data.staffgroupid,
+      }
+    })
+    setLeftTotal(total)
+    setLeftItems(_groups)
+    if (_groups.length > 0)
+      setSelected(_groups[0])
+  }
 
   React.useEffect(() => {
-    let result = "";
+    if (selected._id === 0) return
+    renderRight()
+  }, [rightTabIndex, selected, mode])
+
+  const renderRight = () => {
     if (mode === "dtos") {
-      if (leftTabIndex === 0) result = devices[0].id
-      else result = device_groups[0].id
+      if (leftTabIndex === 0) {
+        if (rightTabIndex === 0) {
+          getDeviceAccessStaffList()
+        } else {
+          getDeviceAccessStaffGroupList()
+        }
+      }
+      else {
+        if (rightTabIndex === 0) {
+          getDeviceGroupAccessStaffList()
+        } else {
+          getDeviceGroupAccessStaffGroupList()
+        }
+      }
     } else {
-      if (leftTabIndex === 0) result = staffs[0].id
-      else result = staff_groups[0].id
+      if (leftTabIndex === 0) {
+        if (rightTabIndex === 0) {
+          getStaffAccessDeviceList()
+        } else {
+          getStaffAccessDeviceGroupList()
+        }
+      } else {
+        if (rightTabIndex === 0) {
+          getStaffGroupAccessDeviceList()
+        } else {
+          getStaffGroupAccessDeviceGroupList()
+        }
+      }
     }
-    setSelected(result)
-  }, [leftTabIndex])
+  }
+
+  React.useEffect(() => {
+    setLeftFilter({
+      page: 0,
+      keyword: "",
+      limit: leftLimit,
+    })
+    renderLeft()
+  }, [leftTabIndex, mode])
+
+  const renderLeft = () => {
+    if (mode === "dtos") {
+      if (leftTabIndex === 0) {
+        getDeviceList()
+        getDeviceGroupOptions()
+      }
+      else {
+        getDevcieGroupList()
+      }
+    } else {
+      if (leftTabIndex === 0) {
+        getStaffList()
+        getStaffGroupOptions()
+      }
+      else {
+        getStaffGroupList()
+      }
+    }
+  }
+
+  const handleChangeMode = (e) => {
+    setMode(e.target.value)
+    setSelected({ _id: 0 })
+    setLeftTabIndex(0)
+    setRightTabIndex(0)
+  }
 
   return (
     <div className={classes.root}>
@@ -178,70 +448,50 @@ const Access = () => {
             <Tab label="群組" />
           </Tabs>
           <Paper className={classes.leftContent}>
-            <SearchTextField placeholder={"搜尋關鍵字"} />
-            {leftTabIndex === 0 && <MuiSelect style={{ marginTop: 20 }} value="" label="群組 ">
+            <SearchTextField placeholder={"搜尋關鍵字"} value={leftFilter.keyword} onChange={e => handleChangeLeftFilter('keyword', e.target.value)} />
+            {leftTabIndex === 0 && <MuiSelect
+              onChange={e => handleChangeLeftFilter('groupid', e.target.value)}
+              style={{ marginTop: 20 }}
+              value={leftFilter.groupid || ""}
+              label="群組 ">
               {
-                device_groups.map(group => <MenuItem key={group.id} value={group.id}>{group.name}</MenuItem>)
+                leftSelectOptions.map(item => <MenuItem key={item._id} value={item._id}>{item.name}</MenuItem>)
               }
             </MuiSelect>}
             <div className={classes.leftContentInner}>
               {
-                mode === "dtos"
-                  ?
-                  (
-                    leftTabIndex === 0
-                      ?
-                      devices.map(device => (
-                        <div
-                          style={selected === device.id ? { border: '3px solid' + palette.primary.main } : { border: '3px solid white' }}
-                          className={classes.leftContentInnerItem}
-                          onClick={() => setSelected(device.id)}
-                          key={device.id}>
-                          <Router style={{ margin: 10 }} /> {device.name}
-                        </div>
-                      ))
-                      :
-                      device_groups.map(group => (
-                        <div
-                          style={selected === group.id ? { border: '3px solid' + palette.primary.main } : { border: '3px solid white' }}
-                          className={classes.leftContentInnerItem}
-                          onClick={() => setSelected(group.id)}
-                          key={group.id}>
-                          <SettingsInputComponent style={{ margin: 10 }} /> {group.name}
-                        </div>
-                      ))
-                  )
-                  :
-                  (
-                    leftTabIndex === 0
-                      ?
-                      staffs.map(staff => (
-                        <div
-                          style={selected === staff.id ? { border: '3px solid' + palette.primary.main } : { border: '3px solid white' }}
-                          className={classes.leftContentInnerItem}
-                          onClick={() => setSelected(staff.id)}
-                          key={staff.id}>
-                          <Person style={{ margin: 10 }} /> {staff.name}
-                        </div>
-                      ))
-                      :
-                      staff_groups.map(group => (
-                        <div
-                          style={selected === group.id ? { border: '3px solid' + palette.primary.main } : { border: '3px solid white' }}
-                          className={classes.leftContentInnerItem}
-                          onClick={() => setSelected(group.id)}
-                          key={group.id}>
-                          <People style={{ margin: 10 }} /> {group.name}
-                        </div>
-                      ))
-                  )
+
+                leftItems.map(item => (
+                  <div
+                    style={selected._id === item._id ? { border: '3px solid' + palette.primary.main } : { border: '3px solid white' }}
+                    className={classes.leftContentInnerItem}
+                    onClick={() => setSelected(item)}
+                    key={item._id}>
+                    {
+                      leftTabIndex === 0
+                        ? mode === "dtos" ? <Router style={{ margin: 10 }} /> : <Person style={{ margin: 10 }} />
+                        : mode === "dtos" ? <SettingsInputComponent style={{ margin: 10 }} /> : <People style={{ margin: 10 }} />
+                    }
+                    {item.name}
+                  </div>
+                ))
+
               }
             </div>
+
+            <TablePagination
+              rowsPerPageOptions={[]}
+              component="div"
+              count={leftTotal}
+              rowsPerPage={leftLimit}
+              page={leftFilter.page}
+              onPageChange={(event, newPage) => handleChangeLeftFilter("page", newPage)}
+            />
           </Paper>
         </div>
         <div className={classes.right}>
           <div className={classes.rightTopSelect}>
-            <Select value={mode} onChange={e => setMode(e.target.value)}>
+            <Select value={mode} onChange={handleChangeMode}>
               <MenuItem value="dtos">Device to Staff</MenuItem>
               <MenuItem value="stod">Staff to Device</MenuItem>
             </Select>
@@ -265,70 +515,43 @@ const Access = () => {
           </div>
           <Paper className={classes.rightContet}>
             <div className={classes.rightContetTopbar}>
-              {selected}
+              {selected.name}
               <div>
                 <SearchTextField placeholder={"搜尋關鍵字"} style={{ width: 300 }} />
               </div>
             </div>
             <div className={classes.rightContentInner}>
               {
-                selected
+                selected.name !== undefined
                   ?
-                  mode === "dtos"
-                    ?
-                    (
-                      rightTabIndex === 0
-                        ?
-                        staffs.map(staff => (
-                          <div className={classes.rightContentInnerItem} key={staff.id}>
-                            <Person style={{ margin: 10 }} />
-                            <span style={{ flex: 1 }}>{staff.name}</span>
-                            <IconButton>
-                              <Delete />
-                            </IconButton>
-                          </div>
-                        ))
-                        :
-                        staff_groups.map(group => (
-                          <div className={classes.rightContentInnerItem} key={group.id}>
-                            <People style={{ margin: 10 }} />
-                            <span style={{ flex: 1 }}>{group.name}</span>
-                            <IconButton>
-                              <Delete />
-                            </IconButton>
-                          </div>
-                        ))
-                    )
-                    : (
-                      rightTabIndex === 0
-                        ?
-                        devices.map(device => (
-                          <div className={classes.rightContentInnerItem} key={device.id}>
-                            <Router style={{ margin: 10 }} />
-                            <span style={{ flex: 1 }}>{device.name}</span>
-                            <IconButton>
-                              <Delete />
-                            </IconButton>
-                          </div>
-                        ))
-                        :
-                        device_groups.map(group => (
-                          <div className={classes.rightContentInnerItem} key={group.id}>
-                            <SettingsInputComponent style={{ margin: 10 }} />
-                            <span style={{ flex: 1 }}>{group.name}</span>
-                            <IconButton>
-                              <Delete />
-                            </IconButton>
-                          </div>
-                        ))
-                    )
+                  rightItems.map(item => (
+                    <div className={classes.rightContentInnerItem} key={item._id}>
+                      {
+                        rightTabIndex === 0
+                          ? mode === "dtos" ? <Person style={{ margin: 10 }} /> : <Router style={{ margin: 10 }} />
+                          : mode === "dtos" ? <People style={{ margin: 10 }} /> : <SettingsInputComponent style={{ margin: 10 }} />
+                      }
+                      <span style={{ flex: 1 }}>{item.name}</span>
+                      <IconButton>
+                        <Delete />
+                      </IconButton>
+                    </div>))
                   : <h6 style={{ margin: 20 }}>{`請選擇一個左側的${mode === "dtos" ? "設備" : "人員"}`}</h6>
               }
             </div>
+
+            <TablePagination
+              rowsPerPageOptions={[]}
+              component="div"
+              count={rightTotal}
+              rowsPerPage={rightLimit}
+              page={rightFilter.page}
+              onPageChange={(event, newPage) => handleChangeRightFilter("page", newPage)}
+            />
           </Paper>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 

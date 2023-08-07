@@ -43,6 +43,8 @@ export const api = (token, logout, setSnackBar, t) => {
     getLogList: ({ ...rest }) => promise_(instance.get('/db/log', { params: { sign, timestamp, ...rest } })),
     getLocationList: ({ ...rest }) => promise_(instance.get('/db/location/list', { params: { sign, timestamp, ...rest } })),
     getCheckinLogList: ({ ...rest }) => promise_(instance.get('/db/reservation/checkin/loglist', { params: { sign, timestamp, ...rest } })),
+    getDevcieGroupList: ({ ...rest }) => promise_(instance.get('/db/group/list', { params: { sign, timestamp, ...rest } })),
+    getStaffGroupList: ({ ...rest }) => promise_(instance.get('/db/staffgroup/list', { params: { sign, timestamp, ...rest } })),
 
     // edit device
     editACCDevice: ({ data, ...rest }) => promise_(instance.post('/db/acc/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
@@ -78,7 +80,6 @@ export const api = (token, logout, setSnackBar, t) => {
     getDeviceCardStatusList: ({ data, ...rest }) => promise_(instance.post('/db/device/card_status', { ...data }, { params: { sign, timestamp, ...rest } })),
     postResetDeviceCardStatus: ({ data, ...rest }) => promise_(instance.post('/db/device/reset_card_status', { ...data }, { params: { sign, timestamp, ...rest } })),
     getAvailableDeviceIdList: ({ ...rest }) => promise_(instance.get('/db/deviceid/list', { params: { sign, timestamp, ...rest } })),
-    getDevcieGroupList: ({ ...rest }) => promise_(instance.get('/db/group/list', { params: { sign, timestamp, ...rest } })),
     getAccessGroupListById: ({ ...rest }) => promise_(instance.get('/db/deviceid/list', { params: { sign, timestamp, ...rest } })),
     getStaffGroupList: ({ ...rest }) => promise_(instance.get('/db/staffgroup/list', { params: { sign, timestamp, ...rest } })),
     addAccess: ({ data, ...rest }) => promise_(instance.post('/db/access/add', data, { params: { sign, timestamp, ...rest } })),
@@ -97,6 +98,12 @@ export const api = (token, logout, setSnackBar, t) => {
     deleteStaffFace: ({ ...rest }) => promise_(instance.delete('/db/staff/delete_faceid', { params: { sign, timestamp, ...rest } })),
     deleteStaff: ({ ...rest }) => promise_(instance.delete('/db/staff/delete', { params: { sign, timestamp, ...rest } })),
     deleteStaffs: ({ data }) => promise_(instance({ method: "DELETE", url: '/db/staff/staffids/delete', params: { sign, timestamp }, data })),
+
+    //access
+    getDeviceGroupAccessList: ({ ...rest }) => promise_(instance.get('/db/access/group/list', { params: { sign, timestamp, ...rest } })),
+    getDeviceAccessList: ({ ...rest }) => promise_(instance.get('/db/access/id/list', { params: { sign, timestamp, ...rest } })),
+    getStaffAccessList: ({ ...rest }) => promise_(instance.get('/db/access/staff/list', { params: { sign, timestamp, ...rest } })),
+    getStaffGroupAccessList: ({ ...rest }) => promise_(instance.get('/db/access/staffgroup/list', { params: { sign, timestamp, ...rest } })),
 
     getAccountById: ({ ...rest }) => promise_(instance.get('/db/account/get', { params: { sign, timestamp, ...rest } })),
     editAccountCustomizeById: ({ data, ...rest }) => promise_(instance.post('/db/account/customize/edit', data, { params: { sign, timestamp, ...rest } })),
