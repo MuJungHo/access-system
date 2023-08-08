@@ -649,8 +649,8 @@ const Access = () => {
             variant="fullWidth"
             textColor="primary"
           >
-            <Tab label={mode === "dtos" ? "設備" : "人員"} />
-            <Tab label="群組" />
+            <Tab label={mode === "dtos" ? "設備列表" : "人員列表"} />
+            <Tab label={mode === "dtos" ? "設備群組" : "人員群組"} />
           </Tabs>
           <Paper className={classes.leftContent}>
             <SearchTextField style={{ flex: 'unset' }} placeholder={"搜尋關鍵字"} value={leftFilter.keyword} onChange={e => handleChangeLeftFilter('keyword', e.target.value)} />
@@ -715,8 +715,8 @@ const Access = () => {
               variant="fullWidth"
               textColor="primary"
             >
-              <Tab label={mode === "dtos" ? "人員" : "設備"} />
-              <Tab label="群組" />
+              <Tab label={mode === "dtos" ? "人員列表" : "設備列表"} />
+              <Tab label={mode === "dtos" ? "人員群組" : "設備群組"} />
             </Tabs>
             <div>
               <Button variant="contained" color="primary" onClick={handleOpenAddModal}>新增</Button>
