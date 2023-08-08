@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { LayoutContext } from "../contexts/LayoutContext";
 import { AuthContext } from "../contexts/AuthContext";
 import { LocaleContext } from "../contexts/LocaleContext";
-import { Button, MenuItem, IconButton, Paper, Select, TablePagination, Avatar } from '@material-ui/core';
+import { Button, MenuItem, IconButton, Paper, Select, TablePagination, Avatar, Tooltip } from '@material-ui/core';
 import MuiSelect from "../components/Select"
 import Tab from '../components/common/Tab';
 import Tabs from "../components/common/Tabs"
@@ -747,10 +747,14 @@ const Access = () => {
                           : mode === "dtos" ? <People style={{ margin: 10 }} /> : <SettingsInputComponent style={{ margin: 10 }} />
                       }
                       <span style={{ flex: 1 }}>{item.name}</span>
-                      {/* {item.isG && <Avatar >G</Avatar>} */}
-                      <IconButton disabled={item.disabled} onClick={() => showDeteleAccessConfirm(item)}>
-                        <Delete />
-                      </IconButton>
+                      {
+                        item.disabled
+                          ? <Tooltip title="Access from group"><Avatar style={{ width: 21, height: 21, margin: 12 }}>G</Avatar></Tooltip>
+                          : <IconButton onClick={() => showDeteleAccessConfirm(item)}>
+                            <Delete />
+                          </IconButton>
+                      }
+
                     </div>))
                   : <h6 style={{ margin: 20 }}>{`請選擇一個左側的${mode === "dtos" ? "設備" : "人員"}`}</h6>
               }
