@@ -145,6 +145,7 @@ export default function Event() {
       title: "編輯使用者",
       component: <UserModalComponent
         user={row}
+        locations={locations}
         onSave={handleSaveUser} />
     })
   }
