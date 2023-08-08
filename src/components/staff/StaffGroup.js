@@ -46,7 +46,7 @@ export default function Devices() {
   const [rows, setRows] = React.useState([]);
   const [total, setTotal] = React.useState(0);
   const [filter, setFilter] = React.useState({
-    order: 'asc',
+    order: 'desc',
     orderBy: 'datetime',
     page: 0,
     limit: 5

@@ -17,3 +17,9 @@ export const cardtypes = [
   { value: "mifare" },
   { value: "uhf" },
 ]
+
+export const usertypes = [
+  { roleid: 1, name: "administrator" },
+  { roleid: 2, name: "operator" },
+  { roleid: 3, name: "user" },
+]
