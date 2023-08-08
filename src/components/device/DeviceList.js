@@ -51,7 +51,7 @@ export default function Devices() {
 
   const { t } = useContext(LocaleContext);
   const { authedApi, token } = useContext(AuthContext);
-  
+
   const [wsData, setWsData] = React.useState({});
   const [total, setTotal] = React.useState(0);
   const [filter, setFilter] = React.useState({
@@ -66,7 +66,7 @@ export default function Devices() {
   const [devices, setDevices] = React.useState([])
   const [locations, setLocations] = React.useState([])
   const [groups, setGroups] = React.useState([])
-  
+
 
 
   React.useEffect(() => {
@@ -124,7 +124,7 @@ export default function Devices() {
       }))
     }
   }, [wsData, setDevices])
-  
+
   const handleEditDeviceOpen = (e, device) => {
     e.stopPropagation()
     history.push(`/device/item/${device.id}`)
@@ -201,7 +201,7 @@ export default function Devices() {
               }
             </Select>
             <Button
-              style={{ marginLeft: 20 }}
+              style={{ marginLeft: 20, minWidth: 85 }}
               onClick={() => setFilter({
                 ...filter,
                 groupid: "",

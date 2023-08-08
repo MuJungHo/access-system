@@ -673,8 +673,14 @@ const Access = () => {
                     key={item._id}>
                     {
                       leftTabIndex === 0
-                        ? mode === "dtos" ? <Router style={{ margin: 10 }} /> : <Person style={{ margin: 10 }} />
-                        : mode === "dtos" ? <SettingsInputComponent style={{ margin: 10 }} /> : <People style={{ margin: 10 }} />
+                        ? mode === "dtos" ? <Router style={{ margin: 10 }} />
+                          :
+                          item.photo
+                            ? <Avatar style={{ width: 30, height: 30, marginLeft: 5, marginRight: 5 }} src={`data:image/png;base64,${item.photo}`} />
+                            : <Person style={{ margin: 10 }} />
+                        : mode === "dtos"
+                          ? <SettingsInputComponent style={{ margin: 10 }} />
+                          : <People style={{ margin: 10 }} />
                     }
                     {item.name}
                   </div>
@@ -732,7 +738,12 @@ const Access = () => {
                     <div className={classes.rightContentInnerItem} key={item._id}>
                       {
                         rightTabIndex === 0
-                          ? mode === "dtos" ? <Person style={{ margin: 10 }} /> : <Router style={{ margin: 10 }} />
+                          ? mode === "dtos"
+                            ?
+                            item.photo
+                              ? <Avatar style={{ width: 30, height: 30, marginLeft: 5, marginRight: 5 }} src={`data:image/png;base64,${item.photo}`} />
+                              : <Person style={{ margin: 10 }} />
+                            : <Router style={{ margin: 10 }} />
                           : mode === "dtos" ? <People style={{ margin: 10 }} /> : <SettingsInputComponent style={{ margin: 10 }} />
                       }
                       <span style={{ flex: 1 }}>{item.name}</span>

@@ -358,7 +358,7 @@ export default function Devices() {
                 }
               </Select>
               <Button
-                style={{ marginLeft: 20 }}
+              style={{ marginLeft: 20, minWidth: 85 }}
                 onClick={() => setFilter({
                   ...filter,
                   group: [],
