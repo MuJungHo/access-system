@@ -120,6 +120,10 @@ export const api = (token, logout, setSnackBar, t) => {
     editStaffGroup: ({ data, ...rest }) => promise_(instance.post('/db/staffgroup/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
     deleteStaffGroup: ({ ...rest }) => promise_(instance.delete('/db/staffgroup/delete', { params: { sign, timestamp, ...rest } })),
 
+    //location
+    addLocation: ({ data, ...rest }) => promise_(instance.post('/db/location/add', { ...data }, { params: { sign, timestamp, ...rest } })),
+    editLocation: ({ data, ...rest }) => promise_(instance.post('/db/location/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+    deleteLocation: ({ ...rest }) => promise_(instance.delete('/db/location/delete', { params: { sign, timestamp, ...rest } })),
 
     getAccountById: ({ ...rest }) => promise_(instance.get('/db/account/get', { params: { sign, timestamp, ...rest } })),
     editAccount: ({ data, ...rest }) => promise_(instance.put('/db/account/edit', data, { params: { sign, timestamp, ...rest } })),

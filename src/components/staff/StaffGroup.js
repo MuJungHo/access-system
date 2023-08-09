@@ -117,7 +117,7 @@ export default function Devices() {
 
   const handleShowEditGroupModal = (row) => {
     showModal({
-      title: "編輯設備群組",
+      title: "編輯群組",
       component: <GroupEditModalComponent
         group={row}
         authedApi={authedApi}
@@ -183,7 +183,8 @@ export default function Devices() {
           ]}
           actions={[
             { name: t('edit'), onClick: (e, row) => handleShowEditGroupModal(row), icon: <BorderColorSharp /> },
-            { name: t('delete'), onClick: (e, row) => showDeleteConfirmDialog(row), icon: <Delete /> },]}
+            { name: t('delete'), onClick: (e, row) => showDeleteConfirmDialog(row), icon: <Delete /> },
+          ]}
         />
       </Paper>
     </div>
