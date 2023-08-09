@@ -3,14 +3,18 @@ import { useHistory, useRouteMatch } from "react-router-dom"
 import { makeStyles } from '@material-ui/core/styles';
 import { AuthContext } from "../../contexts/AuthContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
+import { LayoutContext } from "../../contexts/LayoutContext";
 import {
   PlayArrow,
   BorderColorSharp,
-  FiberManualRecord
+  FiberManualRecord,
+  AddBox,
+  Delete
 } from '@material-ui/icons';
 
 import Table from "../../components/table/Table";
 import Paper from '@material-ui/core/Paper';
+import GroupEditModalComponent from "../staff/GroupEditModalComponent"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +46,9 @@ const useStyles = makeStyles((theme) => ({
 export default function Devices() {
   const classes = useStyles();
   const history = useHistory();
+  const { showModal, hideModal, setSnackBar, showWarningConfirm } = useContext(LayoutContext);
   const { t } = useContext(LocaleContext);
+  const [locations, setLocations] = React.useState([])
   const [rows, setRows] = React.useState([]);
   const [total, setTotal] = React.useState(0);
   const [filter, setFilter] = React.useState({
@@ -55,21 +61,107 @@ export default function Devices() {
 
   React.useEffect(() => {
     (async () => {
-      const { result, total } = await authedApi.getStaffGroupList({ ...filter, page: filter.page + 1 })
+      const { result } = await authedApi.getLocationList({ limit: 50, page: 1 })
+      setLocations(result)
+    })()
+  }, [])
 
-      const tableData = result.map(data => {
-        return {
-          id: data.staffgroupid,
-          name: data.name,
-          locationid: data.locationid,
-        }
-      })
-      setTotal(total)
-      setRows(tableData)
+  React.useEffect(() => {
+    getStaffGroupList()
+  }, [filter])
 
-    })();
-  }, [authedApi, filter])
+  const getStaffGroupList = async () => {
+    const { result, total } = await authedApi.getStaffGroupList({ ...filter, page: filter.page + 1 })
 
+    const tableData = result.map(data => {
+      return {
+        ...data,
+        id: data.staffgroupid,
+        name: data.name,
+        locationid: data.locationid,
+        item: data.staffids?.map(_id => String(_id)) || []
+      }
+    })
+    setTotal(total)
+    setRows(tableData)
+  }
+
+  const showAddGroupModal = () => {
+    showModal({
+      title: "新增群組",
+      component: <GroupEditModalComponent
+        // group={{}}
+        authedApi={authedApi}
+        locations={locations}
+        onSave={handleAddGroup}
+      />
+    })
+  }
+
+  const handleAddGroup = async (state) => {
+    await authedApi.addStaffGroup({
+      data: {
+        staffids: state.item.map(_id => Number(_id)),
+        name: state.name,
+        locationid: state.locationid
+      }
+    })
+    getStaffGroupList()
+    hideModal()
+    setSnackBar({
+      message: "儲存成功",
+      isOpen: true,
+      severity: "success"
+    })
+  }
+
+  const handleShowEditGroupModal = (row) => {
+    showModal({
+      title: "編輯設備群組",
+      component: <GroupEditModalComponent
+        group={row}
+        authedApi={authedApi}
+        locations={locations}
+        onSave={handleSaveGroup}
+      />
+    })
+  }
+
+  const handleSaveGroup = async (state, group) => {
+    await authedApi.editStaffGroup({
+      data: {
+        staffids: state.item.map(_id => Number(_id)),
+        name: state.name,
+        locationid: state.locationid,
+        staffgroupid: group.staffgroupid
+      }
+    })
+    getStaffGroupList()
+    hideModal()
+    setSnackBar({
+      message: "儲存成功",
+      isOpen: true,
+      severity: "success"
+    })
+  }
+
+  const showDeleteConfirmDialog = (row) => {
+    showWarningConfirm({
+      title: '刪除人員群組',
+      component: <h6 style={{ margin: 16 }}>{`確認刪除群組 ${row.name} ?`}</h6>,
+      onConfirm: () => handleDeleteGroup(row.staffgroupid)
+    })
+  }
+
+  const handleDeleteGroup = async (staffgroupid) => {
+    await authedApi.deleteStaffGroup({ staffgroupid })
+    getStaffGroupList()
+    setSnackBar({
+      message: "刪除成功",
+      isOpen: true,
+      severity: "success"
+    })
+  }
 
   return (
     <div className={classes.root}>
@@ -82,12 +174,16 @@ export default function Devices() {
           title="人員群組"
           filter={filter}
           setFilter={setFilter}
+          tableActions={[
+            { name: t('add'), onClick: showAddGroupModal, icon: <AddBox /> },
+          ]}
           columns={[
             { key: "name", label: t('name'), enable: true, sortable: true },
             { key: "locationid", label: t('locationid'), enable: true },
           ]}
-        //   actions={[
-        //     { name: t('edit'), onClick: (e, person) => history.push(`/person/${person.staffid}`), icon: <BorderColorSharp /> }]}
+          actions={[
+            { name: t('edit'), onClick: (e, row) => handleShowEditGroupModal(row), icon: <BorderColorSharp /> },
+            { name: t('delete'), onClick: (e, row) => showDeleteConfirmDialog(row), icon: <Delete /> },]}
         />
       </Paper>
     </div>
