@@ -14,25 +14,30 @@ function AuthProvider(props) {
   const [authedUser, setAuthedUser] = useState(JSON.parse(localStorage.getItem('user')));
   const [authedCustomize, setAuthedCustomize] = useState(JSON.parse(localStorage.getItem('customize')))
 
-  const login = async (jwtToken, accountid) => {
+  const login = async (jwtToken, accountid, keep) => {
     const [accountInfo] = await api(jwtToken, logout).getAccountById({ accountid })
     const customize = accountInfo.customize || "{}"
     const jsonCustomize = JSON.parse(customize)
+    
     setToken(jwtToken);
     setAuthedUser(accountInfo)
     setAuthedCustomize(jsonCustomize)
-    localStorage.setItem('token', jwtToken)
-    localStorage.setItem('customize', JSON.stringify(jsonCustomize))
-    localStorage.setItem('user', JSON.stringify({ ...accountInfo }))
+
+    if (keep) {
+      localStorage.setItem('token', jwtToken)
+      localStorage.setItem('customize', JSON.stringify(jsonCustomize))
+      localStorage.setItem('name', accountInfo.name)
+    }
   };
 
   const logout = () => {
     setToken(null);
     setAuthedUser(null);
     setAuthedCustomize(null);
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    localStorage.removeItem('customize')
+    localStorage.clear()
+    // localStorage.removeItem('token')
+    // localStorage.removeItem('name')
+    // localStorage.removeItem('customize')
   };
 
   const editAuthedUserCustomize = async (customize) => {

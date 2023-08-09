@@ -41,11 +41,11 @@ const useStyles = makeStyles(theme => ({
 
   },
   title: {
-    marginBottom: '2rem',
+    marginBottom: '1.5rem',
     textAlign: 'center'
   },
   logo: {
-    marginBottom: '1.5rem',
+    marginBottom: '2rem',
     height: 30,
     margin: 'auto',
   },
@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
     flex: '1 1 auto'
   },
   user: {
-    marginBottom: '2.1rem',
+    marginBottom: 20,
     '& svg': {
       width: 17
     },
@@ -71,7 +71,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   password: {
-    marginBottom: '.5rem',
+    // marginBottom: '.5rem',
     '& svg': {
       width: 20
     },
@@ -107,6 +107,7 @@ const Login = () => {
   const classes = useStyles();
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
+  const [keep, setKeep] = useState(false);
 
   const { login, token } = useContext(AuthContext);
   const { t, changeLocale, locale } = useContext(LocaleContext);
@@ -117,12 +118,11 @@ const Login = () => {
     const { secretkey } = await getKey({ timestamp });
     const timeAccount = md5(timestamp + "#" + md5(secretkey + "#" + account));
     const timePassword = md5(timestamp + "#" + md5(secretkey + "#" + password));
-
-    var credentials = Base64.encode(timeAccount + ":" + timePassword);
+    const credentials = Base64.encode(timeAccount + ":" + timePassword);
 
     const { Token, Accountid /*name, Roleid*/ } = await tokenlogin({ credentials, timestamp })
 
-    login(Token, Accountid);
+    login(Token, Accountid, keep);
   };
 
   if (token) {
@@ -146,15 +146,6 @@ const Login = () => {
               value={account}
               onChange={e => setAccount(e.target.value)}
               label="Account"
-            // name="accountID"
-            // autoComplete="accountID"
-            // autoFocus
-            // error={vertificationFailed}
-            // placeholder={message(locale, 'pleaseEnterThing', message(locale, 'account'))}
-            // InputProps={{
-            //   startAdornment:
-            //     <LoginUser />
-            // }}
             />
           </FormControl>
           <FormControl className={classes.margin}>
@@ -168,18 +159,12 @@ const Login = () => {
               label="Password"
               type="password"
               autoComplete="current-password"
-            // error={vertificationFailed}
-            // placeholder={message(locale, 'pleaseEnterThing', message(locale, 'password'))}
-            // InputProps={{
-            //   startAdornment:
-            //     <LoginKey />
-            // }}
             />
           </FormControl>
-          <div style={{ display: 'flex', marginBottom: '1.2rem', justifyContent: 'space-between', alignItems: 'center', color: '#bebebe' }}>
+          <div style={{ display: 'flex',  justifyContent: 'space-between', alignItems: 'center', color: '#bebebe' }}>
             <FormControlLabel
               value="end"
-              control={<Checkbox color="primary" />}
+              control={<Checkbox color="primary" value={keep} onChange={e => setKeep(e.target.checked)}/>}
               label="記住我"
               labelPlacement="end"
             />

@@ -46,7 +46,8 @@ export const api = (token, logout, setSnackBar, t) => {
     getCheckinLogList: ({ ...rest }) => promise_(instance.get('/db/reservation/checkin/loglist', { params: { sign, timestamp, ...rest } })),
     getDevcieGroupList: ({ ...rest }) => promise_(instance.get('/db/group/list', { params: { sign, timestamp, ...rest } })),
     getStaffGroupList: ({ ...rest }) => promise_(instance.get('/db/staffgroup/list', { params: { sign, timestamp, ...rest } })),
-
+    getDeviceById: ({ ...rest }) => promise_(instance.get('/db/device/get', { params: { sign, timestamp, ...rest } })),
+    
     // edit device
     editACCDevice: ({ data, ...rest }) => promise_(instance.post('/db/acc/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
     editPMSDevice: ({ data, ...rest }) => promise_(instance.post('/db/pms/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
@@ -125,13 +126,14 @@ export const api = (token, logout, setSnackBar, t) => {
     editLocation: ({ data, ...rest }) => promise_(instance.post('/db/location/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
     deleteLocation: ({ ...rest }) => promise_(instance.delete('/db/location/delete', { params: { sign, timestamp, ...rest } })),
 
+
+    //Account
     getAccountById: ({ ...rest }) => promise_(instance.get('/db/account/get', { params: { sign, timestamp, ...rest } })),
     editAccount: ({ data, ...rest }) => promise_(instance.put('/db/account/edit', data, { params: { sign, timestamp, ...rest } })),
     deleteAccount: ({ ...rest }) => promise_(instance.delete('/db/account/delete', { params: { sign, timestamp, ...rest } })),
     addAccount: ({ data, ...rest }) => promise_(instance.post('/db/account/add', data, { params: { sign, timestamp, ...rest } })),
     editAccountPermission: ({ data, ...rest }) => promise_(instance.put('/db/account/permission/edit', data, { params: { sign, timestamp, ...rest } })),
     editAccountCustomizeById: ({ data, ...rest }) => promise_(instance.post('/db/account/customize/edit', data, { params: { sign, timestamp, ...rest } })),
-    getDeviceById: ({ ...rest }) => promise_(instance.get('/db/device/get', { params: { sign, timestamp, ...rest } }))
   }
 }
 
