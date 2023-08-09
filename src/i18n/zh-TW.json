@@ -88,7 +88,7 @@
     "sider/device/management": "設備管理",
     "sider/event": "事件管理",
     "sider/": "首頁",
-    "sider/location": "位置管理",
+    "sider/location/management": "位置管理",
     "sider/log": "系統紀錄",
     "sider/staff/management": "人員管理",
     "sider/visitor": "訪客管理",

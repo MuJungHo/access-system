@@ -42,12 +42,11 @@ export const api = (token, logout, setSnackBar, t) => {
     getEventList: ({ ...rest }) => promise_(instance.get('/db/event/search', { params: { sign, timestamp, ...rest } })),
     getUserList: ({ ...rest }) => promise_(instance.get('/db/account/list', { params: { sign, timestamp, ...rest } })),
     getLogList: ({ ...rest }) => promise_(instance.get('/db/log', { params: { sign, timestamp, ...rest } })),
-    getLocationList: ({ ...rest }) => promise_(instance.get('/db/location/list', { params: { sign, timestamp, ...rest } })),
     getCheckinLogList: ({ ...rest }) => promise_(instance.get('/db/reservation/checkin/loglist', { params: { sign, timestamp, ...rest } })),
     getDevcieGroupList: ({ ...rest }) => promise_(instance.get('/db/group/list', { params: { sign, timestamp, ...rest } })),
     getStaffGroupList: ({ ...rest }) => promise_(instance.get('/db/staffgroup/list', { params: { sign, timestamp, ...rest } })),
     getDeviceById: ({ ...rest }) => promise_(instance.get('/db/device/get', { params: { sign, timestamp, ...rest } })),
-    
+
     // edit device
     editACCDevice: ({ data, ...rest }) => promise_(instance.post('/db/acc/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
     editPMSDevice: ({ data, ...rest }) => promise_(instance.post('/db/pms/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
@@ -125,6 +124,8 @@ export const api = (token, logout, setSnackBar, t) => {
     addLocation: ({ data, ...rest }) => promise_(instance.post('/db/location/add', { ...data }, { params: { sign, timestamp, ...rest } })),
     editLocation: ({ data, ...rest }) => promise_(instance.post('/db/location/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
     deleteLocation: ({ ...rest }) => promise_(instance.delete('/db/location/delete', { params: { sign, timestamp, ...rest } })),
+    getLocationList: ({ ...rest }) => promise_(instance.get('/db/location/list', { params: { sign, timestamp, ...rest } })),
+    getAreaList: ({ ...rest }) => promise_(instance.get('/db/area/list', { params: { sign, timestamp, ...rest } })),
 
 
     //Account

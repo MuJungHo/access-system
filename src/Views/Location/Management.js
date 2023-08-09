@@ -1,18 +1,21 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
-import { LocaleContext } from "../contexts/LocaleContext";
-import { LayoutContext } from "../contexts/LayoutContext";
+import { AuthContext } from "../../contexts/AuthContext";
+import { LocaleContext } from "../../contexts/LocaleContext";
+import { LayoutContext } from "../../contexts/LayoutContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Table from "../components/table/Table";
+import Table from "../../components/table/Table";
+import { useHistory } from "react-router-dom"
 import {
   PlayArrow,
   BorderColorSharp,
   FiberManualRecord,
   AddBox,
-  Delete
+  Delete,
+  LocationOn
 } from '@material-ui/icons';
-import LocationEditModalComponent from "../components/location/LocationEditModalComponent"
+
+import LocationEditModalComponent from "../../components/location/LocationEditModalComponent"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Location() {
   const classes = useStyles();
+  const history = useHistory();
   const { t } = useContext(LocaleContext);
   const { showModal, hideModal, setSnackBar, showWarningConfirm } = useContext(LayoutContext);
   const [rows, setRows] = React.useState([]);
@@ -100,7 +104,7 @@ export default function Location() {
 
   const handleShowEditLocationModal = (row) => {
     showModal({
-      title: "編輯群組",
+      title: "編輯位置",
       component: <LocationEditModalComponent
         location={row}
         onSave={handleSaveLocation}
@@ -149,7 +153,6 @@ export default function Location() {
           tableKey="LOCATION_LIST"
           data={rows}
           total={total}
-          title={t('sider/location')}
           filter={filter}
           setFilter={setFilter}
           tableActions={[
@@ -161,6 +164,7 @@ export default function Location() {
           ]}
           actions={[
             { name: t('edit'), onClick: (e, row) => handleShowEditLocationModal(row), icon: <BorderColorSharp /> },
+            { name: 'area', onClick: (e, row) => history.push(`/location/area/${row.locationid}`), icon: <LocationOn /> },
             { name: t('delete'), onClick: (e, row) => showDeleteConfirmDialog(row), icon: <Delete /> },
           ]}
         />

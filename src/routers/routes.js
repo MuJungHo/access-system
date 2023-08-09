@@ -5,11 +5,13 @@ import StaffManagement from '../Views/Staff/Management'
 import Staff from '../Views/Staff/Staff'
 import User from '../Views/User'
 import Log from '../Views/Log'
-import Location from '../Views/Location'
 import Access from '../Views/Access'
 
 import Device from '../Views/Device/Item'
 import CardStatus from '../Views/Device/CardStatus'
+
+import Location from '../Views/Location/Management'
+import Area from "../Views/Location/Area"
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
@@ -17,8 +19,8 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import StorageIcon from '@material-ui/icons/Storage';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
 import SubtitlesIcon from '@material-ui/icons/Subtitles';
+import LocationCityIcon from '@material-ui/icons/LocationCity';
 
 const routes = [
   {
@@ -75,10 +77,15 @@ const routes = [
     siderlink: true
   },
   {
-    path: '/location',
+    path: '/location/management',
     component: Location,
-    icon: LocationOnIcon,
+    icon: LocationCityIcon,
     siderlink: true
+  },
+  {
+    path: '/location/area/:locationid',
+    component: Area,
+    siderlink: false
   },
   {
     path: '/user',
