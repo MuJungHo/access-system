@@ -115,7 +115,7 @@ export default function Location() {
   }
   return (
     <div className={classes.root}>
-      <IconButton onClick={() => history.push('/device/list')}><ArrowBackIcon /></IconButton>
+      <IconButton onClick={() => history.push('/device/management')}><ArrowBackIcon /></IconButton>
       <Paper className={classes.paper}>
         <Table
           tableKey="CARD_STATUS"
