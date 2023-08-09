@@ -80,6 +80,7 @@ const PathComponent = () => {
   if (location.pathname === "/staff/management") return "人員管理"
   if (location.pathname === "/location/management") return "位置管理"
   if (location.pathname === "/access") return "存取控制"
+  if (location.pathname === "/setting") return "系統設定"
   if (location.pathname.includes("/device/item/")) return (<Breadcrumbs aria-label="breadcrumb">
     <Link color="inherit" onClick={e => {
       e.preventDefault();

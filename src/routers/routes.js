@@ -6,6 +6,7 @@ import Staff from '../Views/Staff/Staff'
 import User from '../Views/User'
 import Log from '../Views/Log'
 import Access from '../Views/Access'
+import Setting from '../Views/Setting'
 
 import Device from '../Views/Device/Item'
 import CardStatus from '../Views/Device/CardStatus'
@@ -21,6 +22,7 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import StorageIcon from '@material-ui/icons/Storage';
 import SubtitlesIcon from '@material-ui/icons/Subtitles';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const routes = [
   {
@@ -97,6 +99,12 @@ const routes = [
     path: '/log',
     component: Log,
     icon: StorageIcon,
+    siderlink: true
+  },
+  {
+    path: '/setting',
+    component: Setting,
+    icon: SettingsIcon,
     siderlink: true
   },
 ]

@@ -128,13 +128,18 @@ export const api = (token, logout, setSnackBar, t) => {
     getAreaList: ({ ...rest }) => promise_(instance.get('/db/area/list', { params: { sign, timestamp, ...rest } })),
 
 
-    //Account
+    //account
     getAccountById: ({ ...rest }) => promise_(instance.get('/db/account/get', { params: { sign, timestamp, ...rest } })),
     editAccount: ({ data, ...rest }) => promise_(instance.put('/db/account/edit', data, { params: { sign, timestamp, ...rest } })),
     deleteAccount: ({ ...rest }) => promise_(instance.delete('/db/account/delete', { params: { sign, timestamp, ...rest } })),
     addAccount: ({ data, ...rest }) => promise_(instance.post('/db/account/add', data, { params: { sign, timestamp, ...rest } })),
     editAccountPermission: ({ data, ...rest }) => promise_(instance.put('/db/account/permission/edit', data, { params: { sign, timestamp, ...rest } })),
     editAccountCustomizeById: ({ data, ...rest }) => promise_(instance.post('/db/account/customize/edit', data, { params: { sign, timestamp, ...rest } })),
+
+    //setting
+    getGeneralSetting: ({ ...rest }) => promise_(instance.get('/db/setting/general', { params: { sign, timestamp, ...rest } })),
+    editGeneralSetting: ({ data, ...rest }) => promise_(instance.put('/db/setting/general/update', data, { params: { sign, timestamp, ...rest } })),
+    sendEmail: () => promise_(instance.post('/system', {}, { params: { action: 'email', sign, timestamp } })),
   }
 }
 
