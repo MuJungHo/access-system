@@ -73,17 +73,17 @@ const PathComponent = () => {
   const location = useLocation();
   const history = useHistory();
   // console.log(location.pathname)
-  if (location.pathname === "/device/list") return "設備管理"
+  if (location.pathname === "/device/management") return "設備管理"
   if (location.pathname === "/event") return "事件管理"
   if (location.pathname === "/log") return "系統紀錄"
   if (location.pathname === "/user") return "用戶管理"
-  if (location.pathname === "/staff/list") return "人員管理"
+  if (location.pathname === "/staff/management") return "人員管理"
   if (location.pathname === "/location") return "位置管理"
   if (location.pathname === "/access") return "存取控制"
   if (location.pathname.includes("/device/item/")) return (<Breadcrumbs aria-label="breadcrumb">
     <Link color="inherit" onClick={e => {
       e.preventDefault();
-      history.push("/device/list")
+      history.push("/device/management")
 
     }}>
       設備管理
@@ -97,7 +97,7 @@ const PathComponent = () => {
   if (location.pathname.includes("/device/card-status/")) return (<Breadcrumbs aria-label="breadcrumb">
     <Link color="inherit" onClick={e => {
       e.preventDefault();
-      history.push("/device/list")
+      history.push("/device/management")
 
     }}>
       設備管理
@@ -111,7 +111,7 @@ const PathComponent = () => {
   if (location.pathname.includes("/staff/person/")) return (<Breadcrumbs aria-label="breadcrumb">
     <Link color="inherit" onClick={e => {
       e.preventDefault();
-      history.push("/staff/list")
+      history.push("/staff/management")
     }}>
       人員管理
     </Link>

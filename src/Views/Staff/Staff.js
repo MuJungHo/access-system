@@ -93,7 +93,7 @@ const Person = () => {
   return (
     <div className={classes.root}>
       <IconButton
-        onClick={() => history.push('/staff/list')}>
+        onClick={() => history.push('/staff/management')}>
         <ArrowBackIcon />
       </IconButton>
       <Information staff={staff} setStaff={setStaff} />

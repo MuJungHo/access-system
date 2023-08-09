@@ -1,7 +1,7 @@
 import Event from '../Views/Event'
-import Devices from '../Views/Device/List'
+import DeviceManagement from '../Views/Device/Management'
 import Home from '../Views/Home'
-import Staffs from '../Views/Staff/List'
+import StaffManagement from '../Views/Staff/Management'
 import Staff from '../Views/Staff/Staff'
 import User from '../Views/User'
 import Log from '../Views/Log'
@@ -44,8 +44,8 @@ const routes = [
     siderlink: false
   },
   {
-    path: '/device/list',
-    component: Devices,
+    path: '/device/management',
+    component: DeviceManagement,
     icon: DevicesOtherIcon,
     exact: true,
     siderlink: true
@@ -56,8 +56,8 @@ const routes = [
     siderlink: false
   },
   {
-    path: '/staff/list',
-    component: Staffs,
+    path: '/staff/management',
+    component: StaffManagement,
     icon: PeopleIcon,
     exact: true,
     siderlink: true

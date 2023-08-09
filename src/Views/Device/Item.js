@@ -109,7 +109,7 @@ export default () => {
       {/* {console.log(deviceConfig)} */}
       <IconButton onClick={() => history.push(
         parentid === undefined
-          ? '/device/list'
+          ? '/device/management'
           : `/device/item/${parentid}`
       )}><ArrowBackIcon /></IconButton>
       <DeviceConfiguration
