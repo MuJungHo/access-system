@@ -85,7 +85,6 @@ export default ({
   const [items, setItems] = React.useState([])
   const [state, setState] = React.useState({ ...group })
   const [total, setTotal] = React.useState(0)
-  const [page, setPage] = React.useState(0)
   const [filter, setFilter] = React.useState({
     page: 0,
     keyword: ""
@@ -128,7 +127,7 @@ export default ({
         />
       </div>
       <div className={classes.info}>
-        <Text>{t('location')}</Text>
+        <Text required>{t('location')}</Text>
         <Select
           style={{ margin: 20 }}
           value={state.locationid || ''}
