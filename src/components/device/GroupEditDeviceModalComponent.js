@@ -9,6 +9,8 @@ import {
   // Paper,
   // Divider,
   Button,
+  TextField,
+  MenuItem,
 } from '@material-ui/core'
 
 import Text from "../Text"
@@ -22,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     width: 500,
-    height: 565,
+    height: 620,
     backgroundColor: '#fff',
     padding: 20,
     display: 'flex',
@@ -32,8 +34,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 12
   },
   contentInner: {
-    flex: 1,
-    marginTop: 10,
+    height: 505,
     backgroundColor: viewBackgroundColor,
     display: 'flex',
     flexWrap: 'wrap',
@@ -52,22 +53,37 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 8,
     borderRadius: 5
   },
+  info: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    height: 45,
+    marginBottom: 5,
+    // margin: '6px 12px',
+    '& > *': {
+      flex: 1
+    },
+  }
 }));
 
 const limit = 12
 
 export default ({
-  mode = "dtos",
-  leftTabIndex = 0,
-  rightTabIndex = 0,
+  group = {
+    name: "",
+    locationid: "",
+    item: []
+  },
   onSave,
-  isExisted = [],
-  authedApi }) => {
+  authedApi,
+  locations
+}) => {
   const { t } = useContext(LocaleContext);
+
   // const { authedApi } = useContext(AuthContext);
   const classes = useStyles();
   const [items, setItems] = React.useState([])
-  const [state, setState] = React.useState([])
+  const [state, setState] = React.useState({ ...group })
   const [total, setTotal] = React.useState(0)
   const [page, setPage] = React.useState(0)
   const [filter, setFilter] = React.useState({
@@ -76,62 +92,64 @@ export default ({
   })
   React.useEffect(() => {
     (async () => {
-
-      if (mode === "dtos") {
-        if (rightTabIndex === 0) {
-          const { result, total } = await authedApi.postStaffList({ data: { priority_list: isExisted }, page: filter.page + 1, keyword: filter.keyword, limit })
-          let _items = result.map(item => ({
-            ...item,
-            _id: String(item.staffid)
-          }))
-          setTotal(total)
-          setItems(_items)
-        }
-        else {
-          const { result, total } = await authedApi.postStaffGroupList({ data: { priority_list: isExisted }, page: filter.page + 1, keyword: filter.keyword, limit })
-          let _items = result.map(item => ({
-            ...item,
-            _id: String(item.staffgroupid)
-          }))
-          setTotal(total)
-          setItems(_items)
-        }
-      } else {
-        if (rightTabIndex === 0) {
-          const { result, total } = await authedApi.postDeviceList({ data: { priority_list: isExisted }, page: filter.page + 1, keyword: filter.keyword, limit })
-          let _items = result.map(item => ({
-            ...item,
-            _id: String(item.id)
-          }))
-          setTotal(total)
-          setItems(_items)
-        }
-        else {
-          const { result, total } = await authedApi.postDeviceGroupList({ data: { priority_list: isExisted }, page: filter.page + 1, keyword: filter.keyword, limit })
-          let _items = result.map(item => ({
-            ...item,
-            _id: String(item.groupid)
-          }))
-          setTotal(total)
-          setItems(_items)
-        }
-      }
+      const { result, total } = await authedApi.postDeviceList({ data: { priority_list: group.item.map(_id => Number(_id)) }, page: filter.page + 1, keyword: filter.keyword, limit, access: 1 })
+      let _items = result.map(item => ({
+        ...item,
+        _id: String(item.id)
+      }))
+      setTotal(total)
+      setItems(_items)
     })()
   }, [filter])
 
   const handleChange = (event) => {
-    let newState = [...state]
+    let newItem = [...state.item]
     if (event.target.checked) {
-      newState.push(event.target.name)
+      newItem.push(event.target.name)
     } else {
-      newState = newState.filter(state => state !== event.target.name)
+      newItem = newItem.filter(state => state !== event.target.name)
     }
-    setState(newState)
+    setState({
+      ...state,
+      item: newItem
+    })
   };
 
   return (
     <div className={classes.content}>
-      <div>
+      <div className={classes.info}>
+        <Text required>{t('name')}</Text>
+        <TextField
+          value={state.name || ''}
+          onChange={e => setState({
+            ...state,
+            name: e.target.value
+          })}
+        />
+      </div>
+      <div className={classes.info}>
+        <Text>{t('location')}</Text>
+        <Select
+          style={{ margin: 20 }}
+          value={state.locationid || ''}
+          onChange={e => setState({
+            ...state,
+            locationid: e.target.value
+          })}
+        // label={t("cardtype")}
+        >
+          {
+            locations
+              .map(location =>
+                <MenuItem
+                  key={location.locationid}
+                  value={location.locationid}>
+                  {location.name}
+                </MenuItem>)
+          }
+        </Select>
+      </div>
+      <div className={classes.info}>
         <SearchTextField style={{ flex: 'unset' }} placeholder={"搜尋關鍵字"} value={filter.keyword} onChange={e => setFilter({ ...filter, keyword: e.target.value })} />
       </div>
       <div className={classes.contentInner}>
@@ -141,8 +159,7 @@ export default ({
               style={{ width: '100%', margin: 0, height: '100%' }}
               control={
                 <Checkbox
-                  disabled={isExisted.includes(Number(item._id))}
-                  checked={state.includes(item._id)}
+                  checked={state.item.includes(item._id)}
                   onChange={handleChange}
                   name={item._id}
                   color="primary"
@@ -164,11 +181,11 @@ export default ({
           page: newPage
         })}
       />
-      <div style={{ width: '100%', paddingTop: 10, paddingBottom: 20 }}>
+      <div style={{ width: '100%', paddingTop: 10 }}>
         <Button
           style={{ float: 'right' }}
           variant="contained"
-          onClick={() => onSave(state)} color="primary">Save</Button>
+          onClick={() => onSave(state, group)} color="primary">Save</Button>
       </div>
     </div>
   )

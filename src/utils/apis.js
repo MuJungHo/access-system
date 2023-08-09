@@ -36,6 +36,7 @@ export const api = (token, logout, setSnackBar, t) => {
 
   return {
     getDeviceList: ({ ...rest }) => promise_(instance.get('/db/device/list', { params: { sign, timestamp, ...rest } })),
+    getGroupList: ({ ...rest }) => promise_(instance.get('/db/group/list', { params: { sign, timestamp, ...rest } })),
     getStaffList: ({ data, ...rest }) => promise_(instance.post('/db/staff/list', { ...data }, { params: { sign, timestamp, ...rest } })),
     getNewCardList: ({ ...rest }) => promise_(instance.get('/db/newcard/list', { params: { sign, timestamp, ...rest } })),
     getEventList: ({ ...rest }) => promise_(instance.get('/db/event/search', { params: { sign, timestamp, ...rest } })),
@@ -108,6 +109,11 @@ export const api = (token, logout, setSnackBar, t) => {
     postDeviceGroupList: ({ data, ...rest }) => promise_(instance.post('/db/group/list', { ...data }, { params: { sign, timestamp, ...rest } })),
     postStaffList: ({ data, ...rest }) => promise_(instance.post('/db/staff/list', { ...data }, { params: { sign, timestamp, ...rest } })),
     postStaffGroupList: ({ data, ...rest }) => promise_(instance.post('/db/staffgroup/list', { ...data }, { params: { sign, timestamp, ...rest } })),
+
+    //group
+    editDeviceGroup: ({ data, ...rest }) => promise_(instance.post('/db/group/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+    addDeviceGroup: ({ data, ...rest }) => promise_(instance.post('/db/group/add', { ...data }, { params: { sign, timestamp, ...rest } })),
+    deleteDeviceGroup: ({ ...rest }) => promise_(instance.delete('/db/group/delete', { params: { sign, timestamp, ...rest } })),
 
     getAccountById: ({ ...rest }) => promise_(instance.get('/db/account/get', { params: { sign, timestamp, ...rest } })),
     editAccount: ({ data, ...rest }) => promise_(instance.put('/db/account/edit', data, { params: { sign, timestamp, ...rest } })),

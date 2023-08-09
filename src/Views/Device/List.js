@@ -39,7 +39,7 @@ export default function Devices() {
   const classes = useStyles();
   // const md5 = require("md5");
 
-  const [tabIndex, setTabIndex] = React.useState(0);
+  const [tabIndex, setTabIndex] = React.useState(1);
 
 
   return (
@@ -59,7 +59,12 @@ export default function Devices() {
       </Tabs>
 
       <Paper className={classes.paper}>
-        <DeviceList />
+        {
+          {
+            0: <DeviceList />,
+            1: <DeviceGroup />
+          }[tabIndex]
+        }
       </Paper>
 
     </div>
