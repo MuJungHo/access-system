@@ -6,6 +6,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Paper, TextField, MenuItem, Button, CircularProgress } from '@material-ui/core';
 import Text from "../components/Text"
 import Select from "../components/Select"
+import Tab from '../components/common/Tab';
+import Tabs from "../components/common/Tabs"
 
 // import {
 //   PlayArrow,
@@ -18,14 +20,17 @@ import Select from "../components/Select"
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: 700,
+    margin: 'auto',
+    position: 'relative'
   },
   paper: {
     width: '100%',
     paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    marginBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(3),
+    paddingRight: theme.spacing(3),
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
   content: {
     display: 'flex',
@@ -33,11 +38,11 @@ const useStyles = makeStyles((theme) => ({
   },
   info: {
     display: 'flex',
-    width: 'calc(50% - 16px)',
+    width: 'calc(50% - 24px)',
     alignItems: 'center',
     height: 45,
     marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(3),
     '& > *': {
       flex: 1
     },
@@ -54,6 +59,7 @@ export default () => {
   const classes = useStyles();
   const { authedApi } = useContext(AuthContext);
   const { t } = useContext(LocaleContext);
+  const [tabIndex, setTabIndex] = React.useState(0)
   const { setSnackBar, showModal, hideModal, showWarningConfirm } = useContext(LayoutContext);
   const [isloading, setLoading] = React.useState(false)
   const [setting, setSetting] = React.useState({})
@@ -68,7 +74,7 @@ export default () => {
   const handleEditSetting = async () => {
     await authedApi.editGeneralSetting({ data: { ...setting } })
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSuccess"),
       isOpen: true,
       severity: "success"
     })
@@ -80,7 +86,7 @@ export default () => {
       setLoading(false)
     });
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSuccess"),
       isOpen: true,
       severity: "success"
     })
@@ -88,10 +94,22 @@ export default () => {
 
   return (
     <div className={classes.root}>
-      <div style={{ textAlign: 'right' }}>
-        <Button style={{ marginBottom: 20 }} color="primary" variant="contained" onClick={handleEditSetting}>儲存</Button></div>
+      <Button style={{ position: 'absolute', right: 0 }} color="primary" variant="contained" onClick={handleEditSetting}>{t('save')}</Button>
+      <Tabs
+        style={{ width: 350 }}
+        value={tabIndex}
+        TabIndicatorProps={{ style: { background: 'white' } }}
+        onChange={(event, newValue) => {
+          setTabIndex(newValue);
+        }}
+        textColor="primary"
+      >
+        <Tab label={t('normal')} />
+        <Tab label="license" />
+      </Tabs>
+
       <Paper className={classes.paper}>
-        <h6 style={{ marginLeft: 16 }}>一般</h6>
+        <h6 style={{ marginLeft: 16 }}>{t('normal')}</h6>
         <div className={classes.content}>
           <div className={classes.info}>
             <Text required>{t('language')}</Text>
@@ -117,7 +135,7 @@ export default () => {
             </Select>
           </div>
           <div className={classes.info}>
-            <Text required>{'Keep Days'}</Text>
+            <Text required>{t('keepdays')}</Text>
             <TextField
               value={setting.keepdays || ''}
               onChange={e => setSetting({
@@ -147,7 +165,7 @@ export default () => {
             />
           </div>
           <div className={classes.info}>
-            <Text>{'Download Path'}</Text>
+            <Text>{t('downloadpath')}</Text>
             <TextField
               value={setting.downloadpath || ''}
               onChange={e => setSetting({
@@ -158,17 +176,17 @@ export default () => {
           </div>
         </div>
 
-        <div style={{ marginLeft: 16, marginTop: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ height: 40, marginLeft: 16, marginTop: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <h6>SMTP</h6>
           {
             isloading
               ? <CircularProgress />
-              : <Button color="primary" variant="outlined" onClick={handleSendEmail}>Send Email</Button>
+              : <Button color="primary" variant="outlined" onClick={handleSendEmail}>{t('sendtestemail')}</Button>
           }
         </div>
         <div className={classes.content}>
           <div className={classes.info}>
-            <Text>{'sender'}</Text>
+            <Text>{t('sender')}</Text>
             <TextField
               value={setting.sender || ''}
               onChange={e => setSetting({
@@ -178,7 +196,7 @@ export default () => {
             />
           </div>
           <div className={classes.info}>
-            <Text>{'senderemail'}</Text>
+            <Text>{t('senderemail')}</Text>
             <TextField
               value={setting.senderemail || ''}
               onChange={e => setSetting({
@@ -188,7 +206,7 @@ export default () => {
             />
           </div>
           <div className={classes.info}>
-            <Text>{'mailserver'}</Text>
+            <Text>{t('mailserver')}</Text>
             <TextField
               value={setting.mailserver || ''}
               onChange={e => setSetting({
@@ -198,7 +216,7 @@ export default () => {
             />
           </div>
           <div className={classes.info}>
-            <Text>{'mailserveraccount'}</Text>
+            <Text>{t('account')}</Text>
             <TextField
               value={setting.mailserveraccount || ''}
               onChange={e => setSetting({
@@ -208,7 +226,7 @@ export default () => {
             />
           </div>
           <div className={classes.info}>
-            <Text>{'mailserverpassword'}</Text>
+            <Text>{t('password')}</Text>
             <TextField
               value={setting.mailserverpassword || ''}
               onChange={e => setSetting({
@@ -218,7 +236,7 @@ export default () => {
             />
           </div>
           <div className={classes.info}>
-            <Text>{'mailserverport'}</Text>
+            <Text>{"Port"}</Text>
             <TextField
               value={setting.mailserverport || ''}
               onChange={e => setSetting({
