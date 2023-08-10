@@ -19,13 +19,15 @@ const useStyles = makeStyles({
 export default function BasicTable({
   data = [],
   columns = [],
-  actions = []
+  actions = [],
+  component = Paper,
+  style = {}
 }) {
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer style={{ ...style }} component={component}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
