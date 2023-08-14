@@ -11,21 +11,24 @@ function AuthProvider(props) {
   const { t } = useContext(LocaleContext);
   const { setSnackBar } = useContext(LayoutContext);
   const [token, setToken] = useState(localStorage.getItem('token'));
+  const [keep, setKeep] = useState(localStorage.getItem('keep') === "1");
   const [authedUser, setAuthedUser] = useState(JSON.parse(localStorage.getItem('user')));
   const [authedCustomize, setAuthedCustomize] = useState(JSON.parse(localStorage.getItem('customize')))
 
-  const login = async (jwtToken, accountid, keep) => {
+  const login = async (jwtToken, accountid) => {
     const [accountInfo] = await api(jwtToken, logout).getAccountById({ accountid })
     const customize = accountInfo.customize || "{}"
     const jsonCustomize = JSON.parse(customize)
-    
+
     setToken(jwtToken);
     setAuthedUser(accountInfo)
     setAuthedCustomize(jsonCustomize)
 
+    localStorage.setItem('customize', JSON.stringify(jsonCustomize))
+    localStorage.setItem('keep', keep ? 1 : 0)
+
     if (keep) {
       localStorage.setItem('token', jwtToken)
-      localStorage.setItem('customize', JSON.stringify(jsonCustomize))
       localStorage.setItem('name', accountInfo.name)
     }
   };
@@ -56,6 +59,7 @@ function AuthProvider(props) {
     token,
     login,
     logout,
+    setKeep,
     authedUser,
     authedCustomize,
     editAuthedUserCustomize,

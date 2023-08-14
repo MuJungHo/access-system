@@ -107,11 +107,11 @@ const Login = () => {
   const classes = useStyles();
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
-  const [keep, setKeep] = useState(false);
+  // const [keep, setKeep] = useState(false);
 
-  const { login, token } = useContext(AuthContext);
+  const { login, token, setKeep, keep } = useContext(AuthContext);
   const { t, changeLocale, locale } = useContext(LocaleContext);
-  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const timestamp = Date.now();
@@ -122,21 +122,23 @@ const Login = () => {
 
     const { Token, Accountid /*name, Roleid*/ } = await tokenlogin({ credentials, timestamp })
 
-    login(Token, Accountid, keep);
+    login(Token, Accountid);
   };
 
   if (token) {
     return <Redirect to="/" />
   }
+
   const handleChagneLocale = (e) => {
     changeLocale(e.target.value)
   }
+  
   return (
     <div className={classes.container}>
       <Card className={classes.card}>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <h1 className={classes.title}>{t('welcome')}</h1>
-          <img className={classes.logo} src="../assets/logo.png" alt=""/>
+          <img className={classes.logo} src="../assets/logo.png" alt="" />
           <FormControl className={classes.margin}>
             <TextField
               className={classes.user}
@@ -161,10 +163,12 @@ const Login = () => {
               autoComplete="current-password"
             />
           </FormControl>
-          <div style={{ display: 'flex',  justifyContent: 'space-between', alignItems: 'center', color: '#bebebe' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#bebebe' }}>
             <FormControlLabel
               value="end"
-              control={<Checkbox color="primary" value={keep} onChange={e => setKeep(e.target.checked)}/>}
+              control={<Checkbox color="primary" value={keep} onChange={e => {
+                setKeep(e.target.checked)
+              }} />}
               label="記住我"
               labelPlacement="end"
             />

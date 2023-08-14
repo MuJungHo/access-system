@@ -127,7 +127,13 @@ export const api = (token, logout, setSnackBar, t) => {
     editLocation: ({ data, ...rest }) => promise_(instance.post('/db/location/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
     deleteLocation: ({ ...rest }) => promise_(instance.delete('/db/location/delete', { params: { sign, timestamp, ...rest } })),
     getLocationList: ({ ...rest }) => promise_(instance.get('/db/location/list', { params: { sign, timestamp, ...rest } })),
+    //area
+
+    addArea: ({ data, ...rest }) => promise_(instance.post('/db/area/add', { ...data }, { params: { sign, timestamp, ...rest } })),
+    getArea: ({ ...rest }) => promise_(instance.get('/db/area/get', { params: { sign, timestamp, ...rest } })),
     getAreaList: ({ ...rest }) => promise_(instance.get('/db/area/list', { params: { sign, timestamp, ...rest } })),
+    editArea: ({ data, ...rest }) => promise_(instance.post('/db/area/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
+    deleteArea: ({ ...rest }) => promise_(instance.delete('/db/area/delete', { params: { sign, timestamp, ...rest } })),
 
 
     //account

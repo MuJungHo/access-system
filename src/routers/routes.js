@@ -12,6 +12,7 @@ import Device from '../Views/Device/Item'
 import CardStatus from '../Views/Device/CardStatus'
 
 import Location from '../Views/Location/Management'
+import AreaList from "../Views/Location/AreaList"
 import Area from "../Views/Location/Area"
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
@@ -85,7 +86,12 @@ const routes = [
     siderlink: true
   },
   {
-    path: '/location/area/:locationid',
+    path: '/location/:locationid/area-list',
+    component: AreaList,
+    siderlink: false
+  },
+  {
+    path: '/location/:locationid/area/:areaid',
     component: Area,
     siderlink: false
   },

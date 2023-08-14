@@ -81,6 +81,44 @@ const PathComponent = () => {
   if (location.pathname === "/location/management") return "位置管理"
   if (location.pathname === "/access") return "存取控制"
   if (location.pathname === "/setting") return "系統設定"
+  if (location.pathname.includes("/location") && location.pathname.includes("/area-list")) return (<Breadcrumbs aria-label="breadcrumb">
+    <Link color="inherit" onClick={e => {
+      e.preventDefault();
+      history.push("/location/management")
+    }}>
+      位置管理
+  </Link>
+    <Link
+      color="textPrimary"
+    >
+      區域列表
+  </Link>
+  </Breadcrumbs>)
+  if (location.pathname.includes("/location") && location.pathname.includes("/area")) {
+    let pathname = location.pathname.split("/area")
+    return (<Breadcrumbs aria-label="breadcrumb">
+      <Link color="inherit" onClick={e => {
+        e.preventDefault();
+        history.push("/location/management")
+      }}>
+        {"位置管理"}
+      </Link>
+      <Link
+        color="inherit"
+        onClick={e => {
+          e.preventDefault();
+          history.push(pathname[0] + "/area-list")
+        }}
+      >
+        {"區域列表"}
+      </Link>
+      <Link
+        color="textPrimary"
+      >
+        {"區域編輯"}
+      </Link>
+    </Breadcrumbs>)
+  }
   if (location.pathname.includes("/device/item/")) return (<Breadcrumbs aria-label="breadcrumb">
     <Link color="inherit" onClick={e => {
       e.preventDefault();

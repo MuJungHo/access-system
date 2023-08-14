@@ -328,7 +328,9 @@ export default () => {
   </React.Fragment>)
   return (
     <div className={classes.root}>
-      {tabIndex === 0 && <Button style={{ position: 'absolute', right: 0 }} color="primary" variant="contained" onClick={handleEditSetting}>{t('save')}</Button>}      <Tabs
+      {tabIndex === 0 && <Button style={{ position: 'absolute', right: 0 }} color="primary" variant="contained" onClick={handleEditSetting}>{t('save')}</Button>}
+      <Tabs
+        style={{ width: 300 }}
         value={tabIndex}
         TabIndicatorProps={{ style: { background: 'white' } }}
         onChange={(event, newValue) => {

@@ -164,7 +164,7 @@ export default function Location() {
           ]}
           actions={[
             { name: t('edit'), onClick: (e, row) => handleShowEditLocationModal(row), icon: <BorderColorSharp /> },
-            { name: 'area', onClick: (e, row) => history.push(`/location/area/${row.locationid}`), icon: <LocationOn /> },
+            { name: 'area', onClick: (e, row) => history.push(`/location/${row.locationid}/area-list`), icon: <LocationOn /> },
             { name: t('delete'), onClick: (e, row) => showDeleteConfirmDialog(row), icon: <Delete /> },
           ]}
         />
