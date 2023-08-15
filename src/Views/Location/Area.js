@@ -75,7 +75,7 @@ export default function Location() {
 
   const showAddGateModal = (type) => {
     showModal({
-      title: "新增" + type,
+      title: "新增區域" + (type === "enter" ? "入口" : "出口"),
       component: <GateModalComponent
         authedApi={authedApi}
         excludeList={excludeList}
@@ -90,7 +90,7 @@ export default function Location() {
 
   const showEditGateModal = (e, gate, type) => {
     showModal({
-      title: "編輯區域",
+      title: "編輯區域" + (type === "enter" ? "入口" : "出口"),
       component: <GateModalComponent
         authedApi={authedApi}
         excludeList={excludeList}
@@ -222,9 +222,10 @@ export default function Location() {
   }
 
   const showDeleteConfirmDialog = (row, type) => {
+    // console.log(row)
     showWarningConfirm({
-      title: '刪除資訊',
-      component: <h6 style={{ margin: 16 }}>{`確認刪除?`}</h6>,
+      title: '刪除區域'+ (type === "enter" ? "入口" : "出口"),
+      component: <h6 style={{ margin: 16 }}>{`確認刪除 ${row.name} ?`}</h6>,
       onConfirm: () => handleDeleteGate(row, type)
     })
   }

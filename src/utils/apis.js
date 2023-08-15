@@ -134,6 +134,7 @@ export const api = (token, logout, setSnackBar, t) => {
     getAreaList: ({ ...rest }) => promise_(instance.get('/db/area/list', { params: { sign, timestamp, ...rest } })),
     editArea: ({ data, ...rest }) => promise_(instance.post('/db/area/edit', { ...data }, { params: { sign, timestamp, ...rest } })),
     deleteArea: ({ ...rest }) => promise_(instance.delete('/db/area/delete', { params: { sign, timestamp, ...rest } })),
+    getAreaStatus: ({ ...rest }) => promise_(instance.get('/db/area/status', { params: { sign, timestamp, ...rest } })),
 
 
     //account
