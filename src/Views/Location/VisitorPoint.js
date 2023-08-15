@@ -1,22 +1,25 @@
 import React, { useContext } from "react";
+import { useHistory, useParams } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { LayoutContext } from "../../contexts/LayoutContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from "../../components/table/Table";
-import { useHistory } from "react-router-dom"
+import VisitorPointModalComponent from "../../components/location/VisitorPointModalComponent";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import Select from '../../components/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import moment from 'moment'
 import {
-  PlayArrow,
+  IconButton,
+} from '@material-ui/core'
+import {
   BorderColorSharp,
-  FiberManualRecord,
-  AddBox,
   Delete,
-  LocationOn,
-  CompareArrows
+  AddBox
 } from '@material-ui/icons';
 
-import LocationEditModalComponent from "../../components/location/LocationEditModalComponent"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,57 +47,60 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Location() {
   const classes = useStyles();
-  const history = useHistory();
   const { t } = useContext(LocaleContext);
-  const { showModal, hideModal, setSnackBar, showWarningConfirm } = useContext(LayoutContext);
+  const { setSnackBar, showModal, hideModal, showWarningConfirm } = useContext(LayoutContext);
+  const { locationid } = useParams();
+  const history = useHistory();
   const [rows, setRows] = React.useState([]);
   const [total, setTotal] = React.useState(0);
   const [filter, setFilter] = React.useState({
     order: 'desc',
     orderBy: 'datetime',
     page: 0,
-    limit: 5
+    limit: 5,
   })
   const { authedApi } = useContext(AuthContext);
 
   React.useEffect(() => {
-    getLocationList()
+    getVisitorPointList()
   }, [filter])
 
-  const getLocationList = async () => {
-    const { result, total } = await authedApi.getLocationList({ ...filter, page: filter.page + 1 })
+  const getVisitorPointList = async () => {
+    const { result, total } = await authedApi.getVisitorPointList({
+      ...filter, page: filter.page + 1, locationid
+    })
 
     const tableData = result.map(data => {
-
       return {
         ...data,
-        id: data.locationid,
-        name: data.name,
-        address: data.address
+        id: data.vgid,
+        item: data.staffgroupid?.map(_id => String(_id)) || []
       }
     })
     setTotal(total)
     setRows(tableData)
   }
 
-
-  const showAddGroupModal = () => {
+  const showAddVisitorPointModal = () => {
     showModal({
-      title: "新增位置",
-      component: <LocationEditModalComponent
-        onSave={handleAddLocation}
+      title: "新增Visitor Point",
+      component: <VisitorPointModalComponent
+        authedApi={authedApi}
+        // visitorpoint={{}}
+        onSave={handleAddVisitorPoint}
       />
     })
   }
 
-  const handleAddLocation = async (state) => {
-    await authedApi.addLocation({
+  const handleAddVisitorPoint = async (state) => {
+    await authedApi.addVisitorPoint({
       data: {
         name: state.name,
-        address: state.address
+        locationid: Number(locationid),
+        staffgroupids: state.item.map(_id => Number(_id))
       }
     })
-    getLocationList()
+    getVisitorPointList()
     hideModal()
     setSnackBar({
       message: "儲存成功",
@@ -103,25 +109,27 @@ export default function Location() {
     })
   }
 
-  const handleShowEditLocationModal = (row) => {
+  const handleShowEditVisitorPointModal = (row) => {
     showModal({
-      title: "編輯位置",
-      component: <LocationEditModalComponent
-        location={row}
-        onSave={handleSaveLocation}
+      title: "編輯Visitor Point",
+      component: <VisitorPointModalComponent
+        authedApi={authedApi}
+        visitorpoint={row}
+        onSave={handleSaveVisitorPoint}
       />
     })
   }
 
-  const handleSaveLocation = async (state) => {
-    await authedApi.editLocation({
+  const handleSaveVisitorPoint = async (state) => {
+    await authedApi.editVisitorPoint({
       data: {
+        vgid: state.vgid,
         name: state.name,
-        address: state.address,
-        locationid: state.locationid
+        locationid: Number(locationid),
+        staffgroupids: state.item.map(_id => Number(_id))
       }
     })
-    getLocationList()
+    getVisitorPointList()
     hideModal()
     setSnackBar({
       message: "儲存成功",
@@ -132,41 +140,43 @@ export default function Location() {
 
   const showDeleteConfirmDialog = (row) => {
     showWarningConfirm({
-      title: '刪除位置',
-      component: <h6 style={{ margin: 16 }}>{`確認刪除位置 ${row.name} ?`}</h6>,
-      onConfirm: () => handleDeleteLocation(row.locationid)
+      title: '刪除Visitor Point',
+      component: <h6 style={{ margin: 16 }}>{`確認刪除Visitor Point ${row.name} ?`}</h6>,
+      onConfirm: () => handleDeleteVisitorPoint(row.vgid)
     })
   }
 
-  const handleDeleteLocation = async (locationid) => {
-    await authedApi.deleteLocation({ locationid })
-    getLocationList()
+  const handleDeleteVisitorPoint = async (vgid) => {
+    await authedApi.deleteVisitorPoint({ vgid })
+    getVisitorPointList()
     setSnackBar({
       message: "刪除成功",
       isOpen: true,
       severity: "success"
     })
   }
+
   return (
     <div className={classes.root}>
+      <IconButton
+        onClick={() => history.push(`/location/management`)}>
+        <ArrowBackIcon />
+      </IconButton>
       <Paper className={classes.paper}>
         <Table
-          tableKey="LOCATION_LIST"
+          tableKey="VISITOR_POINT"
           data={rows}
           total={total}
           filter={filter}
           setFilter={setFilter}
           tableActions={[
-            { name: t('add'), onClick: showAddGroupModal, icon: <AddBox /> },
+            { name: t('add'), onClick: showAddVisitorPointModal, icon: <AddBox /> },
           ]}
           columns={[
             { key: 'name', label: t('name'), enable: true },
-            { key: 'address', label: t('address'), enable: true },
           ]}
           actions={[
-            { name: t('edit'), onClick: (e, row) => handleShowEditLocationModal(row), icon: <BorderColorSharp /> },
-            { name: 'area', onClick: (e, row) => history.push(`/location/${row.locationid}/area-list`), icon: <CompareArrows /> },
-            { name: 'visitor point', onClick: (e, row) => history.push(`/location/${row.locationid}/visitor-point`), icon: <LocationOn /> },
+            { name: t('edit'), onClick: (e, row) => handleShowEditVisitorPointModal(row), icon: <BorderColorSharp /> },
             { name: t('delete'), onClick: (e, row) => showDeleteConfirmDialog(row), icon: <Delete /> },
           ]}
         />

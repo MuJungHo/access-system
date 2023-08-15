@@ -15,6 +15,7 @@ import Location from '../Views/Location/Management'
 import AreaList from "../Views/Location/AreaList"
 import Area from "../Views/Location/Area"
 import AreaStatus from "../Views/Location/AreaStatus"
+import VisitorPoint from "../Views/Location/VisitorPoint"
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
@@ -99,6 +100,11 @@ const routes = [
   {
     path: '/location/:locationid/area-status/:areaid',
     component: AreaStatus,
+    siderlink: false
+  },
+  {
+    path: '/location/:locationid/visitor-point',
+    component: VisitorPoint,
     siderlink: false
   },
   {
