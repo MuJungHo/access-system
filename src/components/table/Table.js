@@ -190,7 +190,7 @@ function EnhancedTableHead(props) {
             </TableSortLabel>
           </TableCell>
         ))}
-        {actions.length > 0 && <TableCell align="left">{t('actions')}</TableCell>}
+        {actions.length > 0 && <TableCell align="center">{t('actions')}</TableCell>}
       </TableRow>
     </TableHead>
   );
@@ -278,12 +278,12 @@ const EnhancedTableToolbar = ({
   const nowDateEndTime = moment(filter.end).unix() * 1000
 
   const actions = [...tableActions,
-  { name: "欄位管理", onClick: () => setColumnModal({ isOpen: true }), icon: <TableChartIcon /> }]
+  { name: t("column-management"), onClick: () => setColumnModal({ isOpen: true }), icon: <TableChartIcon /> }]
 
   const showBatchDeleteConfirm = () => {
     showWarningConfirm({
-      title: '批次刪除',
-      component: <h6 style={{ margin: 16 }}>{`確認刪除${selected.length}筆資料?`}</h6>,
+      title: t("batch-delete"),      
+      component: <h6 style={{ margin: 16 }}>{t("confirm-delete-count", { count: selected.length })}</h6>,
       onConfirm: () => {
         handleBatchDeleteConfirm(selected)
         setSelected([])
@@ -299,7 +299,7 @@ const EnhancedTableToolbar = ({
     >
       {numSelected > 0 ? (
         <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-          {numSelected} selected
+          {numSelected} {t("selected")}
         </Typography>
       ) : (
           <React.Fragment>
@@ -346,7 +346,7 @@ const EnhancedTableToolbar = ({
       }
 
       <ColumnManageDialog
-        title={'欄位管理'}
+        title={t("column-management")}
         open={columnModal.isOpen}
         maxWidth="xs"
         onConfirm={handleEditTableColumns}
@@ -558,7 +558,7 @@ export default ({
                         {row[column.key]}
                       </TableCell>
                     ))}
-                    {actions?.length > 0 && <TableCell align="left">
+                    {actions?.length > 0 && <TableCell align="center">
                       <Actions actions={actions} row={row} />
                     </TableCell>}
                   </TableRow>

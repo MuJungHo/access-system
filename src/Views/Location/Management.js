@@ -13,7 +13,8 @@ import {
   AddBox,
   Delete,
   LocationOn,
-  CompareArrows
+  CompareArrows,
+  ExitToApp
 } from '@material-ui/icons';
 
 import LocationEditModalComponent from "../../components/location/LocationEditModalComponent"
@@ -80,7 +81,7 @@ export default function Location() {
 
   const showAddGroupModal = () => {
     showModal({
-      title: "新增位置",
+      title: t("add-thing", { thing: t("location") }),
       component: <LocationEditModalComponent
         onSave={handleAddLocation}
       />
@@ -97,7 +98,7 @@ export default function Location() {
     getLocationList()
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -105,7 +106,7 @@ export default function Location() {
 
   const handleShowEditLocationModal = (row) => {
     showModal({
-      title: "編輯位置",
+      title: t("edit-thing", { thing: t("location") }),
       component: <LocationEditModalComponent
         location={row}
         onSave={handleSaveLocation}
@@ -124,7 +125,7 @@ export default function Location() {
     getLocationList()
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -132,8 +133,8 @@ export default function Location() {
 
   const showDeleteConfirmDialog = (row) => {
     showWarningConfirm({
-      title: '刪除位置',
-      component: <h6 style={{ margin: 16 }}>{`確認刪除位置 ${row.name} ?`}</h6>,
+      title: t("delete-thing", { thing: t("location") }),
+      component: <h6 style={{ margin: 16 }}>{t("confirm-delete-thing", { thing: row.name })}</h6>,
       onConfirm: () => handleDeleteLocation(row.locationid)
     })
   }
@@ -142,7 +143,7 @@ export default function Location() {
     await authedApi.deleteLocation({ locationid })
     getLocationList()
     setSnackBar({
-      message: "刪除成功",
+      message: t("deleteSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -164,9 +165,9 @@ export default function Location() {
             { key: 'address', label: t('address'), enable: true },
           ]}
           actions={[
-            { name: t('edit'), onClick: (e, row) => handleShowEditLocationModal(row), icon: <BorderColorSharp /> },
-            { name: 'area', onClick: (e, row) => history.push(`/location/${row.locationid}/area-list`), icon: <CompareArrows /> },
-            { name: 'visitor point', onClick: (e, row) => history.push(`/location/${row.locationid}/visitor-point`), icon: <LocationOn /> },
+            { name: t('edit'), onClick: (e, row) => handleShowEditLocationModal(row), icon: <ExitToApp /> },
+            { name: t('area'), onClick: (e, row) => history.push(`/location/${row.locationid}/area-list`), icon: <CompareArrows /> },
+            { name: t('visitorpoint'), onClick: (e, row) => history.push(`/location/${row.locationid}/visitor-point`), icon: <LocationOn /> },
             { name: t('delete'), onClick: (e, row) => showDeleteConfirmDialog(row), icon: <Delete /> },
           ]}
         />

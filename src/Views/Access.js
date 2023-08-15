@@ -653,7 +653,7 @@ const Access = () => {
             <Tab label={mode === "dtos" ? "設備群組" : "人員群組"} />
           </Tabs>
           <Paper className={classes.leftContent}>
-            <SearchTextField style={{ flex: 'unset' }} placeholder={"搜尋關鍵字"} value={leftFilter.keyword} onChange={e => handleChangeLeftFilter('keyword', e.target.value)} />
+            <SearchTextField style={{ flex: 'unset' }} placeholder={t("search-keyword")} value={leftFilter.keyword} onChange={e => handleChangeLeftFilter('keyword', e.target.value)} />
             {leftTabIndex === 0 && <MuiSelect
               onChange={e => handleChangeLeftFilter('groupid', e.target.value)}
               style={{ marginTop: 20 }}
@@ -727,7 +727,7 @@ const Access = () => {
             <div className={classes.rightContetTopbar}>
               {selected.name}
               <div>
-                <SearchTextField placeholder={"搜尋關鍵字"} style={{ width: 300 }} onChange={e => handleChangeRightFilter("keyword", e.target.value)} />
+                <SearchTextField placeholder={t("search-keyword")} style={{ width: 300 }} onChange={e => handleChangeRightFilter("keyword", e.target.value)} />
               </div>
             </div>
             <div className={classes.rightContentInner}>

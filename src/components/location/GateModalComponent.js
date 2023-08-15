@@ -102,7 +102,7 @@ export default ({
         <Button
           style={{ float: 'right' }}
           variant="contained"
-          onClick={() => onSave(state, type)} color="primary">Save</Button>
+          onClick={() => onSave(state, type)} color="primary">{t("save")}</Button>
       </div>
     </div>
   )

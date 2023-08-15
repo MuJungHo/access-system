@@ -88,7 +88,7 @@ export default function Devices() {
 
   const showAddGroupModal = () => {
     showModal({
-      title: "新增群組",
+      title: t("add-thing", { thing: t("staff-group") }),
       component: <GroupEditModalComponent
         // group={{}}
         authedApi={authedApi}
@@ -109,7 +109,7 @@ export default function Devices() {
     getStaffGroupList()
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -117,7 +117,7 @@ export default function Devices() {
 
   const handleShowEditGroupModal = (row) => {
     showModal({
-      title: "編輯群組",
+      title: t("edit-thing", { thing: t("staff-group") }),
       component: <GroupEditModalComponent
         group={row}
         authedApi={authedApi}
@@ -139,7 +139,7 @@ export default function Devices() {
     getStaffGroupList()
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -147,8 +147,8 @@ export default function Devices() {
 
   const showDeleteConfirmDialog = (row) => {
     showWarningConfirm({
-      title: '刪除人員群組',
-      component: <h6 style={{ margin: 16 }}>{`確認刪除群組 ${row.name} ?`}</h6>,
+      title: t("delete-thing", { thing: t("staff-group") }),
+      component: <h6 style={{ margin: 16 }}>{t("confirm-delete-thing", { thing: row.name })}</h6>,
       onConfirm: () => handleDeleteGroup(row.staffgroupid)
     })
   }
@@ -157,7 +157,7 @@ export default function Devices() {
     await authedApi.deleteStaffGroup({ staffgroupid })
     getStaffGroupList()
     setSnackBar({
-      message: "刪除成功",
+      message: t("deleteSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -171,7 +171,6 @@ export default function Devices() {
           maxHeight="calc(100vh - 275px)"
           data={rows}
           total={total}
-          title="人員群組"
           filter={filter}
           setFilter={setFilter}
           tableActions={[

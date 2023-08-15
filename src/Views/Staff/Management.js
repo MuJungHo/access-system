@@ -1,5 +1,6 @@
-import React from "react";
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import React, { useContext } from "react";
+import { LocaleContext } from "../../contexts/LocaleContext";
+import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tab from '../../components/common/Tab';
 import Tabs from "../../components/common/Tabs";
@@ -33,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Devices() {
   const classes = useStyles();
+  const { t } = useContext(LocaleContext);
   // const md5 = require("md5");
 
   const [tabIndex, setTabIndex] = React.useState(0);
@@ -51,8 +53,8 @@ export default function Devices() {
         variant="fullWidth"
         textColor="primary"
       >
-        <Tab label="人員列表" />
-        <Tab label="人員群組" />
+        <Tab label={t("staff-list")} />
+        <Tab label={t("staff-group")} />
       </Tabs>
 
       <Paper className={classes.paper}>

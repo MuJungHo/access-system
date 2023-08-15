@@ -1,14 +1,10 @@
 import React, { useContext } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom"
 import { makeStyles } from '@material-ui/core/styles';
 import { AuthContext } from "../../contexts/AuthContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { LayoutContext } from "../../contexts/LayoutContext";
 import {
-  PlayArrow,
   BorderColorSharp,
-  FiberManualRecord,
-  PostAdd,
   Delete,
   AddBox
 } from '@material-ui/icons';
@@ -46,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Devices() {
   const classes = useStyles();
-  const history = useHistory();
   const { t } = useContext(LocaleContext);
   const { authedApi } = useContext(AuthContext);
   const { showModal, hideModal, setSnackBar, showWarningConfirm } = useContext(LayoutContext);
@@ -90,7 +85,7 @@ export default function Devices() {
   const handleShowEditGroupModal = (row) => {
     // console.log(row)
     showModal({
-      title: "編輯設備群組",
+      title: t("edit-thing", { thing: t("device-group") }),
       component: <GroupEditDeviceModalComponent
         group={row}
         authedApi={authedApi}
@@ -112,7 +107,7 @@ export default function Devices() {
     getDeviceGroupList()
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -120,7 +115,7 @@ export default function Devices() {
 
   const showAddGroupModal = () => {
     showModal({
-      title: "新增群組",
+      title: t("add-thing", { thing: t("device-group") }),
       component: <GroupEditDeviceModalComponent
         // group={{}}
         authedApi={authedApi}
@@ -140,7 +135,7 @@ export default function Devices() {
     getDeviceGroupList()
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -148,8 +143,8 @@ export default function Devices() {
 
   const showDeleteConfirmDialog = (row) => {
     showWarningConfirm({
-      title: '刪除設備群組',
-      component: <h6 style={{ margin: 16 }}>{`確認刪除群組 ${row.name} ?`}</h6>,
+      title: t("delete-thing", { thing: t("device-group") }),
+      component: <h6 style={{ margin: 16 }}>{t("confirm-delete-thing", { thing: row.name })}</h6>,
       onConfirm: () => handleDeleteGroup(row.groupid)
     })
   }
@@ -158,7 +153,7 @@ export default function Devices() {
     await authedApi.deleteDeviceGroup({ groupid })
     getDeviceGroupList()
     setSnackBar({
-      message: "刪除成功",
+      message: t("deleteSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -172,7 +167,6 @@ export default function Devices() {
           maxHeight="calc(100vh - 275px)"
           data={rows}
           total={total}
-          title="設備群組"
           filter={filter}
           setFilter={setFilter}
           tableActions={[

@@ -3,30 +3,15 @@ import { useHistory, useParams } from "react-router-dom"
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { LayoutContext } from "../../contexts/LayoutContext";
 import { AuthContext } from "../../contexts/AuthContext";
-import { makeStyles } from '@material-ui/core/styles';
-import Select from "../../components/Select"
 import SimpleTable from "../table/SimpleTable"
 import DetailCard from "../DetailCard";
 import CardModalComponent from "./CardModalComponent"
 import moment from 'moment'
-import {
-  // Paper,
-  // Divider,
-  // Button,
-  MenuItem
-} from '@material-ui/core'
 
 import {
   Delete,
   ExitToApp
 } from '@material-ui/icons';
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    width: '100%',
-    // padding: theme.spacing(2)
-  }
-}));
 
 export default ({
   cards = [],
@@ -36,18 +21,11 @@ export default ({
   const { authedApi } = useContext(AuthContext);
   const { setSnackBar, showModal, showWarningConfirm, hideModal } = useContext(LayoutContext);
   const { staffid } = useParams();
-  // const classes = useStyles();
-
-  // React.useEffect(() => {
-  //   (async () => {
-
-  //   })()
-  // }, [])
-
+  
   const handleShowEditCardModal = (row) => {
     // console.log(row)
     showModal({
-      title: "編輯卡片資訊",
+      title: t("edit-thing", { thing: t("card-identification") }),
       component: <CardModalComponent
         card={row}
         onSave={handleSaveCard} />
@@ -69,7 +47,7 @@ export default ({
     setCards(newCards)
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -78,7 +56,7 @@ export default ({
   const showAddCardModal = () => {
     // console.log(row)
     showModal({
-      title: "新增卡片資訊",
+      title: t("add-thing", { thing: t("card-identification") }),
       component: <CardModalComponent
         card={{}}
         onSave={handleAddCard} />
@@ -87,8 +65,8 @@ export default ({
 
   const showDeleteConfirmDialog = (row) => {
     showWarningConfirm({
-      title: '刪除卡片資訊',
-      component: <h6 style={{ margin: 16 }}>{`確認刪除卡號 ${row.card_number} 的卡片?`}</h6>,
+      title: t("delete-thing", { thing: t("card-identification") }),
+      component: <h6 style={{ margin: 16 }}>{t("confirm-delete-thing", { thing: row.card_number })}</h6>,
       onConfirm: () => handleDeleteCard(row.cardidid)
     })
   }
@@ -98,7 +76,7 @@ export default ({
     const newCards = cards.filter(card => card.cardidid !== cardidid)
     setCards(newCards)
     setSnackBar({
-      message: "刪除成功",
+      message: t("deleteSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -133,7 +111,7 @@ export default ({
     setCards(newCards)
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -142,8 +120,8 @@ export default ({
 
   return (
     <DetailCard
-      title="卡片資訊"
-      buttonText="新增"
+      title={t("card-identification")}
+      buttonText={t("add")}
       onClick={showAddCardModal}
       style={{ marginBottom: 20 }}>
       {cards.length > 0 && <SimpleTable

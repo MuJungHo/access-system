@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import Select from "../../components/Select"
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { Checkbox, FormControlLabel, TablePagination } from '@material-ui/core';
 import SearchTextField from "../common/SearchTextField"
@@ -10,8 +9,6 @@ import {
   // Divider,
   Button,
 } from '@material-ui/core'
-
-import Text from "../Text"
 
 const viewBackgroundColor = "#e5e5e5"
 
@@ -58,7 +55,6 @@ const limit = 12
 
 export default ({
   mode = "dtos",
-  leftTabIndex = 0,
   rightTabIndex = 0,
   onSave,
   isExisted = [],
@@ -69,7 +65,6 @@ export default ({
   const [items, setItems] = React.useState([])
   const [state, setState] = React.useState([])
   const [total, setTotal] = React.useState(0)
-  const [page, setPage] = React.useState(0)
   const [filter, setFilter] = React.useState({
     page: 0,
     keyword: ""
@@ -132,7 +127,7 @@ export default ({
   return (
     <div className={classes.content}>
       <div>
-        <SearchTextField style={{ flex: 'unset' }} placeholder={"搜尋關鍵字"} value={filter.keyword} onChange={e => setFilter({ ...filter, keyword: e.target.value })} />
+        <SearchTextField style={{ flex: 'unset' }} placeholder={t("search-keyword")} value={filter.keyword} onChange={e => setFilter({ ...filter, keyword: e.target.value })} />
       </div>
       <div className={classes.contentInner}>
         {
@@ -168,7 +163,7 @@ export default ({
         <Button
           style={{ float: 'right' }}
           variant="contained"
-          onClick={() => onSave(state)} color="primary">Save</Button>
+          onClick={() => onSave(state)} color="primary">{t("save")}</Button>
       </div>
     </div>
   )

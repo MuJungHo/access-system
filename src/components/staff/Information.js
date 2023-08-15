@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useHistory, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom";
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { LayoutContext } from "../../contexts/LayoutContext";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -57,7 +57,7 @@ export default ({
   const handleSaveStaff = async () => {
     await authedApi.editStaff({ data: { ...staff }, staffid })
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -65,7 +65,8 @@ export default ({
 
   return (
     <DetailCard
-      title="人員資訊"
+      title={t("staff-information")}
+      buttonText={t("save")}
       onClick={handleSaveStaff}
       style={{ marginBottom: 20 }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', padding: 8 }}>
@@ -104,7 +105,6 @@ export default ({
                   ...staff,
                   identity: e.target.value
                 })}
-                label={t("identity")}
               >
                 {
                   identities
@@ -129,7 +129,6 @@ export default ({
               ...staff,
               groups: e.target.value
             })}
-            label={t("group")}
           >
             {
               groups

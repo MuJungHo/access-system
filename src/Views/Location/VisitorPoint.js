@@ -4,15 +4,12 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { LayoutContext } from "../../contexts/LayoutContext";
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Table from "../../components/table/Table";
 import VisitorPointModalComponent from "../../components/location/VisitorPointModalComponent";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import Select from '../../components/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import moment from 'moment'
 import {
   IconButton,
+  Paper
 } from '@material-ui/core'
 import {
   BorderColorSharp,
@@ -83,7 +80,7 @@ export default function Location() {
 
   const showAddVisitorPointModal = () => {
     showModal({
-      title: "新增Visitor Point",
+      title: t("add-thing", { thing: t("visitorpoint") }),
       component: <VisitorPointModalComponent
         authedApi={authedApi}
         // visitorpoint={{}}
@@ -103,7 +100,7 @@ export default function Location() {
     getVisitorPointList()
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -111,7 +108,7 @@ export default function Location() {
 
   const handleShowEditVisitorPointModal = (row) => {
     showModal({
-      title: "編輯Visitor Point",
+      title: t("edit-thing", { thing: t("visitorpoint") }),
       component: <VisitorPointModalComponent
         authedApi={authedApi}
         visitorpoint={row}
@@ -132,7 +129,7 @@ export default function Location() {
     getVisitorPointList()
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -140,8 +137,8 @@ export default function Location() {
 
   const showDeleteConfirmDialog = (row) => {
     showWarningConfirm({
-      title: '刪除Visitor Point',
-      component: <h6 style={{ margin: 16 }}>{`確認刪除Visitor Point ${row.name} ?`}</h6>,
+      title: t("delete-thing", { thing: t("visitorpoint") }),
+      component: <h6 style={{ margin: 16 }}>{t("confirm-delete-thing", { thing: row.name })}</h6>,
       onConfirm: () => handleDeleteVisitorPoint(row.vgid)
     })
   }
@@ -150,7 +147,7 @@ export default function Location() {
     await authedApi.deleteVisitorPoint({ vgid })
     getVisitorPointList()
     setSnackBar({
-      message: "刪除成功",
+      message: t("deleteSucceed"),
       isOpen: true,
       severity: "success"
     })

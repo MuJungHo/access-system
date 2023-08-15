@@ -371,14 +371,13 @@ export default function Devices() {
           }
           columns={[
             { key: "name", label: t('name'), enable: true, sortable: true },
-            { key: "photo", label: '頭像', enable: true },
+            { key: "photo", label: t('photo'), enable: true },
             { key: "faceid", label: t('faceid'), enable: true },
             { key: "cardid", label: t('cardid'), enable: true },
             { key: "vehicleid", label: t('vehicleid'), enable: true },
             { key: "company", label: t('company'), enable: true },
             { key: "department", label: t('department'), enable: true },
             { key: "email", label: t('email'), enable: false },
-            // { key: "groups", label: t('group'), enable: false },
             { key: "idcardnumber", label: t('idcardnumber'), enable: false },
             { key: "staffnumber", label: t('staffnumber'), enable: false },
             { key: "note", label: t('note'), enable: false },

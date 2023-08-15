@@ -1,31 +1,17 @@
 import React, { useContext } from "react";
-import { useHistory, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { LayoutContext } from "../../contexts/LayoutContext";
 import { AuthContext } from "../../contexts/AuthContext";
-import { makeStyles } from '@material-ui/core/styles';
 import DetailCard from "../DetailCard";
 import SimpleTable from "../table/SimpleTable"
 import VehicleModalComponent from "./VehicleModalComponent"
 import moment from 'moment'
-import {
-  // Paper,
-  // Divider,
-  // Button,
-  MenuItem
-} from '@material-ui/core'
 
 import {
   Delete,
   ExitToApp
 } from '@material-ui/icons';
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    width: '100%',
-    // padding: theme.spacing(2)
-  }
-}));
 
 export default ({
   vehicles = [],
@@ -47,7 +33,7 @@ export default ({
   const handleEditVehicle = (row) => {
     // console.log(row)
     showModal({
-      title: "編輯車輛資訊",
+      title: t("edit-thing", { thing: t("vehicle-identification") }),
       component: <VehicleModalComponent
         vehicle={row}
         onSave={handleSaveVehicle} />
@@ -57,7 +43,7 @@ export default ({
   const showAddVehicleModal = () => {
     // console.log(row)
     showModal({
-      title: "新增車輛資訊",
+      title: t("add-thing", { thing: t("vehicle-identification") }),
       component: <VehicleModalComponent
         vehicle={{}}
         onSave={handleDoAddVehicle} />
@@ -90,7 +76,7 @@ export default ({
     setVehicles(newVehicles)
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -114,7 +100,7 @@ export default ({
     setVehicles(newVehicles)
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -122,8 +108,8 @@ export default ({
 
   const handleDeleteVehicle = (row) => {
     showWarningConfirm({
-      title: '刪除車輛資訊',
-      component: <h6 style={{ margin: 16 }}>{`確認刪除車牌 ${row.vin} 的車輛?`}</h6>,
+      title: t("delete-thing", { thing: t("vehicle-identification") }),
+      component: <h6 style={{ margin: 16 }}>{t("confirm-delete-thing", { thing: row.vin })}</h6>,
       onConfirm: () => handleDoDeleteVehicle(row.vehicleidid)
     })
   }
@@ -133,7 +119,7 @@ export default ({
     const newVehicles = vehicles.filter(vehicle => vehicle.vehicleidid !== vehicleidid)
     setVehicles(newVehicles)
     setSnackBar({
-      message: "刪除成功",
+      message: t("deleteSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -141,8 +127,8 @@ export default ({
 
   return (
     <DetailCard
-      title="車輛資訊"
-      buttonText="新增"
+      title={t("vehicle-identification")}
+      buttonText={t("add")}
       onClick={showAddVehicleModal}
       style={{ marginBottom: 20 }}>
       {vehicles.length > 0 && <SimpleTable

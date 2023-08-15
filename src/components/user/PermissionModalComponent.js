@@ -116,7 +116,7 @@ export default ({ onSave, permission, user }) => {
         <Button
           style={{ float: 'right' }}
           variant="contained"
-          onClick={() => onSave(state, user.accountid)} color="primary">Save</Button>
+          onClick={() => onSave(state, user.accountid)} color="primary">{t("save")}</Button>
       </div>
     </div>
   )

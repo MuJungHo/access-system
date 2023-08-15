@@ -149,7 +149,7 @@ export default ({
         </Select>
       </div>
       <div className={classes.info}>
-        <SearchTextField style={{ flex: 'unset' }} placeholder={"搜尋關鍵字"} value={filter.keyword} onChange={e => setFilter({ ...filter, keyword: e.target.value })} />
+        <SearchTextField style={{ flex: 'unset' }} placeholder={t("search-keyword")} value={filter.keyword} onChange={e => setFilter({ ...filter, keyword: e.target.value })} />
       </div>
       <div className={classes.contentInner}>
         {
@@ -184,7 +184,7 @@ export default ({
         <Button
           style={{ float: 'right' }}
           variant="contained"
-          onClick={() => onSave(state, group)} color="primary">Save</Button>
+          onClick={() => onSave(state, group)} color="primary">{t("save")}</Button>
       </div>
     </div>
   )

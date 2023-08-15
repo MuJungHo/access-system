@@ -1,18 +1,16 @@
-import React, { useRef } from "react";
+import React, { useRef, useContext } from "react";
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  // Paper,
-  // Divider,
-  Button,
-  IconButton,
-  Typography,
   ButtonBase
 } from '@material-ui/core'
 
 import {
   Delete,
 } from '@material-ui/icons';
+
+import { LocaleContext } from "../../contexts/LocaleContext";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -55,7 +53,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default ({ image = "", onChange = () => { }, onClean = () => { }, style }) => {
-  const fileRef = useRef()
+  const fileRef = useRef();
+  const { t } = useContext(LocaleContext);
 
   const classes = useStyles();
   const handleFileRead = async (event) => {
@@ -121,7 +120,7 @@ export default ({ image = "", onChange = () => { }, onClean = () => { }, style }
               {/*  */}
             </React.Fragment>
             :
-            "上傳圖片"
+            t("upload-image")
         }
       </ButtonBase>
     </div>)

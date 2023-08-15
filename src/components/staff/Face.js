@@ -1,19 +1,13 @@
 import React, { useContext } from "react";
-import { useHistory, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { LocaleContext } from "../../contexts/LocaleContext";
 import { LayoutContext } from "../../contexts/LayoutContext";
 import { AuthContext } from "../../contexts/AuthContext";
-import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment'
 import DetailCard from "../DetailCard";
 import SimpleTable from "../table/SimpleTable"
 import FaceModalComponent from "./FaceModalComponent"
-import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import {
-  // Paper,
-  // Divider,
-  // Button,
-  // MenuItem,
   Avatar,
 } from '@material-ui/core'
 
@@ -21,12 +15,6 @@ import {
   Delete,
   ExitToApp
 } from '@material-ui/icons';
-
-// const useStyles = makeStyles((theme) => ({
-//   paper: {
-//     width: '100%',
-//   }
-// }));
 
 export default ({
   faces = [],
@@ -54,7 +42,7 @@ export default ({
 
   const showAddFaceModal = () => {
     showModal({
-      title: "新增頭像資訊",
+      title: t("add-thing", { thing: t("card-identification") }),
       component: <FaceModalComponent
         face={{}}
         FRSDevices={FRSDevices}
@@ -90,7 +78,7 @@ export default ({
     setFaces(newFaces)
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -98,8 +86,8 @@ export default ({
 
   const showDeleteFaceConfirm = (row) => {
     showWarningConfirm({
-      title: '刪除頭像資訊',
-      component: <h6 style={{ margin: 16 }}>{`確認刪除卡號 ${row.cardnumber} 頭像資訊？`}</h6>,
+      title: t("delete-thing", { thing: t("face-identification") }),
+      component: <h6 style={{ margin: 16 }}>{t("confirm-delete-thing", { thing: row.cardnumber })}</h6>,
       onConfirm: () => handleDeleteFace(row.faceidid)
     })
   }
@@ -109,7 +97,7 @@ export default ({
     const newFaces = faces.filter(card => card.faceidid !== faceidid)
     setFaces(newFaces)
     setSnackBar({
-      message: "刪除成功",
+      message: t("deleteSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -119,7 +107,7 @@ export default ({
   const handleEditFace = (row) => {
     // console.log(row)
     showModal({
-      title: "編輯頭像資訊",
+      title: t("edit-thing", { thing: t("face-identification") }),
       component: <FaceModalComponent
         face={row}
         FRSDevices={FRSDevices}
@@ -144,7 +132,7 @@ export default ({
     setFaces(newFaces)
     hideModal()
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
@@ -152,8 +140,8 @@ export default ({
 
   return (
     <DetailCard
-      title="頭像資訊"
-      buttonText="新增"
+      title={t("face-identification")}
+      buttonText={t("add")}
       onClick={showAddFaceModal}
       style={{ marginBottom: 20 }}>
       {faces.length > 0 && <SimpleTable
