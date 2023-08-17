@@ -35,14 +35,16 @@ function LayoutProvider({ children, ...rest }) {
     title = "",
     component = <></>,
     maxWidth = "sm",
-    fullWidth = false
-   }) => {
+    fullWidth = false,
+    fullScreen = false
+  }) => {
     setModal({
       title,
       component,
       maxWidth,
       fullWidth,
-      isOpen: true
+      isOpen: true,
+      fullScreen
     })
   }
 
@@ -103,6 +105,7 @@ function LayoutProvider({ children, ...rest }) {
       onClose={hideModal}
       open={modal.isOpen}
       fullWidth={modal.fullWidth}
+      fullScreen={modal.fullScreen}
       maxWidth={modal.maxWidth}>
       <DialogTitle onClose={hideModal}>
         {modal.title}

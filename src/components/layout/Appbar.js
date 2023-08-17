@@ -8,14 +8,13 @@ import { makeStyles } from '@material-ui/core/styles';
 // import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import LanguageSharpIcon from '@material-ui/icons/LanguageSharp';
+import LiveTvIcon from '@material-ui/icons/LiveTv';
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import Badge from '@material-ui/core/Badge';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -25,6 +24,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import DoneIcon from '@material-ui/icons/Done';
 import { palette } from '../../customTheme'
+import LiveStreamComponent from "../live/LiveStreamComponent"
 
 const drawerWidth = 240;
 
@@ -193,8 +193,8 @@ const Appbar = ({ open }) => {
   const history = useHistory();
 
   const md5 = require("md5");
-  const { logout, token } = useContext(AuthContext);
-  const { setSnackBar } = useContext(LayoutContext)
+  const { logout, token, authedApi } = useContext(AuthContext);
+  const { setSnackBar, showModal } = useContext(LayoutContext)
   const { locale, changeLocale } = useContext(LocaleContext);
   const [wsData, setWsData] = React.useState({})
   const [anchor, setAnchor] = React.useState(null);
@@ -265,6 +265,13 @@ const Appbar = ({ open }) => {
     }
   }, [wsData])
   // console.log(events)
+  const handleShowLiveModal = () => {
+    showModal({
+      title: "Live",
+      fullScreen: true,
+      component: <LiveStreamComponent authedApi={authedApi} />
+    })
+  }
   return (
     <AppBar
       position="fixed"
@@ -276,6 +283,9 @@ const Appbar = ({ open }) => {
         <Paper className={classes.paper}>
           <PathComponent />
           <div>
+            <IconButton onClick={handleShowLiveModal}>
+              <LiveTvIcon />
+            </IconButton>
             <IconButton onClick={e => setEventAnchor(e.currentTarget)}>
               <Badge overlap="rectangular" badgeContent={events.length} color="error">
                 <NotificationsIcon />

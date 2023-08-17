@@ -15,7 +15,6 @@ import Schedule from '../../components/device/Schedule';
 import DeviceConfiguration from '../../components/device/DeviceConfiguration';
 import Child from '../../components/device/Child';
 import Camera from '../../components/device/Camera';
-import Player from '../../components/device/Player';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +32,7 @@ const config = {
   "FRD": ["DoorControl", "Schedule", "Camera"],
   "ELEVC": ["Schedule", "Camera"],
   "ELEVF": [],
-  "VMSIPC": ["Player"],
+  "VMSIPC": [],
   "PMSG": ["Camera"]
 }
 
@@ -129,6 +128,5 @@ export default () => {
         setChildDevices={setChildDevices}
         deviceConfig={deviceConfig} />}
       {config[deviceConfig.Category]?.includes("Camera") && <Camera reader_id={deviceid} camerabinds={camerabinds} setCamerabinds={setCamerabinds}/>}
-      {config[deviceConfig.Category]?.includes("Player") && <Player id={deviceConfig.DeviceId} />}
     </div>)
 }
