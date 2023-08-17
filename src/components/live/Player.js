@@ -209,7 +209,12 @@ const Player = ({ onDelete, isSelected, player, handleCheckPlayer }) => {
       }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <span style={{ flex: 1 }}>{player.device.name}</span>
-        <IconButton style={{ color: '#fff' }} onClick={() => onDelete()}><Delete /></IconButton>
+        <IconButton
+          style={{ color: '#fff' }}
+          onClick={(e) => {
+            e.stopPropagation()
+            onDelete()
+          }}><Delete /></IconButton>
       </div>
       <video
         width="100%"

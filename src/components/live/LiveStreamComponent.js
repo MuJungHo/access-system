@@ -92,6 +92,7 @@ export default ({ authedApi }) => {
   const [selectedDevice, setSelectedDevice] = React.useState({ _id: "" })
   const [leftItems, setLeftItems] = React.useState([])
 
+  // console.log(selectedDevice)
   React.useEffect(() => {
     getDeviceList()
   }, [])
