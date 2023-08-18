@@ -227,7 +227,7 @@ const Appbar = ({ open }) => {
     ws.onclose = () => console.log('event ws closed');
     ws.onmessage = e => {
       const message = JSON.parse(e.data);
-      setWsData(message)
+      //setWsData(message)
     };
 
     return () => {
@@ -286,11 +286,11 @@ const Appbar = ({ open }) => {
             <IconButton onClick={handleShowLiveModal}>
               <LiveTvIcon />
             </IconButton>
-            <IconButton onClick={e => setEventAnchor(e.currentTarget)}>
+            {/* <IconButton onClick={e => setEventAnchor(e.currentTarget)}>
               <Badge overlap="rectangular" badgeContent={events.length} color="error">
                 <NotificationsIcon />
               </Badge>
-            </IconButton>
+            </IconButton> */}
             <IconButton onClick={e => setAnchor(e.currentTarget)}>
               <LanguageSharpIcon />
             </IconButton>

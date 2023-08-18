@@ -8,19 +8,33 @@ import {
   Button,
   TextField,
   MenuItem,
-  TablePagination
+  TablePagination,
+  ButtonGroup
 } from '@material-ui/core'
-import VideocamIcon from '@material-ui/icons/Videocam';
+import {
+  Videocam,
+  Notifications,
+  Dashboard,
+  GridOff,
+  BorderAllRounded,
+  LooksOne,
+  FiberManualRecord,
+  CropDin,
+  CheckBoxOutlineBlankTwoTone
+} from '@material-ui/icons';
 import Text from "../Text"
 import SearchTextField from '../common/SearchTextField'
+import Tab from '../common/Tab';
+import Tabs from "../common/Tabs"
 import { LocaleContext } from "../../contexts/LocaleContext";
-import { AuthContext } from "../../contexts/AuthContext";
 import { palette } from "../../customTheme";
+import moment from "moment";
 
 const viewBackgroundColor = "#e5e5e5"
 
 const leftLimit = 7
-const useStyles = makeStyles((theme) => ({
+
+const useStyles = makeStyles(() => ({
   paper: {
     width: '100%',
     // padding: theme.spacing(2)
@@ -29,12 +43,20 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     height: 'calc(100vh - 60px)',
   },
-  contentInnerLeft: {
+  right: {
+    flex: 1,
     backgroundColor: viewBackgroundColor,
     display: 'flex',
-    flex: 1,
+    flexDirection: 'column',
+  },
+  contentRightTop: {
+    paddingTop: 12,
+    paddingLeft: 12
+  },
+  contentInnerRight: {
+    display: 'flex',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   contentInnerItem: {
     backgroundColor: '#fff',
@@ -45,8 +67,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 8,
     borderRadius: 5
   },
-  leftContent: {
+  left: {
     width: 350,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  leftContent: {
+    flex: 1,
     backgroundColor: '#fff',
     padding: 20,
     display: 'flex',
@@ -58,8 +85,8 @@ const useStyles = makeStyles((theme) => ({
   leftContentInner: {
     backgroundColor: viewBackgroundColor,
     // height: '100%',
+    //padding: 12,
     flex: 1,
-    marginTop: 20
   },
   leftContentInnerItem: {
     height: 50,
@@ -74,13 +101,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default ({ authedApi }) => {
   const classes = useStyles();
+  const md5 = require("md5");
+  const token = localStorage.getItem('token')
   const { t } = React.useContext(LocaleContext);
+  const [leftTabIndex, setLeftTabIndex] = React.useState(0);
   const [playerlist, setPlayerlist] = React.useState([
     { playerid: 'player1', device: { _id: "" } },
     { playerid: 'player2', device: { _id: "" } },
     { playerid: 'player3', device: { _id: "" } },
     { playerid: 'player4', device: { _id: "" } },
   ])
+  const [wsData, setWsData] = React.useState({})
+
+  const [isGrid, setGrid] = React.useState(true)
 
   const [leftFilter, setLeftFilter] = React.useState({
     page: 0,
@@ -91,11 +124,64 @@ export default ({ authedApi }) => {
   const [selectedPlayer, setSelectedPlayer] = React.useState({ playerid: 'player1', device: { _id: "" } })
   const [selectedDevice, setSelectedDevice] = React.useState({ _id: "" })
   const [leftItems, setLeftItems] = React.useState([])
+  const [events, setEvents] = React.useState([])
 
-  // console.log(selectedDevice)
   React.useEffect(() => {
+    const timestamp = Date.now()
+    const sign = md5(timestamp + '#' + token)
+    const wsuri = `ws://${process.env.REACT_APP_DOMAIN}/cgi-bin/message?sign=${sign}&timestamp=${timestamp}`
+    let ws = new WebSocket(wsuri);
+    ws.onopen = () => console.log('event ws opened');
+    ws.onclose = () => console.log('event ws closed');
+    ws.onmessage = e => {
+      const message = JSON.parse(e.data);
+      setWsData(message)
+    };
+
     getDeviceList()
+
+    return () => {
+      ws.close();
+    }
   }, [])
+
+  React.useEffect(() => {
+    if (wsData['Event']) {
+      setEvents(prevEvents => {
+        const prevEvents_ = [...prevEvents]
+        // if (wsData['Event'].Level === 3) 
+        prevEvents_.push({ ...wsData['Event'] })
+        return prevEvents_
+      })
+    }
+    if (wsData['DeviceStatus']) {
+      setLeftItems(prevRows => prevRows.map(row => {
+        const device = wsData['DeviceStatus'].find(ws => ws.DeviceID === row.deviceid) || {}
+        const status = device.Status
+        return {
+          ...row,
+          status
+        }
+      }))
+    }
+  }, [wsData])
+
+  React.useEffect(() => {
+    setSelectedPlayer({ playerid: "player1", device: { _id: "" } })
+    setSelectedDevice({ _id: "" })
+    if (isGrid) {
+      setPlayerlist([
+        { playerid: 'player1', device: { _id: "" } },
+        { playerid: 'player2', device: { _id: "" } },
+        { playerid: 'player3', device: { _id: "" } },
+        { playerid: 'player4', device: { _id: "" } },
+      ])
+    } else {
+      setPlayerlist([
+        { playerid: 'player1', device: { _id: "" } },
+      ])
+    }
+  }, [isGrid])
 
   const handleDeletePlayer = (playerid) => {
     let newPlayList = [...playerlist]
@@ -114,6 +200,7 @@ export default ({ authedApi }) => {
       return {
         ...data,
         _id: data.deviceid,
+        status: ''
       }
     })
     setLeftTotal(total)
@@ -135,31 +222,11 @@ export default ({ authedApi }) => {
     setSelectedDevice(item.device)
   }
 
-  return (
-    <div className={classes.content}>
-      <div className={classes.contentInnerLeft}>
-        {
-          playerlist.map(player =>
-            <Player
-              isSelected={player.playerid === selectedPlayer.playerid}
-              key={player.playerid}
-              player={player}
-              handleCheckPlayer={() => handleCheckPlayer(player)}
-              onDelete={() => handleDeletePlayer(player.playerid)}
-            />)
-        }
-      </div>
-      <Paper className={classes.leftContent}>
+  const DeviceList = () => {
+    return (
+      <React.Fragment>
         <SearchTextField style={{ flex: 'unset' }} placeholder={t("search-keyword")} />
-        {/* {leftTabIndex === 0 && <MuiSelect
-          onChange={e => handleChangeLeftFilter('groupid', e.target.value)}
-          style={{ marginTop: 20 }}
-          value={leftFilter.groupid || ""}
-          label="群組 ">
-          {
-            leftSelectOptions.map(item => <MenuItem key={item._id} value={item._id}>{item.name}</MenuItem>)
-          }
-        </MuiSelect>} */}
+        <div style={{ height: 20 }}></div>
         <div className={classes.leftContentInner}>
           {
             leftItems.map(item => (
@@ -168,8 +235,9 @@ export default ({ authedApi }) => {
                 className={classes.leftContentInnerItem}
                 onClick={() => handleCheckDevice(item)}
                 key={item._id}>
-                <VideocamIcon style={{ margin: 10 }} />
-                {item.name}
+                <FiberManualRecord style={{ margin: 10, color: item.status === "on" ? palette.secondary.main : palette.error.main }} />
+                <span style={{ flex: 1 }}>{item.name}</span>
+                <img src={`data:image/png;base64,${item.snapshot}`} style={{ height: 30, marginRight: 8 }} />
               </div>
             ))
           }
@@ -182,7 +250,80 @@ export default ({ authedApi }) => {
           page={leftFilter.page}
           onPageChange={(event, newPage) => { }}
         />
-      </Paper>
+      </React.Fragment>)
+  }
+
+  const EventList = () => {
+
+    return (
+      <div className={classes.leftContentInner}>
+        {
+          events.map((event, i) =>
+            <div style={{
+              color: event.Level === 3 ? palette.error.main : '',
+              margin: 8
+            }} key={i}><h7 >
+                {`
+                ${moment(event.DateTime).format('YYYY-MM-DD hh:mm:ss')}
+                ${event.Identity}
+                ${event.Name}
+                ${event.camerabind && `( ${event.camerabind[0].name} )`}
+              `}
+              </h7></div>)
+        }
+      </div>
+
+    )
+  }
+
+  return (
+    <div className={classes.content}>
+      <div className={classes.left}>
+        <Tabs
+          value={leftTabIndex}
+          TabIndicatorProps={{ style: { background: 'white' } }}
+          onChange={(event, newValue) => {
+            setLeftTabIndex(newValue);
+          }}
+          variant="fullWidth"
+          textColor="primary"
+        >
+          <Tab icon={<Videocam />} />
+          <Tab icon={<Notifications />} />
+        </Tabs>
+        <Paper className={classes.leftContent}>
+          {
+            {
+              0: <DeviceList />,
+              1: <EventList />
+            }[leftTabIndex]
+          }
+        </Paper>
+      </div>
+      <div className={classes.right}>
+        <div className={classes.contentRightTop}>
+          <ButtonGroup
+            // color="primary"
+            variant="outlined"
+            size="large">
+            <Button onClick={() => setGrid(true)}><BorderAllRounded color={isGrid ? 'primary' : 'default'} /></Button>
+            <Button onClick={() => setGrid(false)}><CheckBoxOutlineBlankTwoTone color={isGrid ? 'default' : 'primary'} /></Button>
+          </ButtonGroup>
+        </div>
+        <div className={classes.contentInnerRight}>
+          {
+            playerlist.map(player =>
+              <Player
+                isSelected={player.playerid === selectedPlayer.playerid}
+                key={player.playerid}
+                player={player}
+                isGrid={isGrid}
+                handleCheckPlayer={() => handleCheckPlayer(player)}
+                onDelete={() => handleDeletePlayer(player.playerid)}
+              />)
+          }
+        </div>
+      </div>
     </div>
   )
 }

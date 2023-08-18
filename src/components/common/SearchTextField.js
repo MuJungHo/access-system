@@ -40,7 +40,8 @@ export default withStyles(theme => ({
       </InputAdornment>
     )
   }}
-  {...props} inputProps={{
+  {...props}
+  inputProps={{
     style: {
       ...props.style,
       fontSize: '1rem',

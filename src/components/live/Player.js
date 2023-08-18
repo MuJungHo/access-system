@@ -1,44 +1,54 @@
 import React, { useRef, useContext } from 'react'
+import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 
 import {
   Delete,
-  AddBox
+  AddBox,
+  LiveTv
 } from '@material-ui/icons';
 
 import {
   IconButton,
   Paper
 } from '@material-ui/core'
+import { palette } from "../../customTheme";
 
 const useStyles = makeStyles((theme) => ({
-  content: {
-    paddingLeft: 12,
-    paddingRight: 12,
+  player: {
+    paddingLeft: 18,
+    paddingRight: 18,
     paddingBottom: 12,
-    height: 340,
-    width: 512,
     marginTop: 12,
     marginLeft: 12,
     marginRight: 12,
     borderRadius: 5,
+    '& svg': {
+      width: '100%'
+    }
   },
+  grid: {
+    height: 315,
+    width: 490,
+  },
+  full: {
+    height: 'calc(100vh - 135px)',
+    width: '100%',
+  },
+  empty: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 }));
-const EmptyPlayer = ({ handleCheckPlayer, isSelected }) => {
-  const classes = useStyles();
-  return (
-    <div
-      onClick={handleCheckPlayer}
-      style={{
-        cursor: 'pointer',
-        border: `1px solid ${isSelected ? 'red' : 'rgba(0, 0, 0, 0.54)'}`
-      }}
-      className={classes.content}>
-      {/* <IconButton onClick={}><AddBox /></IconButton> */}
-    </div>)
-}
 
-const Player = ({ onDelete, isSelected, player, handleCheckPlayer }) => {
+const Player = ({
+  onDelete,
+  isSelected,
+  player,
+  handleCheckPlayer,
+  isGrid
+}) => {
   // console.log(id)
   const classes = useStyles();
   const videoRef = useRef()
@@ -195,17 +205,37 @@ const Player = ({ onDelete, isSelected, player, handleCheckPlayer }) => {
     }
   }, [player.device._id])
 
-  if (player.device._id === "") return <EmptyPlayer isSelected={isSelected} handleCheckPlayer={handleCheckPlayer} />
+  const EmptyPlayer = () => {
+    const classes = useStyles();
+    return (
+      <div
+        onClick={handleCheckPlayer}
+        style={{
+          cursor: 'pointer',
+          border: `1px solid ${isSelected ? palette.primary.main : 'rgba(0, 0, 0, 0.23)'}`
+        }}
+
+        className={clsx(classes.player, classes.empty, {
+          [classes.grid]: isGrid,
+          [classes.full]: !isGrid,
+        })}>
+        <LiveTv style={{ width: "60%", height: "60%", margin: 'auto', color: isSelected ? palette.primary.main : 'rgba(0, 0, 0, 0.23)' }} />
+      </div>)
+  }
+  if (player.device._id === "") return <EmptyPlayer />
 
   return (
     <div
-      className={classes.content}
+      className={clsx(classes.player, {
+        [classes.grid]: isGrid,
+        [classes.full]: !isGrid
+      })}
       onClick={handleCheckPlayer}
       style={{
         color: '#fff',
         cursor: 'pointer',
         backgroundColor: '#000',
-        border: `1px solid ${isSelected ? 'red' : '#fff'}`
+        border: `1px solid ${isSelected ? palette.primary.main : '#fff'}`
       }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <span style={{ flex: 1 }}>{player.device.name}</span>
@@ -214,7 +244,9 @@ const Player = ({ onDelete, isSelected, player, handleCheckPlayer }) => {
           onClick={(e) => {
             e.stopPropagation()
             onDelete()
-          }}><Delete /></IconButton>
+          }}>
+          <Delete />
+        </IconButton>
       </div>
       <video
         width="100%"
