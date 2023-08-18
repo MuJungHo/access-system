@@ -306,8 +306,8 @@ export default ({ authedApi }) => {
             // color="primary"
             variant="outlined"
             size="large">
-            <Button onClick={() => setGrid(true)}><BorderAllRounded color={isGrid ? 'primary' : 'default'} /></Button>
-            <Button onClick={() => setGrid(false)}><CheckBoxOutlineBlankTwoTone color={isGrid ? 'default' : 'primary'} /></Button>
+            <Button onClick={() => setGrid(true)}><BorderAllRounded color={isGrid ? 'primary' : 'inherit'} /></Button>
+            <Button onClick={() => setGrid(false)}><CheckBoxOutlineBlankTwoTone color={isGrid ? 'inherit' : 'primary'} /></Button>
           </ButtonGroup>
         </div>
         <div className={classes.contentInnerRight}>

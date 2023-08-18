@@ -5,7 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Delete,
   AddBox,
-  LiveTv
+  LiveTv,
+  Stop,
+  PlayArrow,
+  CropFree
 } from '@material-ui/icons';
 
 import {
@@ -54,28 +57,33 @@ const Player = ({
   const videoRef = useRef()
   const wsRef = useRef()
   const md5 = require("md5");
-  const [bitrate, setBitrate] = React.useState("")
-  const [fname, setFname] = React.useState("")
+  const [isPlaying, setPlaying] = React.useState(true)
+  const [bitrate, setBitrate] = React.useState(`000.000 Kbps, 00 Fps`)
+  const [fname, setFname] = React.useState('Time Offset : 0')
+
+  var sourceBuffer, mediaSource, video;
+  var queue = [];
+  var new_codec_string;
+  var old_codec_string;
+  const token = localStorage.getItem('token')
+  const timestamp = Date.now()
+  const sign = md5(timestamp + '#' + token)
 
   React.useEffect(() => {
     if (player.device._id === "") return
+    InitWebSocket()
+    return () => {
+      wsRef.current.close();
+    }
+  }, [player.device._id])
 
-    var ws = wsRef.current
-    var sourceBuffer, mediaSource, video;
-    var queue = [];
-    var new_codec_string;
-    var old_codec_string;
-    const token = localStorage.getItem('token')
-    const timestamp = Date.now()
-    const sign = md5(timestamp + '#' + token)
-    // ws = new WebSocket('wss://' + process.env.REACT_APP_DOMAIN + '/cgi-bin/live?device=20&timestamp=1622706598604&sign=fe75a05683e151dc52d7551d81d50b8c');
-
-    ws = new WebSocket(`ws://${process.env.REACT_APP_DOMAIN}/cgi-bin/live?device=${player.device._id}&timestamp=${timestamp}&sign=${sign}`);
-    ws.binaryType = "arraybuffer";
-    ws.onopen = () => console.log('player ws opened');
-    ws.onclose = () => console.log('player ws closed');
-    ws.onmessage = evt => {
-
+  const InitWebSocket = () => {
+    wsRef.current = new WebSocket(`ws://${process.env.REACT_APP_DOMAIN}/cgi-bin/live?device=${player.device._id}&timestamp=${timestamp}&sign=${sign}`);
+    wsRef.current.binaryType = "arraybuffer";
+    wsRef.current.onopen = () => console.log('player ws opened');
+    wsRef.current.onclose = () => console.log('player ws closed');
+    wsRef.current.onmessage = evt => {
+      setPlaying(true)
       if (evt.data.byteLength > 128) {
 
         var ext_data = new DataView(evt.data, evt.data.byteLength - 32, 32);
@@ -111,7 +119,7 @@ const Player = ({
 
         var subdata = new DataView(evt.data, 0, evt.data.byteLength - 128);
 
-        setBitrate(vodeo_type + ', ' + subdata.byteLength / 1000 + ' Kbps' + ', ' + fps + "Fps, " + video_width + "x" + video_height + ", codecstring=" + new_codec_string)
+        setBitrate(`${subdata.byteLength / 1000} Kbps, ${fps}Fps`)
 
         if (old_codec_string != new_codec_string) {
 
@@ -129,7 +137,6 @@ const Player = ({
             queue.push(subdata);
 
           } else {
-
             try {
               sourceBuffer.appendBuffer(subdata);
             }
@@ -142,69 +149,66 @@ const Player = ({
       }
 
     };
+  }
+  const InitMediaSource = () => {
 
-    const InitMediaSource = () => {
+    if (mediaSource != null) {
 
-      if (mediaSource != null) {
-
-        if (sourceBuffer != null) {
-          mediaSource.removeSourceBuffer(sourceBuffer);
-          sourceBuffer = null;
-        }
-
-        mediaSource = null;
+      if (sourceBuffer != null) {
+        mediaSource.removeSourceBuffer(sourceBuffer);
+        sourceBuffer = null;
       }
 
-      var mimeCodec = 'video/mp4; codecs="' + old_codec_string + '"';
-      // console.log(old_codec_string + '=' + MediaSource.isTypeSupported(mimeCodec));
-      if (MediaSource.isTypeSupported(mimeCodec)) {
-        // Create Media Source
-        mediaSource = new MediaSource();
+      mediaSource = null;
+    }
 
-        // Get video element
-        video = videoRef.current;
-        video.src = window.URL.createObjectURL(mediaSource);
-        video.muted = true;
+    var mimeCodec = 'video/mp4; codecs="' + old_codec_string + '"';
+    // console.log(old_codec_string + '=' + MediaSource.isTypeSupported(mimeCodec));
+    if (MediaSource.isTypeSupported(mimeCodec)) {
+      // Create Media Source
+      mediaSource = new MediaSource();
 
-        mediaSource.addEventListener('sourceopen', function (_) {
-          sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
-          sourceBuffer.mode = 'sequence';
+      // Get video element
+      video = videoRef.current;
+      video.src = window.URL.createObjectURL(mediaSource);
+      // video.muted = true;
 
-          sourceBuffer.addEventListener('updateend', function (_) {
+      mediaSource.addEventListener('sourceopen', function (_) {
+        sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+        sourceBuffer.mode = 'sequence';
 
-            //  console.log('updateend: ' + mediaSource.readyState);
+        sourceBuffer.addEventListener('updateend', function (_) {
 
-            if (sourceBuffer.timestampOffset - video.currentTime > 2) {
-              video.currentTime = sourceBuffer.timestampOffset;
-              //     console.log("adjust offset");		//for latency to high
+          //  console.log('updateend: ' + mediaSource.readyState);
+
+          if (sourceBuffer.timestampOffset - video.currentTime > 2) {
+            video.currentTime = sourceBuffer.timestampOffset;
+            //     console.log("adjust offset");		//for latency to high
+          }
+
+          setFname('Time Offset : ' + video.currentTime)
+
+          if (queue.length > 0 && !sourceBuffer.updating) {
+
+            try {
+              sourceBuffer.appendBuffer(queue.shift());
             }
-
-            setFname('Time Offset : ' + video.currentTime)
-
-            if (queue.length > 0 && !sourceBuffer.updating) {
-
-              try {
-                sourceBuffer.appendBuffer(queue.shift());
-              }
-              catch (e) {
-                console.log(e);
-              }
+            catch (e) {
+              console.log(e);
             }
+          }
 
-            if (video.pause) {
+          if (video.pause) {
+            setTimeout(function () {
               video.play();
-            }
+            }, 150)
+          }
 
-          });
+        });
 
-        }, false);
-      }
+      }, false);
     }
-    return () => {
-      ws.close();
-    }
-  }, [player.device._id])
-
+  }
   const EmptyPlayer = () => {
     const classes = useStyles();
     return (
@@ -212,7 +216,7 @@ const Player = ({
         onClick={handleCheckPlayer}
         style={{
           cursor: 'pointer',
-          border: `1px solid ${isSelected ? palette.primary.main : 'rgba(0, 0, 0, 0.23)'}`
+          border: `2px solid ${isSelected ? palette.primary.main : 'rgba(0, 0, 0, 0.23)'}`
         }}
 
         className={clsx(classes.player, classes.empty, {
@@ -235,10 +239,10 @@ const Player = ({
         color: '#fff',
         cursor: 'pointer',
         backgroundColor: '#000',
-        border: `1px solid ${isSelected ? palette.primary.main : '#fff'}`
+        border: `2px solid ${isSelected ? palette.primary.main : 'rgba(0, 0, 0, 0.23)'}`
       }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <span style={{ flex: 1 }}>{player.device.name}</span>
+        <span style={{ flex: 1 }}>{`${player.device.name}/${bitrate}/${fname}`}</span>
         <IconButton
           style={{ color: '#fff' }}
           onClick={(e) => {
@@ -247,10 +251,36 @@ const Player = ({
           }}>
           <Delete />
         </IconButton>
+        {
+          isPlaying
+            ?
+            <IconButton
+              style={{ color: '#fff' }}
+              onClick={(e) => {
+                e.stopPropagation()
+                wsRef.current.close()
+                setPlaying(false)
+              }}>
+              <Stop />
+            </IconButton>
+            :
+            <IconButton
+              style={{ color: '#fff' }}
+              onClick={(e) => {
+                e.stopPropagation()
+                InitWebSocket()
+                setPlaying(true)
+              }}>
+              <PlayArrow />
+            </IconButton>
+        }
+
+
       </div>
       <video
         width="100%"
         height="auto"
+        muted
         ref={videoRef}
         style={{ margin: 'auto', display: 'block' }}
       />
