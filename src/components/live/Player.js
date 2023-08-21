@@ -4,16 +4,16 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import {
   Delete,
-  AddBox,
+  // AddBox,
   LiveTv,
   Stop,
   PlayArrow,
-  CropFree
+  // CropFree
 } from '@material-ui/icons';
 
 import {
   IconButton,
-  Paper
+  // Paper
 } from '@material-ui/core'
 import { palette } from "../../customTheme";
 
@@ -22,20 +22,17 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 18,
     paddingRight: 18,
     paddingBottom: 12,
-    marginTop: 12,
-    marginLeft: 12,
-    marginRight: 12,
-    borderRadius: 5,
+    // borderRadius: 5,
     '& svg': {
       width: '100%'
     }
   },
   grid: {
-    height: 315,
-    width: 490,
+    // height: 315,
+    width: '50%',
   },
   full: {
-    height: 'calc(100vh - 135px)',
+    // height: 'calc(100vh - 135px)',
     width: '100%',
   },
   empty: {
@@ -90,8 +87,8 @@ const Player = ({
 
         var fps = ext_data.getUint8(0);
 
-        var video_width = ext_data.getUint8(1) * 256 + ext_data.getUint8(2);
-        var video_height = ext_data.getUint8(3) * 256 + ext_data.getUint8(4);
+        // var video_width = ext_data.getUint8(1) * 256 + ext_data.getUint8(2);
+        // var video_height = ext_data.getUint8(3) * 256 + ext_data.getUint8(4);
         var vodeo_type;
 
         if (ext_data.getUint8(5) == 3)

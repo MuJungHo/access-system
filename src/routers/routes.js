@@ -7,6 +7,7 @@ import User from '../Views/User'
 import Log from '../Views/Log'
 import Access from '../Views/Access'
 import Setting from '../Views/Setting'
+import Live from '../Views/Live'
 
 import Device from '../Views/Device/Item'
 import CardStatus from '../Views/Device/CardStatus'
@@ -26,6 +27,7 @@ import StorageIcon from '@material-ui/icons/Storage';
 import SubtitlesIcon from '@material-ui/icons/Subtitles';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import SettingsIcon from '@material-ui/icons/Settings';
+import LiveTvIcon from '@material-ui/icons/LiveTv';
 
 const routes = [
   {
@@ -73,6 +75,12 @@ const routes = [
     path: '/access',
     component: Access,
     icon: SubtitlesIcon,
+    siderlink: true
+  },
+  {
+    path: '/live',
+    component: Live,
+    icon: LiveTvIcon,
     siderlink: true
   },
   {

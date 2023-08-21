@@ -118,6 +118,7 @@
     "sider/device/management": "Device",
     "sider/event": "Event",
     "sider/": "Home",
+    "sider/live": "Live",
     "sider/location/management": "Location",
     "sider/log": "Log",
     "sider/setting": "Setting",

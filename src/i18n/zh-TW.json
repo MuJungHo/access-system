@@ -118,6 +118,7 @@
     "sider/device/management": "設備管理",
     "sider/event": "事件管理",
     "sider/": "首頁",
+    "sider/live": "即時資料",
     "sider/location/management": "位置管理",
     "sider/log": "系統紀錄",
     "sider/setting": "系統設定",
