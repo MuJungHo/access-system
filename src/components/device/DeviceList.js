@@ -208,7 +208,7 @@ export default function Devices() {
                 locationid: "",
                 category: ""
               })}
-              variant="outlined"><Close />清除</Button>
+              variant="outlined"><Close />{t("clear")}</Button>
           </React.Fragment>
         }
         columns={[
@@ -218,7 +218,7 @@ export default function Devices() {
           { key: 'ip', label: t('ip'), enable: true },
         ]}
         actions={[
-          { show: handleActionShow, name: "進出", onClick: (e, row) => history.push(`/device/card-status/${row.id}`), icon: <MeetingRoom /> },
+          { show: handleActionShow, name: t("inout"), onClick: (e, row) => history.push(`/device/card-status/${row.id}`), icon: <MeetingRoom /> },
           { name: t('edit'), onClick: handleEditDeviceOpen, icon: <BorderColorSharp /> },
         ]}
       />

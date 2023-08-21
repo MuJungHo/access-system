@@ -16,7 +16,7 @@ function PublicRoute({
           ) : (
             <Redirect
               to={{
-                pathname: '/',
+                pathname: '/device/management',
                 state: { from: location }
               }}
             />

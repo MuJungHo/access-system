@@ -25,7 +25,7 @@ export default ({
   title,
   children,
   onClick,
-  buttonText = "儲存",
+  buttonText = "",
   showButton = true,
   loading = false
 }) => {

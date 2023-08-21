@@ -104,9 +104,8 @@ const useStyles = makeStyles(() => ({
 const Live = () => {
   const classes = useStyles();
   const md5 = require("md5");
-  const token = localStorage.getItem('token')
   const { t } = React.useContext(LocaleContext);
-  const { authedApi } = React.useContext(AuthContext);
+  const { authedApi, token } = React.useContext(AuthContext);
   const [leftTabIndex, setLeftTabIndex] = React.useState(0);
   const [playerlist, setPlayerlist] = React.useState([
     { playerid: 'player1', device: { _id: "" } },
@@ -117,7 +116,7 @@ const Live = () => {
   const [wsData, setWsData] = React.useState({})
 
   const [isGrid, setGrid] = React.useState(true)
-  const [count, setCount] = React.useState(4);
+
   const [leftFilter, setLeftFilter] = React.useState({
     page: 0,
     keyword: ""
@@ -172,30 +171,19 @@ const Live = () => {
   React.useEffect(() => {
     setSelectedPlayer({ playerid: "player1", device: { _id: "" } })
     setSelectedDevice({ _id: "" })
-    if (count === 4) {
+    if (isGrid) {
       setPlayerlist([
         { playerid: 'player1', device: { _id: "" } },
         { playerid: 'player2', device: { _id: "" } },
         { playerid: 'player3', device: { _id: "" } },
         { playerid: 'player4', device: { _id: "" } },
       ])
-    } else if (count === 3) {
-      setPlayerlist([
-        { playerid: 'player1', device: { _id: "" } },
-        { playerid: 'player2', device: { _id: "" } },
-        { playerid: 'player3', device: { _id: "" } },
-      ])
-    }else if (count === 2) {
-      setPlayerlist([
-        { playerid: 'player1', device: { _id: "" } },
-        { playerid: 'player2', device: { _id: "" } },
-      ])
-    }else if (count === 1) {
+    } else {
       setPlayerlist([
         { playerid: 'player1', device: { _id: "" } },
       ])
     }
-  }, [count])
+  }, [isGrid])
 
   const handleDeletePlayer = (playerid) => {
     let newPlayList = [...playerlist]
@@ -251,7 +239,7 @@ const Live = () => {
                 key={item._id}>
                 <FiberManualRecord style={{ margin: 10, color: item.status === "on" ? palette.secondary.main : palette.error.main }} />
                 <span style={{ flex: 1 }}>{item.name}</span>
-                <img src={`data:image/png;base64,${item.snapshot}`} style={{ height: 30, marginRight: 8 }} />
+                {item.snapshot && <img src={`data:image/png;base64,${item.snapshot}`} style={{ height: 30, marginRight: 8 }} />}
               </div>
             ))
           }
@@ -328,6 +316,7 @@ const Live = () => {
             {
               playerlist.map(player =>
                 <Player
+                  token={token}
                   isSelected={player.playerid === selectedPlayer.playerid}
                   key={player.playerid}
                   player={player}

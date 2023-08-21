@@ -229,7 +229,7 @@ export default ({
 
   const handleOpenModal = () => {
     showModal({
-      title: "可連接設備",
+      title: t("availableDevice"),
       component: modalComponent
     })
   }
@@ -237,7 +237,7 @@ export default ({
 
   const modalComponent = (
     childs.length === 0
-      ? <h6>無</h6>
+      ? <h6>{t("none")}</h6>
       :
       <TableContainer>
         <Table
@@ -257,7 +257,7 @@ export default ({
               {
                 config[deviceConfig.Category].map(column => <TableCell key={column}>{column}</TableCell>)
               }
-              <TableCell>狀態</TableCell>
+              <TableCell>{t("status")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -281,7 +281,7 @@ export default ({
                     </TableCell>)
                   }
 
-                  <TableCell>{getDisabledChilds().includes(row.key) ? "已連接" : "可連接"}</TableCell>
+                  <TableCell>{getDisabledChilds().includes(row.key) ? t("connectedDevice") : t("availableDevice")}</TableCell>
                 </TableRow>
               )
             })}
@@ -290,7 +290,7 @@ export default ({
       </TableContainer>)
 
   return (
-    <DetailCard loading={isLoading} onClick={handleOpenModal} buttonText="新增" title="已連接設備" style={{ marginBottom: 20 }}>
+    <DetailCard loading={isLoading} onClick={handleOpenModal} buttonText={t("add")} title={t("connectedDevice")} style={{ marginBottom: 20 }}>
       <SimpleTable
         columns={
           [

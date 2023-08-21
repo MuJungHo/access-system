@@ -282,7 +282,7 @@ const EnhancedTableToolbar = ({
 
   const showBatchDeleteConfirm = () => {
     showWarningConfirm({
-      title: t("batch-delete"),      
+      title: t("batch-delete"),
       component: <h6 style={{ margin: 16 }}>{t("confirm-delete-count", { count: selected.length })}</h6>,
       onConfirm: () => {
         handleBatchDeleteConfirm(selected)
@@ -302,36 +302,36 @@ const EnhancedTableToolbar = ({
           {numSelected} {t("selected")}
         </Typography>
       ) : (
-          <React.Fragment>
-            <form
-              onSubmit={e => {
-                e.preventDefault()
-                setFilter({
-                  ...filter,
-                  keyword: ref.current.value
-                })
-              }}>
-              <SearchTextField
-                inputRef={ref}
-                style={{ width: 270 }}
-                placeholder={t('keyword')}
-              />
-            </form>
-            {dateRangePicker && <DateRangePicker
-              locale={t("daterangepicker")}
-              style={{ marginLeft: 20 }}
-              placement="auto"
-              value={[new Date(nowDateStartTime), new Date(nowDateEndTime)]}
-              onChange={e => {
-                setFilter({
-                  ...filter,
-                  page: 0,
-                  start: moment(e[0]).startOf('date').valueOf(),
-                  end: moment(e[1]).endOf('date').valueOf()
-                })
-              }} />}
-          </React.Fragment>
-        )}
+        <React.Fragment>
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              setFilter({
+                ...filter,
+                keyword: ref.current.value
+              })
+            }}>
+            <SearchTextField
+              inputRef={ref}
+              style={{ width: 270 }}
+              placeholder={t('keyword')}
+            />
+          </form>
+          {dateRangePicker && <DateRangePicker
+            locale={t("daterangepicker")}
+            style={{ marginLeft: 20 }}
+            placement="auto"
+            value={[new Date(nowDateStartTime), new Date(nowDateEndTime)]}
+            onChange={e => {
+              setFilter({
+                ...filter,
+                page: 0,
+                start: moment(e[0]).startOf('date').valueOf(),
+                end: moment(e[1]).endOf('date').valueOf()
+              })
+            }} />}
+        </React.Fragment>
+      )}
       {numSelected === 0 && filterComponent}
       <div style={{ flex: 1 }}></div>
       {numSelected > 0 ? (
@@ -341,8 +341,8 @@ const EnhancedTableToolbar = ({
           </IconButton>
         </Tooltip>
       ) : (
-          <TableActions actions={actions} />
-        )
+        <TableActions actions={actions} />
+      )
       }
 
       <ColumnManageDialog
@@ -426,7 +426,8 @@ export default ({
   const classes = useStyles();
   const { t } = useContext(LocaleContext);
   const { authedCustomize } = useContext(AuthContext);
-
+  // console.log(authedCustomize)
+  // const initColumns = columns_
   const initColumns = authedCustomize[tableKey]
     ? authedCustomize[tableKey].map(column => {
       const foundColumn = columns_.find(column_ => column_.key === column.key) || {}

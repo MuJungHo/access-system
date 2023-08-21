@@ -8,6 +8,7 @@ import { Switch, BrowserRouter } from 'react-router-dom'
 import Login from "../Views/Login";
 import routes from './routes'
 import Layout from '../components/layout/Layout';
+import { Route, Redirect } from "react-router-dom";
 
 const AppRouter = () => {
 
@@ -27,6 +28,9 @@ const AppRouter = () => {
                       <route.component />
                     </PrivateRoute>)
                 }
+                <Route exact path="/">
+                  <Redirect to="/device/management" />
+                </Route>
               </Layout>
             </Switch>
           </BrowserRouter>

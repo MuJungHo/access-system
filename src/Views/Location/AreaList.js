@@ -158,7 +158,7 @@ export default function Location() {
           ]}
           actions={[
             { name: t('edit'), onClick: (e, row) => history.push(`/location/${locationid}/area/${row.areaid}`), icon: <ExitToApp /> },
-            { name: "進出", onClick: (e, row) => history.push(`/location/${locationid}/area-status/${row.areaid}`), icon: <MeetingRoom /> },
+            { name: t('inout'), onClick: (e, row) => history.push(`/location/${locationid}/area-status/${row.areaid}`), icon: <MeetingRoom /> },
             { name: t('delete'), onClick: (e, row) => showDeleteConfirmDialog(row), icon: <Delete /> },
           ]}
         />

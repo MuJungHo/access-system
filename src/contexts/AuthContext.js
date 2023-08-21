@@ -13,7 +13,7 @@ function AuthProvider(props) {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [keep, setKeep] = useState(localStorage.getItem('keep') === "1");
   const [authedUser, setAuthedUser] = useState(JSON.parse(localStorage.getItem('user')));
-  const [authedCustomize, setAuthedCustomize] = useState(JSON.parse(localStorage.getItem('customize')))
+  const [authedCustomize, setAuthedCustomize] = useState(JSON.parse(localStorage.getItem('customize')) || [])
 
   const login = async (jwtToken, accountid) => {
     const [accountInfo] = await api(jwtToken, logout).getAccountById({ accountid })
@@ -36,7 +36,7 @@ function AuthProvider(props) {
   const logout = () => {
     setToken(null);
     setAuthedUser(null);
-    setAuthedCustomize(null);
+    setAuthedCustomize([]);
     localStorage.clear()
     // localStorage.removeItem('token')
     // localStorage.removeItem('name')

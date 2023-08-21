@@ -31,13 +31,6 @@ import LiveTvIcon from '@material-ui/icons/LiveTv';
 
 const routes = [
   {
-    path: '/',
-    component: Home,
-    icon: DashboardIcon,
-    siderlink: true,
-    exact: true,
-  },
-  {
     path: '/device/item/:deviceid',
     component: Device,
     siderlink: false

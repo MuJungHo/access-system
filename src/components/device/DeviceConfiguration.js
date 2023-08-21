@@ -109,9 +109,9 @@ export default ({
 
   return (
     <DetailCard
-      title="設備資訊"
+      title={t("device-information")}
       style={{ marginBottom: 20 }}
-      buttonText="儲存"
+      buttonText={t("save")}
       onClick={handleSaveDeviceConfiguration}
     >
       <div style={{ display: 'flex', flexWrap: 'wrap', padding: 8 }}>

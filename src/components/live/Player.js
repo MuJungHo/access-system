@@ -47,7 +47,8 @@ const Player = ({
   isSelected,
   player,
   handleCheckPlayer,
-  isGrid
+  isGrid,
+  token
 }) => {
   // console.log(id)
   const classes = useStyles();
@@ -62,7 +63,7 @@ const Player = ({
   var queue = [];
   var new_codec_string;
   var old_codec_string;
-  const token = localStorage.getItem('token')
+  
   const timestamp = Date.now()
   const sign = md5(timestamp + '#' + token)
 

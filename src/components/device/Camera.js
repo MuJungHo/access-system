@@ -48,14 +48,14 @@ export default ({
   const handleSaveCamera = async () => {
     await authedApi.postDeviceBindCamera({ data: { reader_id: Number(reader_id), camera_id: camerabinds } })
     setSnackBar({
-      message: "儲存成功",
+      message: t("saveSucceed"),
       isOpen: true,
       severity: "success"
     })
   }
 
   return (
-    <DetailCard onClick={handleSaveCamera} title="相機綁定" style={{ marginBottom: 20 }}>
+    <DetailCard onClick={handleSaveCamera} title={t("cameraBind")} style={{ marginBottom: 20 }}>
       <Select
         style={{ margin: 20 }}
         value={camerabinds}
